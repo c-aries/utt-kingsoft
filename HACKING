@@ -80,5 +80,7 @@ $ ssh-add
 $ ssh -v git@github.com
 $ git remote add origin git@github.com:c-aries/utt.git
 $ git push -u origin master
-* checkout
+* checkout from network
 $ git clone git@github.com:c-aries/utt.git
+* update from network
+$ git pull
