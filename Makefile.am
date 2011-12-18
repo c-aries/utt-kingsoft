@@ -1,0 +1,9 @@
+SUBDIRS = src po
+
+ACLOCAL_AMFLAGS = -I m4
+
+doc_DATA = COPYING AUTHORS
+
+EXTRA_DIST = \
+	$(doc_DATA) \
+	HACKING
