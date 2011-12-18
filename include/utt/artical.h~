@@ -1,0 +1,8 @@
+#ifndef __UTT_ARTICAL_H__
+#define __UTT_ARTICAL_H__
+
+G_BEGIN_DECLS
+
+G_END_DECLS
+
+#endif
