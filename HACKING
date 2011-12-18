@@ -68,3 +68,13 @@ $ cat po/POTFILES.skip
 data/rdm.desktop.in
 $ # need return in POTFILES.*
 $ make -C po update-po
+
+GitHub SSH
+==========
+
+$ ssh-keygen -C 'babyaries2@gmail.com' -t rsa
+$ cat ~/.ssh/id_rsa.pub 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/P0HNY/s1hkY8QSjMlQJbow2e8C3eyWa1jrT8EKeYHl1q9gzJp7jLz9xuxTw5Nm6tYk9wSuiy2nsNIIdpKZhe3btUE7g0i7PTWXcamNN7gt8tw6Pkq7aBITodDTAw7s3pUlGtdqtT6XC1onXI84/JkmnHxBNyObKS0e5xCXorQQGVD9iQCer38QdhPbn8jduYDRWuvhIJKaSOBgXohRJRmJNQFssuV2fQmGjnhAuBZ+RrWDFKWND1+7UOh2rwBZKDinDPD2fWEOcq/xw9csJZBGb2pxs30/m7KHWD6G09m2O9SMx4auWnfMzjllZ925Dg5qIRyRB4aqeC0N+RGok9 babyaries2@gmail.com
+$ ssh -v git@github.com
+$ git remote add origin git@github.com:c-aries/utt.git
+$ git push -u origin master
