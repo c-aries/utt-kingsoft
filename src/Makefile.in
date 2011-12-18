@@ -50,9 +50,12 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_artical_OBJECTS = artical.$(OBJEXT)
+am_artical_OBJECTS = artical-artical.$(OBJEXT)
 artical_OBJECTS = $(am_artical_OBJECTS)
 artical_LDADD = $(LDADD)
+artical_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(artical_LDFLAGS) \
+	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
@@ -99,6 +102,8 @@ FGREP = @FGREP@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMSGFMT = @GMSGFMT@
 GREP = @GREP@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -134,6 +139,9 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -196,6 +204,12 @@ top_srcdir = @top_srcdir@
 AM_CFLAGS = -Werror -Wall
 artical_SOURCES = \
 	artical.c
+
+artical_CPPFLAGS = \
+	$(GTK_CFLAGS)
+
+artical_LDFLAGS = \
+	$(GTK_LIBS)
 
 all: all-am
 
@@ -276,7 +290,7 @@ clean-binPROGRAMS:
 	rm -f $$list
 artical$(EXEEXT): $(artical_OBJECTS) $(artical_DEPENDENCIES) 
 	@rm -f artical$(EXEEXT)
-	$(LINK) $(artical_OBJECTS) $(artical_LDADD) $(LIBS)
+	$(artical_LINK) $(artical_OBJECTS) $(artical_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -284,7 +298,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/artical.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/artical-artical.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -306,6 +320,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+artical-artical.o: artical.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT artical-artical.o -MD -MP -MF $(DEPDIR)/artical-artical.Tpo -c -o artical-artical.o `test -f 'artical.c' || echo '$(srcdir)/'`artical.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/artical-artical.Tpo $(DEPDIR)/artical-artical.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='artical.c' object='artical-artical.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o artical-artical.o `test -f 'artical.c' || echo '$(srcdir)/'`artical.c
+
+artical-artical.obj: artical.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT artical-artical.obj -MD -MP -MF $(DEPDIR)/artical-artical.Tpo -c -o artical-artical.obj `if test -f 'artical.c'; then $(CYGPATH_W) 'artical.c'; else $(CYGPATH_W) '$(srcdir)/artical.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/artical-artical.Tpo $(DEPDIR)/artical-artical.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='artical.c' object='artical-artical.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o artical-artical.obj `if test -f 'artical.c'; then $(CYGPATH_W) 'artical.c'; else $(CYGPATH_W) '$(srcdir)/artical.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
