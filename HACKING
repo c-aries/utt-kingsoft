@@ -84,3 +84,5 @@ $ git push -u origin master
 $ git clone git@github.com:c-aries/utt.git
 * update from network
 $ git pull
+* commit to network
+$ git push
