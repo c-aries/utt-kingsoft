@@ -72,6 +72,7 @@ $ make -C po update-po
 GitHub SSH
 ==========
 
+* initialization
 $ ssh-keygen -C 'babyaries2@gmail.com' -t rsa
 $ cat ~/.ssh/id_rsa.pub 
 $ ssh-agent
@@ -79,3 +80,5 @@ $ ssh-add
 $ ssh -v git@github.com
 $ git remote add origin git@github.com:c-aries/utt.git
 $ git push -u origin master
+* checkout
+$ git clone git@github.com:c-aries/utt.git
