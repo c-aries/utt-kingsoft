@@ -73,8 +73,28 @@ GitHub SSH
 ==========
 
 $ ssh-keygen -C 'babyaries2@gmail.com' -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/c-aries/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/c-aries/.ssh/id_rsa.
+Your public key has been saved in /home/c-aries/.ssh/id_rsa.pub.
+The key fingerprint is:
+31:b6:1d:4d:78:c1:1c:ce:d0:e6:cc:65:df:79:60:8c babyaries2@gmail.com
+The key's randomart image is:
++--[ RSA 2048]----+
+|          .=+=   |
+|          .*E *  |
+|        + .*++ oo|
+|       . = .+  .+|
+|        S .     .|
+|                 |
+|                 |
+|                 |
+|                 |
++-----------------+
 $ cat ~/.ssh/id_rsa.pub 
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/P0HNY/s1hkY8QSjMlQJbow2e8C3eyWa1jrT8EKeYHl1q9gzJp7jLz9xuxTw5Nm6tYk9wSuiy2nsNIIdpKZhe3btUE7g0i7PTWXcamNN7gt8tw6Pkq7aBITodDTAw7s3pUlGtdqtT6XC1onXI84/JkmnHxBNyObKS0e5xCXorQQGVD9iQCer38QdhPbn8jduYDRWuvhIJKaSOBgXohRJRmJNQFssuV2fQmGjnhAuBZ+RrWDFKWND1+7UOh2rwBZKDinDPD2fWEOcq/xw9csJZBGb2pxs30/m7KHWD6G09m2O9SMx4auWnfMzjllZ925Dg5qIRyRB4aqeC0N+RGok9 babyaries2@gmail.com
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDSxSQI6RMhkltOdaAbstwfdE879I102m2O8mK88Ogp7m+gVz/IKPAXgbsuvoPyQk4cWoiv7yZ9/KFshS0PtcTzNtTwTJzdouqE57x2+gagHQ8mJS2knzEbY36Nk+LyPNx24f96sV9AHSrGAb9SG+FgUNwBAXdfVu9y+VsMoK2mvm80Z/CNcuVRAIofQoFY3B8+/sqwGp4rHc4DyD3ShHassPgoRdFT7SDkS3LbfpQlCccRWNDyzgNi98WtXzn0+E6c0JWXTOYqhykaZexfAMPDf7tyJ5RTZP0dWnsCEzFcGX7kw/RtQaa34M0IXLYzlS4vbTgT7hT/OtOx5gmVdkix babyaries2@gmail.com
 $ ssh -v git@github.com
 $ git remote add origin git@github.com:c-aries/utt.git
 $ git push -u origin master
