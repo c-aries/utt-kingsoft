@@ -119,8 +119,7 @@ static gint
 utt_artical_key_press (GtkWidget *widget,
 		       GdkEventKey *event)
 {
-  g_print (G_STRLOC);
-  g_print ("six");
+  g_debug (G_STRFUNC);
 
   if (GTK_WIDGET_CLASS(utt_artical_parent_class)->key_press_event (widget, event)) {
     return TRUE;
@@ -133,6 +132,26 @@ utt_artical_key_release (GtkWidget *widget,
 			 GdkEventKey *event)
 {
   return GTK_WIDGET_CLASS(utt_artical_parent_class)->key_release_event (widget, event);
+}
+
+static void
+utt_artical_grab_focus (GtkWidget *widget)
+{
+  /* c-aries */
+  g_debug (G_STRFUNC);
+
+  GTK_WIDGET_CLASS (utt_artical_parent_class)->grab_focus (widget);
+}
+
+static gint
+utt_artical_focus_in (GtkWidget *widget,
+		      GdkEventFocus *event)
+{
+  /* c-aries */
+  g_debug (G_STRFUNC);
+
+  gtk_widget_queue_draw (widget);
+  return FALSE;
 }
 
 static void
@@ -150,6 +169,8 @@ utt_artical_class_init (UttArticalClass *class)
   widget_class->expose_event = utt_artical_expose;
   widget_class->key_press_event = utt_artical_key_press;
   widget_class->key_release_event = utt_artical_key_release;
+  widget_class->grab_focus = utt_artical_grab_focus;
+  widget_class->focus_in_event = utt_artical_focus_in;
 
   g_type_class_add_private(class, sizeof(UttArticalPrivate));
 }
