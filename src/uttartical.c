@@ -115,6 +115,26 @@ utt_artical_expose (GtkWidget *widget, GdkEventExpose *event)
   return FALSE;
 }
 
+static gint
+utt_artical_key_press (GtkWidget *widget,
+		       GdkEventKey *event)
+{
+  g_print (G_STRLOC);
+  g_print ("six");
+
+  if (GTK_WIDGET_CLASS(utt_artical_parent_class)->key_press_event (widget, event)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+static gint
+utt_artical_key_release (GtkWidget *widget,
+			 GdkEventKey *event)
+{
+  return GTK_WIDGET_CLASS(utt_artical_parent_class)->key_release_event (widget, event);
+}
+
 static void
 utt_artical_class_init (UttArticalClass *class)
 {
@@ -128,6 +148,8 @@ utt_artical_class_init (UttArticalClass *class)
   widget_class->map = utt_artical_map;
   widget_class->unmap = utt_artical_unmap;
   widget_class->expose_event = utt_artical_expose;
+  widget_class->key_press_event = utt_artical_key_press;
+  widget_class->key_release_event = utt_artical_key_release;
 
   g_type_class_add_private(class, sizeof(UttArticalPrivate));
 }
