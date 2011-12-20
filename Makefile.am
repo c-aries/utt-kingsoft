@@ -6,4 +6,5 @@ doc_DATA = COPYING AUTHORS
 
 EXTRA_DIST = \
 	$(doc_DATA) \
-	HACKING
+	HACKING \
+	FAQ

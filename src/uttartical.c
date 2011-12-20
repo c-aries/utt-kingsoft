@@ -184,7 +184,7 @@ utt_artical_class_init (UttArticalClass *class)
 {
 /*   GObjectClass *gobject_class = G_OBJECT_CLASS(class); */
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(class);
-  GtkBindingSet *binding_set;
+/*   GtkBindingSet *binding_set; */
 
   widget_class->realize = utt_artical_realize;
   widget_class->unrealize = utt_artical_unrealize;
@@ -199,7 +199,7 @@ utt_artical_class_init (UttArticalClass *class)
   widget_class->focus_in_event = utt_artical_focus_in;
   widget_class->focus_out_event = utt_artical_focus_out;
 
-  binding_set = gtk_binding_set_by_class (class);
+/*   binding_set = gtk_binding_set_by_class (class); */
 
   g_type_class_add_private(class, sizeof(UttArticalPrivate));
 }
