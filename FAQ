@@ -1,1 +1,18 @@
 0. How to register a new Signal?
+The principle of calling registered signal functions is to call g_signal_emit function.
+Take gtkentry.c for example, popup_targets_received call
+<code>
+g_signal_emit (entry, signals[POPULATE_POPUP], 0, entry->popup_menu);
+</code>
+It register signal "populate-popup" at gtk_entry_class_init, just like below:
+<code>
+  signals[POPULATE_POPUP] =
+    g_signal_new (I_("populate-popup"),
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GtkEntryClass, populate_popup),
+		  NULL, NULL,
+		  _gtk_marshal_VOID__OBJECT,
+		  G_TYPE_NONE, 1,
+		  GTK_TYPE_MENU);
+</code>

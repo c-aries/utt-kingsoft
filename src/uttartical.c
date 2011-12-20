@@ -193,7 +193,7 @@ utt_artical_class_init (UttArticalClass *class)
   widget_class->map = utt_artical_map;
   widget_class->unmap = utt_artical_unmap;
   widget_class->expose_event = utt_artical_expose;
-  widget_class->key_press_event = utt_artical_key_press; /* set gtk_widget_set_can_focus in utt_artical_init */
+  widget_class->key_press_event = utt_artical_key_press; /* set gtk_widget_set_can_focus in utt_artical_init, learn from gtk_entry_init */
   widget_class->key_release_event = utt_artical_key_release;
   widget_class->grab_focus = utt_artical_grab_focus;
   widget_class->focus_in_event = utt_artical_focus_in;
