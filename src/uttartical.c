@@ -1,4 +1,7 @@
 #include <utt/artical.h>
+#include <gtk/gtkbindings.h>
+
+#define DEBUG
 
 typedef struct {
   void *data;
@@ -30,7 +33,9 @@ utt_artical_realize (GtkWidget *widget)
     | GDK_BUTTON_RELEASE_MASK
     | GDK_EXPOSURE_MASK
     | GDK_ENTER_NOTIFY_MASK
-    | GDK_LEAVE_NOTIFY_MASK;
+    | GDK_LEAVE_NOTIFY_MASK
+    | GDK_KEY_PRESS_MASK
+    | GDK_KEY_RELEASE_MASK;
 
   has_window = gtk_widget_get_has_window (widget);
   if (has_window) {
@@ -119,9 +124,12 @@ static gint
 utt_artical_key_press (GtkWidget *widget,
 		       GdkEventKey *event)
 {
+#ifdef DEBUG
   g_debug (G_STRFUNC);
+  g_debug ("%08x", event->keyval);
+#endif
 
-  if (GTK_WIDGET_CLASS(utt_artical_parent_class)->key_press_event (widget, event)) {
+  if (GTK_WIDGET_CLASS (utt_artical_parent_class)->key_press_event (widget, event)) {
     return TRUE;
   }
   return FALSE;
@@ -137,8 +145,10 @@ utt_artical_key_release (GtkWidget *widget,
 static void
 utt_artical_grab_focus (GtkWidget *widget)
 {
+#ifdef DEBUG
   /* c-aries */
   g_debug (G_STRFUNC);
+#endif
 
   GTK_WIDGET_CLASS (utt_artical_parent_class)->grab_focus (widget);
 }
@@ -147,8 +157,23 @@ static gint
 utt_artical_focus_in (GtkWidget *widget,
 		      GdkEventFocus *event)
 {
+#ifdef DEBUG
   /* c-aries */
   g_debug (G_STRFUNC);
+#endif
+
+  gtk_widget_queue_draw (widget);
+  return FALSE;
+}
+
+static gint
+utt_artical_focus_out (GtkWidget *widget,
+		       GdkEventFocus *event)
+{
+#ifdef DEBUG
+  /* c-aries */
+  g_debug (G_STRFUNC);
+#endif
 
   gtk_widget_queue_draw (widget);
   return FALSE;
@@ -159,6 +184,7 @@ utt_artical_class_init (UttArticalClass *class)
 {
 /*   GObjectClass *gobject_class = G_OBJECT_CLASS(class); */
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(class);
+  GtkBindingSet *binding_set;
 
   widget_class->realize = utt_artical_realize;
   widget_class->unrealize = utt_artical_unrealize;
@@ -167,22 +193,26 @@ utt_artical_class_init (UttArticalClass *class)
   widget_class->map = utt_artical_map;
   widget_class->unmap = utt_artical_unmap;
   widget_class->expose_event = utt_artical_expose;
-  widget_class->key_press_event = utt_artical_key_press;
+  widget_class->key_press_event = utt_artical_key_press; /* set gtk_widget_set_can_focus in utt_artical_init */
   widget_class->key_release_event = utt_artical_key_release;
   widget_class->grab_focus = utt_artical_grab_focus;
   widget_class->focus_in_event = utt_artical_focus_in;
+  widget_class->focus_out_event = utt_artical_focus_out;
+
+  binding_set = gtk_binding_set_by_class (class);
 
   g_type_class_add_private(class, sizeof(UttArticalPrivate));
 }
 
 static void
-utt_artical_init(UttArtical *artical)
+utt_artical_init (UttArtical *artical)
 {
   UttArticalPrivate *priv;
 
-  gtk_widget_set_has_window(GTK_WIDGET(artical), TRUE);
+  gtk_widget_set_has_window (GTK_WIDGET (artical), TRUE);
+  gtk_widget_set_can_focus (GTK_WIDGET (artical), TRUE);
 
-  priv = UTT_ARTICAL_GET_PRIVATE(artical);
+  priv = UTT_ARTICAL_GET_PRIVATE (artical);
   priv->data = NULL;
 }
 
