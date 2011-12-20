@@ -1,3 +1,10 @@
 0. article training
+0.0 key_press_event in UttArticle class
+0.1 cairo draw english word on UttArticle screen
+0.2 cairo draw Chinese word on UttArticle screen
+0.2.0 english input method
+0.2.1 wubi input method
+0.3 UttArticle read training files and Layout
+0.4 Training Begin
 1. word training
 2. key training
