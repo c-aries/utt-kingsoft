@@ -129,6 +129,55 @@ utt_artical_key_press (GtkWidget *widget,
   g_debug ("%08x", event->keyval);
 #endif
 
+  if (gtk_widget_is_drawable (widget)) {
+    cairo_t *cairo;
+    GdkColor color;
+    gint width = widget->allocation.width;
+    gint height = widget->allocation.height;
+    gchar word[2] = {};
+    gchar oops[4] = {0xe8, 0xb6, 0x8a};
+    cairo_font_extents_t fe;
+    cairo_text_extents_t te;
+    static gint rel_x = 20;
+    static gint oops_flag = FALSE;
+
+    word[0] = event->keyval;
+
+    cairo = gdk_cairo_create (widget->window);
+    gdk_color_parse ("black", &color);
+    gdk_cairo_set_source_color (cairo, &color);
+    cairo_set_line_width (cairo, 16.0);
+    cairo_set_font_size (cairo, 16.0);
+    cairo_select_font_face (cairo, "Georgia", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+    cairo_font_extents (cairo, &fe);
+    cairo_text_extents (cairo, word, &te);
+#ifdef DEBUG
+    g_debug ("%lf, %lf, %lf", te.width, te.x_bearing, te.x_advance);
+#endif
+    cairo_move_to (cairo, rel_x, 40);
+    cairo_show_text (cairo, word);
+    rel_x += te.x_advance + (te.x_bearing < 0 ? -te.x_bearing : 0);
+    if (te.x_bearing < 0) {
+#ifdef DEBUG
+      g_debug ("xbear %lf", te.x_bearing);
+#endif
+    }
+
+    if (!oops_flag && rel_x > 100) {
+      cairo_text_extents (cairo, oops, &te);
+      cairo_move_to (cairo, rel_x, 40);
+      cairo_show_text (cairo, oops);
+      rel_x += te.x_advance + (te.x_bearing < 0 ? -te.x_bearing : 0);
+      oops_flag = TRUE;
+    }
+
+#ifdef DEBUG
+    g_debug ("%d, %d", width, height);
+#endif
+
+    cairo_destroy (cairo);
+  }
+
   if (GTK_WIDGET_CLASS (utt_artical_parent_class)->key_press_event (widget, event)) {
     return TRUE;
   }
