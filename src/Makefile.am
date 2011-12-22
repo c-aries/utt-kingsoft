@@ -3,11 +3,10 @@ AM_CFLAGS = -Werror -Wall
 bin_PROGRAMS = article
 
 article_SOURCES = \
-	article.c \
-	uttarticle.c
-
+	article.c
 article_CPPFLAGS = \
 	$(GTK_CFLAGS) -I$(top_srcdir)/include
-
-article_LDFLAGS = \
-	$(GTK_LIBS)
+article_LDFLAGS = --export-dynamic
+article_LDADD = \
+	$(GTK_LIBS) \
+	$(top_builddir)/libutt/libutt.la

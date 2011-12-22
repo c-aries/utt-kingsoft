@@ -1,4 +1,4 @@
-SUBDIRS = src po include
+SUBDIRS = po include libutt src
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -7,4 +7,8 @@ doc_DATA = COPYING AUTHORS
 EXTRA_DIST = \
 	$(doc_DATA) \
 	HACKING \
-	FAQ
+	FAQ \
+	libutt.pc.in
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libutt.pc

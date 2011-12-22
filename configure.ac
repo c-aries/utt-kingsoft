@@ -40,9 +40,11 @@ AC_CHECK_HEADERS([stdlib.h])
 # Checks for library functions.
 
 AC_CONFIG_FILES([Makefile
+		libutt.pc
 		po/Makefile.in
 		include/Makefile
 		include/utt/Makefile
+		libutt/Makefile
 		src/Makefile])
 
 AC_OUTPUT
