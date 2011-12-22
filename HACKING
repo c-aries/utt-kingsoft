@@ -73,6 +73,8 @@ $ autoconf
 $ automake --add-missing
 $ automake
 $ make distcheck
+= =b> may be this is better
+$ make distcheck DESTDIR=`pwd`/../dest
 
 USING GETTEXT AND INTLTOOL 
 ==========================

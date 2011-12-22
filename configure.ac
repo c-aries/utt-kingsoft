@@ -50,6 +50,7 @@ AC_CHECK_HEADERS([stdlib.h])
 
 AC_CONFIG_FILES([Makefile
 		libutt.pc
+		data/Makefile
 		po/Makefile.in
 		include/Makefile
 		include/utt/Makefile
