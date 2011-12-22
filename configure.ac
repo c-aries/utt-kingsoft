@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.67])
 AC_INIT([utt], [0.1], [babyaries2@gmail.com])
-AC_CONFIG_SRCDIR([src/artical.c])
+AC_CONFIG_SRCDIR([src/article.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])

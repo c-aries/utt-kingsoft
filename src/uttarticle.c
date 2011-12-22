@@ -1,20 +1,20 @@
-#include <utt/artical.h>
+#include <utt/article.h>
 #include <gtk/gtkbindings.h>
 
 #define DEBUG
 
 typedef struct {
   void *data;
-} UttArticalPrivate;
+} UttArticlePrivate;
 
-#define UTT_ARTICAL_GET_PRIVATE(obj)	G_TYPE_INSTANCE_GET_PRIVATE((obj), UTT_TYPE_ARTICAL, UttArticalPrivate)
+#define UTT_ARTICLE_GET_PRIVATE(obj)	G_TYPE_INSTANCE_GET_PRIVATE((obj), UTT_TYPE_ARTICLE, UttArticlePrivate)
 
-G_DEFINE_TYPE(UttArtical, utt_artical, GTK_TYPE_WIDGET);
+G_DEFINE_TYPE(UttArticle, utt_article, GTK_TYPE_WIDGET);
 
 /* when gtk_widget_set_has_window () set TRUE, should implement this function */
 /* learn from gtkeventbox.c */
 static void
-utt_artical_realize (GtkWidget *widget)
+utt_article_realize (GtkWidget *widget)
 {
   GdkWindowAttr attr;
   gboolean has_window;
@@ -58,19 +58,19 @@ utt_artical_realize (GtkWidget *widget)
 }
 
 static void
-utt_artical_unrealize (GtkWidget *widget)
+utt_article_unrealize (GtkWidget *widget)
 {
-  GTK_WIDGET_CLASS(utt_artical_parent_class)->unrealize (widget);
+  GTK_WIDGET_CLASS(utt_article_parent_class)->unrealize (widget);
 }
 
 static void
-utt_artical_size_request (GtkWidget *widget, GtkRequisition *requisition)
+utt_article_size_request (GtkWidget *widget, GtkRequisition *requisition)
 {
   requisition->width = requisition->height = 0;
 }
 
 static void
-utt_artical_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
+utt_article_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 {
   widget->allocation = *allocation;
   if (gtk_widget_get_realized (widget)) {
@@ -83,7 +83,7 @@ utt_artical_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 }
 
 static void
-utt_artical_map (GtkWidget *widget)
+utt_article_map (GtkWidget *widget)
 {
   gtk_widget_set_mapped (widget, TRUE);
   if (gtk_widget_get_has_window (widget)) {
@@ -92,27 +92,27 @@ utt_artical_map (GtkWidget *widget)
 }
 
 static void
-utt_artical_unmap (GtkWidget *widget)
+utt_article_unmap (GtkWidget *widget)
 {
-  GTK_WIDGET_CLASS(utt_artical_parent_class)->unmap (widget);
+  GTK_WIDGET_CLASS(utt_article_parent_class)->unmap (widget);
 }
 
 static gboolean
-utt_artical_expose (GtkWidget *widget, GdkEventExpose *event)
+utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 {
   cairo_t *cairo;
   GdkColor color;
-  gint utt_artical_width, utt_artical_height;
+  gint utt_article_width, utt_article_height;
 
   if (gtk_widget_is_drawable (widget)) {
-    utt_artical_width = widget->allocation.width;
-    utt_artical_height = widget->allocation.height;
+    utt_article_width = widget->allocation.width;
+    utt_article_height = widget->allocation.height;
 
     cairo = gdk_cairo_create (widget->window);
 
     gdk_color_parse ("yellow", &color);
     gdk_cairo_set_source_color (cairo, &color);
-    cairo_rectangle (cairo, 6, 6, utt_artical_width - 12, utt_artical_height - 12);
+    cairo_rectangle (cairo, 6, 6, utt_article_width - 12, utt_article_height - 12);
     cairo_fill (cairo);
 
     cairo_destroy (cairo);
@@ -121,7 +121,7 @@ utt_artical_expose (GtkWidget *widget, GdkEventExpose *event)
 }
 
 static gint
-utt_artical_key_press (GtkWidget *widget,
+utt_article_key_press (GtkWidget *widget,
 		       GdkEventKey *event)
 {
 #ifdef DEBUG
@@ -178,32 +178,32 @@ utt_artical_key_press (GtkWidget *widget,
     cairo_destroy (cairo);
   }
 
-  if (GTK_WIDGET_CLASS (utt_artical_parent_class)->key_press_event (widget, event)) {
+  if (GTK_WIDGET_CLASS (utt_article_parent_class)->key_press_event (widget, event)) {
     return TRUE;
   }
   return FALSE;
 }
 
 static gint
-utt_artical_key_release (GtkWidget *widget,
+utt_article_key_release (GtkWidget *widget,
 			 GdkEventKey *event)
 {
-  return GTK_WIDGET_CLASS(utt_artical_parent_class)->key_release_event (widget, event);
+  return GTK_WIDGET_CLASS(utt_article_parent_class)->key_release_event (widget, event);
 }
 
 static void
-utt_artical_grab_focus (GtkWidget *widget)
+utt_article_grab_focus (GtkWidget *widget)
 {
 #ifdef DEBUG
   /* c-aries */
   g_debug (G_STRFUNC);
 #endif
 
-  GTK_WIDGET_CLASS (utt_artical_parent_class)->grab_focus (widget);
+  GTK_WIDGET_CLASS (utt_article_parent_class)->grab_focus (widget);
 }
 
 static gint
-utt_artical_focus_in (GtkWidget *widget,
+utt_article_focus_in (GtkWidget *widget,
 		      GdkEventFocus *event)
 {
 #ifdef DEBUG
@@ -216,7 +216,7 @@ utt_artical_focus_in (GtkWidget *widget,
 }
 
 static gint
-utt_artical_focus_out (GtkWidget *widget,
+utt_article_focus_out (GtkWidget *widget,
 		       GdkEventFocus *event)
 {
 #ifdef DEBUG
@@ -229,48 +229,48 @@ utt_artical_focus_out (GtkWidget *widget,
 }
 
 static void
-utt_artical_class_init (UttArticalClass *class)
+utt_article_class_init (UttArticleClass *class)
 {
 /*   GObjectClass *gobject_class = G_OBJECT_CLASS(class); */
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(class);
 /*   GtkBindingSet *binding_set; */
 
-  widget_class->realize = utt_artical_realize;
-  widget_class->unrealize = utt_artical_unrealize;
-  widget_class->size_request = utt_artical_size_request;
-  widget_class->size_allocate = utt_artical_size_allocate;
-  widget_class->map = utt_artical_map;
-  widget_class->unmap = utt_artical_unmap;
-  widget_class->expose_event = utt_artical_expose;
-  widget_class->key_press_event = utt_artical_key_press; /* set gtk_widget_set_can_focus in utt_artical_init, learn from gtk_entry_init */
-  widget_class->key_release_event = utt_artical_key_release;
-  widget_class->grab_focus = utt_artical_grab_focus;
-  widget_class->focus_in_event = utt_artical_focus_in;
-  widget_class->focus_out_event = utt_artical_focus_out;
+  widget_class->realize = utt_article_realize;
+  widget_class->unrealize = utt_article_unrealize;
+  widget_class->size_request = utt_article_size_request;
+  widget_class->size_allocate = utt_article_size_allocate;
+  widget_class->map = utt_article_map;
+  widget_class->unmap = utt_article_unmap;
+  widget_class->expose_event = utt_article_expose;
+  widget_class->key_press_event = utt_article_key_press; /* set gtk_widget_set_can_focus in utt_article_init, learn from gtk_entry_init */
+  widget_class->key_release_event = utt_article_key_release;
+  widget_class->grab_focus = utt_article_grab_focus;
+  widget_class->focus_in_event = utt_article_focus_in;
+  widget_class->focus_out_event = utt_article_focus_out;
 
 /*   binding_set = gtk_binding_set_by_class (class); */
 
-  g_type_class_add_private(class, sizeof(UttArticalPrivate));
+  g_type_class_add_private(class, sizeof(UttArticlePrivate));
 }
 
 static void
-utt_artical_init (UttArtical *artical)
+utt_article_init (UttArticle *article)
 {
-  UttArticalPrivate *priv;
+  UttArticlePrivate *priv;
 
-  gtk_widget_set_has_window (GTK_WIDGET (artical), TRUE);
-  gtk_widget_set_can_focus (GTK_WIDGET (artical), TRUE);
+  gtk_widget_set_has_window (GTK_WIDGET (article), TRUE);
+  gtk_widget_set_can_focus (GTK_WIDGET (article), TRUE);
 
-  priv = UTT_ARTICAL_GET_PRIVATE (artical);
+  priv = UTT_ARTICLE_GET_PRIVATE (article);
   priv->data = NULL;
 }
 
 GtkWidget *
-utt_artical_new ()
+utt_article_new ()
 {
-  UttArtical *artical;
+  UttArticle *article;
 
-  artical = g_object_new (UTT_TYPE_ARTICAL,
+  article = g_object_new (UTT_TYPE_ARTICLE,
 			  NULL);
-  return GTK_WIDGET(artical);
+  return GTK_WIDGET(article);
 }

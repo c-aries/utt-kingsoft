@@ -567,7 +567,7 @@ PACKAGE_STRING='utt 0.1'
 PACKAGE_BUGREPORT='babyaries2@gmail.com'
 PACKAGE_URL=''
 
-ac_unique_file="src/artical.c"
+ac_unique_file="src/article.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

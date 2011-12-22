@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = artical$(EXEEXT)
+bin_PROGRAMS = article$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -50,12 +50,12 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_artical_OBJECTS = artical-artical.$(OBJEXT) \
-	artical-uttartical.$(OBJEXT)
-artical_OBJECTS = $(am_artical_OBJECTS)
-artical_LDADD = $(LDADD)
-artical_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(artical_LDFLAGS) \
+am_article_OBJECTS = article-article.$(OBJEXT) \
+	article-uttarticle.$(OBJEXT)
+article_OBJECTS = $(am_article_OBJECTS)
+article_LDADD = $(LDADD)
+article_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(article_LDFLAGS) \
 	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
@@ -70,8 +70,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(artical_SOURCES)
-DIST_SOURCES = $(artical_SOURCES)
+SOURCES = $(article_SOURCES)
+DIST_SOURCES = $(article_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -203,14 +203,14 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -Werror -Wall
-artical_SOURCES = \
-	artical.c \
-	uttartical.c
+article_SOURCES = \
+	article.c \
+	uttarticle.c
 
-artical_CPPFLAGS = \
+article_CPPFLAGS = \
 	$(GTK_CFLAGS) -I$(top_srcdir)/include
 
-artical_LDFLAGS = \
+article_LDFLAGS = \
 	$(GTK_LIBS)
 
 all: all-am
@@ -290,9 +290,9 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
-artical$(EXEEXT): $(artical_OBJECTS) $(artical_DEPENDENCIES) 
-	@rm -f artical$(EXEEXT)
-	$(artical_LINK) $(artical_OBJECTS) $(artical_LDADD) $(LIBS)
+article$(EXEEXT): $(article_OBJECTS) $(article_DEPENDENCIES) 
+	@rm -f article$(EXEEXT)
+	$(article_LINK) $(article_OBJECTS) $(article_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -300,8 +300,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/artical-artical.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/artical-uttartical.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/article-article.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/article-uttarticle.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -324,33 +324,33 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
-artical-artical.o: artical.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT artical-artical.o -MD -MP -MF $(DEPDIR)/artical-artical.Tpo -c -o artical-artical.o `test -f 'artical.c' || echo '$(srcdir)/'`artical.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/artical-artical.Tpo $(DEPDIR)/artical-artical.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='artical.c' object='artical-artical.o' libtool=no @AMDEPBACKSLASH@
+article-article.o: article.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT article-article.o -MD -MP -MF $(DEPDIR)/article-article.Tpo -c -o article-article.o `test -f 'article.c' || echo '$(srcdir)/'`article.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/article-article.Tpo $(DEPDIR)/article-article.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='article.c' object='article-article.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o artical-artical.o `test -f 'artical.c' || echo '$(srcdir)/'`artical.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o article-article.o `test -f 'article.c' || echo '$(srcdir)/'`article.c
 
-artical-artical.obj: artical.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT artical-artical.obj -MD -MP -MF $(DEPDIR)/artical-artical.Tpo -c -o artical-artical.obj `if test -f 'artical.c'; then $(CYGPATH_W) 'artical.c'; else $(CYGPATH_W) '$(srcdir)/artical.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/artical-artical.Tpo $(DEPDIR)/artical-artical.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='artical.c' object='artical-artical.obj' libtool=no @AMDEPBACKSLASH@
+article-article.obj: article.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT article-article.obj -MD -MP -MF $(DEPDIR)/article-article.Tpo -c -o article-article.obj `if test -f 'article.c'; then $(CYGPATH_W) 'article.c'; else $(CYGPATH_W) '$(srcdir)/article.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/article-article.Tpo $(DEPDIR)/article-article.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='article.c' object='article-article.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o artical-artical.obj `if test -f 'artical.c'; then $(CYGPATH_W) 'artical.c'; else $(CYGPATH_W) '$(srcdir)/artical.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o article-article.obj `if test -f 'article.c'; then $(CYGPATH_W) 'article.c'; else $(CYGPATH_W) '$(srcdir)/article.c'; fi`
 
-artical-uttartical.o: uttartical.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT artical-uttartical.o -MD -MP -MF $(DEPDIR)/artical-uttartical.Tpo -c -o artical-uttartical.o `test -f 'uttartical.c' || echo '$(srcdir)/'`uttartical.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/artical-uttartical.Tpo $(DEPDIR)/artical-uttartical.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='uttartical.c' object='artical-uttartical.o' libtool=no @AMDEPBACKSLASH@
+article-uttarticle.o: uttarticle.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT article-uttarticle.o -MD -MP -MF $(DEPDIR)/article-uttarticle.Tpo -c -o article-uttarticle.o `test -f 'uttarticle.c' || echo '$(srcdir)/'`uttarticle.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/article-uttarticle.Tpo $(DEPDIR)/article-uttarticle.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='uttarticle.c' object='article-uttarticle.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o artical-uttartical.o `test -f 'uttartical.c' || echo '$(srcdir)/'`uttartical.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o article-uttarticle.o `test -f 'uttarticle.c' || echo '$(srcdir)/'`uttarticle.c
 
-artical-uttartical.obj: uttartical.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT artical-uttartical.obj -MD -MP -MF $(DEPDIR)/artical-uttartical.Tpo -c -o artical-uttartical.obj `if test -f 'uttartical.c'; then $(CYGPATH_W) 'uttartical.c'; else $(CYGPATH_W) '$(srcdir)/uttartical.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/artical-uttartical.Tpo $(DEPDIR)/artical-uttartical.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='uttartical.c' object='artical-uttartical.obj' libtool=no @AMDEPBACKSLASH@
+article-uttarticle.obj: uttarticle.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT article-uttarticle.obj -MD -MP -MF $(DEPDIR)/article-uttarticle.Tpo -c -o article-uttarticle.obj `if test -f 'uttarticle.c'; then $(CYGPATH_W) 'uttarticle.c'; else $(CYGPATH_W) '$(srcdir)/uttarticle.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/article-uttarticle.Tpo $(DEPDIR)/article-uttarticle.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='uttarticle.c' object='article-uttarticle.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(artical_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o artical-uttartical.obj `if test -f 'uttartical.c'; then $(CYGPATH_W) 'uttartical.c'; else $(CYGPATH_W) '$(srcdir)/uttartical.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o article-uttarticle.obj `if test -f 'uttarticle.c'; then $(CYGPATH_W) 'uttarticle.c'; else $(CYGPATH_W) '$(srcdir)/uttarticle.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

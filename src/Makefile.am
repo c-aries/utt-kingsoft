@@ -1,13 +1,13 @@
 AM_CFLAGS = -Werror -Wall
 
-bin_PROGRAMS = artical
+bin_PROGRAMS = article
 
-artical_SOURCES = \
-	artical.c \
-	uttartical.c
+article_SOURCES = \
+	article.c \
+	uttarticle.c
 
-artical_CPPFLAGS = \
+article_CPPFLAGS = \
 	$(GTK_CFLAGS) -I$(top_srcdir)/include
 
-artical_LDFLAGS = \
+article_LDFLAGS = \
 	$(GTK_LIBS)

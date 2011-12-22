@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
-#include <utt/artical.h>
+#include <utt/article.h>
 
 int
 main (int argc, char *argv[])
 {
   GtkWidget *window;
-  GtkWidget *artical;
+  GtkWidget *article;
 
   g_print ("Universal Typing Training Artical Module\n");
 
@@ -18,8 +18,8 @@ main (int argc, char *argv[])
   gtk_window_set_title (GTK_WINDOW (window), "artical typing training");
   g_signal_connect (window, "destroy", gtk_main_quit, NULL);
 
-  artical = utt_artical_new ();
-  gtk_container_add (GTK_CONTAINER (window), artical);
+  article = utt_article_new ();
+  gtk_container_add (GTK_CONTAINER (window), article);
 
   gtk_widget_show_all (window);
   gtk_main ();

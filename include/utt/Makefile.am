@@ -1,5 +1,5 @@
 pkginclude_HEADERS = \
-	artical.h
+	article.h
 
 pkgincludedir = \
 	$(includedir)/utt
