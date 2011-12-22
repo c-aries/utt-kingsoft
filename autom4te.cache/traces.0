@@ -2710,14 +2710,24 @@ m4trace:configure.ac:31: -1- PKG_CHECK_EXISTS([$GTK_MODULES], [pkg_cv_[]GTK_LIBS
 m4trace:configure.ac:31: -1- _PKG_SHORT_ERRORS_SUPPORTED
 m4trace:configure.ac:32: -1- m4_pattern_allow([^GTK_CFLAGS$])
 m4trace:configure.ac:33: -1- m4_pattern_allow([^GTK_LIBS$])
-m4trace:configure.ac:36: -1- m4_pattern_allow([^HAVE_STDLIB_H$])
-m4trace:configure.ac:50: -1- m4_pattern_allow([^LIB@&t@OBJS$])
-m4trace:configure.ac:50: -1- m4_pattern_allow([^LTLIBOBJS$])
-m4trace:configure.ac:50: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
-m4trace:configure.ac:50: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
-m4trace:configure.ac:50: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
-m4trace:configure.ac:50: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
-m4trace:configure.ac:50: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
-m4trace:configure.ac:50: -1- _AC_AM_CONFIG_HEADER_HOOK(["$ac_file"])
-m4trace:configure.ac:50: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
-m4trace:configure.ac:50: -1- _LT_PROG_LTMAIN
+m4trace:configure.ac:36: -1- PKG_CHECK_MODULES([GLADE], [$GLADE_MODULES])
+m4trace:configure.ac:36: -1- m4_pattern_allow([^GLADE_CFLAGS$])
+m4trace:configure.ac:36: -1- m4_pattern_allow([^GLADE_LIBS$])
+m4trace:configure.ac:36: -1- PKG_CHECK_EXISTS([$GLADE_MODULES], [pkg_cv_[]GLADE_CFLAGS=`$PKG_CONFIG --[]cflags "$GLADE_MODULES" 2>/dev/null`], [pkg_failed=yes])
+m4trace:configure.ac:36: -1- PKG_CHECK_EXISTS([$GLADE_MODULES], [pkg_cv_[]GLADE_LIBS=`$PKG_CONFIG --[]libs "$GLADE_MODULES" 2>/dev/null`], [pkg_failed=yes])
+m4trace:configure.ac:36: -1- _PKG_SHORT_ERRORS_SUPPORTED
+m4trace:configure.ac:37: -1- m4_pattern_allow([^GLADE_CFLAGS$])
+m4trace:configure.ac:38: -1- m4_pattern_allow([^GLADE_LIBS$])
+m4trace:configure.ac:41: -1- m4_pattern_allow([^GLADE_MODULEDIR$])
+m4trace:configure.ac:42: -1- m4_pattern_allow([^GLADE_CATALOGDIR$])
+m4trace:configure.ac:45: -1- m4_pattern_allow([^HAVE_STDLIB_H$])
+m4trace:configure.ac:60: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.ac:60: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.ac:60: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
+m4trace:configure.ac:60: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
+m4trace:configure.ac:60: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
+m4trace:configure.ac:60: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
+m4trace:configure.ac:60: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
+m4trace:configure.ac:60: -1- _AC_AM_CONFIG_HEADER_HOOK(["$ac_file"])
+m4trace:configure.ac:60: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
+m4trace:configure.ac:60: -1- _LT_PROG_LTMAIN

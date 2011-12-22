@@ -32,6 +32,15 @@ PKG_CHECK_MODULES(GTK,$GTK_MODULES)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
+GLADE_MODULES="gladeui-1.0 >= 3.6.7"
+PKG_CHECK_MODULES(GLADE,$GLADE_MODULES)
+AC_SUBST(GLADE_CFLAGS)
+AC_SUBST(GLADE_LIBS)
+GLADE_MODULEDIR=`pkg-config --variable=moduledir gladeui-1.0`
+GLADE_CATALOGDIR=`pkg-config --variable=catalogdir gladeui-1.0`
+AC_SUBST(GLADE_MODULEDIR)
+AC_SUBST(GLADE_CATALOGDIR)
+
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h])
 
@@ -45,6 +54,7 @@ AC_CONFIG_FILES([Makefile
 		include/Makefile
 		include/utt/Makefile
 		libutt/Makefile
+		glade/Makefile
 		src/Makefile])
 
 AC_OUTPUT

@@ -608,6 +608,10 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIB@&t@OBJS
+GLADE_CATALOGDIR
+GLADE_MODULEDIR
+GLADE_LIBS
+GLADE_CFLAGS
 GTK_LIBS
 GTK_CFLAGS
 PKG_CONFIG_LIBDIR
@@ -773,7 +777,9 @@ PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
 GTK_CFLAGS
-GTK_LIBS'
+GTK_LIBS
+GLADE_CFLAGS
+GLADE_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1426,6 +1432,9 @@ Some influential environment variables:
               path overriding pkg-config's built-in search path
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
+  GLADE_CFLAGS 
+              C compiler flags for GLADE, overriding pkg-config
+  GLADE_LIBS  linker flags for GLADE, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -11497,6 +11506,103 @@ fi
 
 
 
+GLADE_MODULES="gladeui-1.0 >= 3.6.7"
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GLADE" >&5
+$as_echo_n "checking for GLADE... " >&6; }
+
+if test -n "$GLADE_CFLAGS"; then
+    pkg_cv_GLADE_CFLAGS="$GLADE_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$GLADE_MODULES\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$GLADE_MODULES") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GLADE_CFLAGS=`$PKG_CONFIG --cflags "$GLADE_MODULES" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GLADE_LIBS"; then
+    pkg_cv_GLADE_LIBS="$GLADE_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$GLADE_MODULES\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$GLADE_MODULES") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GLADE_LIBS=`$PKG_CONFIG --libs "$GLADE_MODULES" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+        
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GLADE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "$GLADE_MODULES" 2>&1`
+        else 
+	        GLADE_PKG_ERRORS=`$PKG_CONFIG --print-errors "$GLADE_MODULES" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GLADE_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements ($GLADE_MODULES) were not met:
+
+$GLADE_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GLADE_CFLAGS
+and GLADE_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5        
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GLADE_CFLAGS
+and GLADE_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }        
+else
+	GLADE_CFLAGS=$pkg_cv_GLADE_CFLAGS
+	GLADE_LIBS=$pkg_cv_GLADE_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	
+fi
+
+
+GLADE_MODULEDIR=`pkg-config --variable=moduledir gladeui-1.0`
+GLADE_CATALOGDIR=`pkg-config --variable=catalogdir gladeui-1.0`
+
+
+
 # Checks for header files.
 for ac_header in stdlib.h
 do :
@@ -11515,7 +11621,7 @@ done
 
 # Checks for library functions.
 
-ac_config_files="$ac_config_files Makefile libutt.pc po/Makefile.in include/Makefile include/utt/Makefile libutt/Makefile src/Makefile"
+ac_config_files="$ac_config_files Makefile libutt.pc po/Makefile.in include/Makefile include/utt/Makefile libutt/Makefile glade/Makefile src/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -12508,6 +12614,7 @@ do
     "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
     "include/utt/Makefile") CONFIG_FILES="$CONFIG_FILES include/utt/Makefile" ;;
     "libutt/Makefile") CONFIG_FILES="$CONFIG_FILES libutt/Makefile" ;;
+    "glade/Makefile") CONFIG_FILES="$CONFIG_FILES glade/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "po/stamp-it") CONFIG_COMMANDS="$CONFIG_COMMANDS po/stamp-it" ;;
 

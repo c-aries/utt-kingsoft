@@ -1,4 +1,4 @@
-SUBDIRS = po include libutt src
+SUBDIRS = po include libutt glade src
 
 ACLOCAL_AMFLAGS = -I m4
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glade-catalog name="utt" library="gladeutt">
+  <init-function>glade_utt_init</init-function>
+  <glade-widget-classes>
+    <glade-widget-class name="UttArticle" generic-name="article" title="UTT Article">
+      <post-create-function>glade_utt_article_post_create</post-create-function>
+    </glade-widget-class>
+  </glade-widget-classes>
+  <glade-widget-group name="C-aries' Custom" title ="Custom">
+    <glade-widget-class-ref name="UttArticle"/>
+  </glade-widget-group>
+</glade-catalog>
