@@ -1,15 +1,13 @@
 	-*- outline -*-
 * article training
-** key_press_event in UttArticle class
-** cairo draw english word on UttArticle screen
-** cairo draw Chinese word on UttArticle screen
+** autoconf glade option
+** chinese translation
 ** learn cairo, cairo_show_text(), learn freetype2, how bbox was generated?
 <code>
 scale = face->size->metrics.y_scale;
 ascent = FT_CEIL(FT_MulFix(face->bbox.yMax, scale));
 descent = FT_CEIL(FT_MulFix(face->bbox.yMin, scale));
 </code>
-** english input method
 ** wubi input method
 ** UttArticle read training files and Layout
 ** Training Begin
