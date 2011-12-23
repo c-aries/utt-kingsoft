@@ -1,5 +1,8 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* define to enable installing custom glade widgets */
+#undef ENABLE_GLADE_PLUGIN
+
 /* The prefix for our gettext translation domains. */
 #undef GETTEXT_PACKAGE
 

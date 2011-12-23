@@ -32,14 +32,31 @@ PKG_CHECK_MODULES(GTK,$GTK_MODULES)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
-GLADE_MODULES="gladeui-1.0 >= 3.6.7"
-PKG_CHECK_MODULES(GLADE,$GLADE_MODULES)
-AC_SUBST(GLADE_CFLAGS)
-AC_SUBST(GLADE_LIBS)
-GLADE_MODULEDIR=`pkg-config --variable=moduledir gladeui-1.0`
-GLADE_CATALOGDIR=`pkg-config --variable=catalogdir gladeui-1.0`
-AC_SUBST(GLADE_MODULEDIR)
-AC_SUBST(GLADE_CATALOGDIR)
+# glade
+glade_plugin_default="no"
+AC_ARG_ENABLE([glade-plugin],
+	AS_HELP_STRING([--enable-glade-plugin], [enable installing custom glade widgets]),
+	[enable_glade_plugin=$enableval],
+	[enable_glade_plugin=$glade_plugin_default])
+AM_CONDITIONAL(ENABLE_GLADE_PLUGIN, test "x$enable_glade_plugin" != "xno")
+if test "x$enable_glade_plugin" != "xno"; then
+   	AC_DEFINE([ENABLE_GLADE_PLUGIN], [1], [define to enable installing custom glade widgets])
+	glade="glade"
+else
+	glade=""
+fi
+AC_SUBST(glade)
+
+if test "x$enable_glade_plugin" != "xno"; then
+	GLADE_MODULES="gladeui-1.0 >= 3.6.7"
+	PKG_CHECK_MODULES(GLADE,$GLADE_MODULES)
+	AC_SUBST(GLADE_CFLAGS)
+	AC_SUBST(GLADE_LIBS)
+	GLADE_MODULEDIR=`pkg-config --variable=moduledir gladeui-1.0`
+	GLADE_CATALOGDIR=`pkg-config --variable=catalogdir gladeui-1.0`
+	AC_SUBST(GLADE_MODULEDIR)
+	AC_SUBST(GLADE_CATALOGDIR)
+fi
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h])
