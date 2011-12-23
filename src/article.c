@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include <utt/article.h>
+#include "common.h"
 
 #ifndef PKGDATADIR
 #error "PKGDATADIR doesn't exist"
@@ -14,8 +15,9 @@ main (int argc, char *argv[])
   GtkBuilder *builder;
   GtkWidget *window;
 
-  g_print ("Universal Typing Training Artical Module\n");
+  utt_set_locale ();
 
+  g_print ("Universal Typing Training %s Module\n", _("Artical"));
   gtk_init (&argc, &argv);
 
   g_debug("PKGDATADIR %s", PKGDATADIR);

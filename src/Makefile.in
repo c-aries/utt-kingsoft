@@ -50,7 +50,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_article_OBJECTS = article-article.$(OBJEXT)
+am_article_OBJECTS = article-article.$(OBJEXT) \
+	article-common.$(OBJEXT)
 article_OBJECTS = $(am_article_OBJECTS)
 am__DEPENDENCIES_1 =
 article_DEPENDENCIES = $(am__DEPENDENCIES_1) \
@@ -210,12 +211,14 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -Werror -Wall
 article_SOURCES = \
-	article.c
+	article.c \
+	common.c common.h
 
 article_CPPFLAGS = \
 	$(GTK_CFLAGS) \
 	-I$(top_srcdir)/include \
-	-DPKGDATADIR=\"$(pkgdatadir)\"
+	-DPKGDATADIR=\"$(pkgdatadir)\" \
+	-DLOCALEDIR=\"$(localedir)\"
 
 article_LDFLAGS = --export-dynamic
 article_LDADD = \
@@ -310,6 +313,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/article-article.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/article-common.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -345,6 +349,20 @@ article-article.obj: article.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='article.c' object='article-article.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o article-article.obj `if test -f 'article.c'; then $(CYGPATH_W) 'article.c'; else $(CYGPATH_W) '$(srcdir)/article.c'; fi`
+
+article-common.o: common.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT article-common.o -MD -MP -MF $(DEPDIR)/article-common.Tpo -c -o article-common.o `test -f 'common.c' || echo '$(srcdir)/'`common.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/article-common.Tpo $(DEPDIR)/article-common.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='common.c' object='article-common.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o article-common.o `test -f 'common.c' || echo '$(srcdir)/'`common.c
+
+article-common.obj: common.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT article-common.obj -MD -MP -MF $(DEPDIR)/article-common.Tpo -c -o article-common.obj `if test -f 'common.c'; then $(CYGPATH_W) 'common.c'; else $(CYGPATH_W) '$(srcdir)/common.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/article-common.Tpo $(DEPDIR)/article-common.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='common.c' object='article-common.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(article_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o article-common.obj `if test -f 'common.c'; then $(CYGPATH_W) 'common.c'; else $(CYGPATH_W) '$(srcdir)/common.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

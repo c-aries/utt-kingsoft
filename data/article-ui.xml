@@ -6,7 +6,7 @@
   <object class="GtkWindow" id="window1">
     <property name="width_request">640</property>
     <property name="height_request">320</property>
-    <property name="title">Artical Typing Traning</property>
+    <property name="title" translatable="yes">Artical Typing Traning</property>
     <property name="window_position">center</property>
     <property name="default_width">640</property>
     <property name="default_height">320</property>
@@ -21,14 +21,14 @@
             <child>
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
-                <property name="label">Artical(_A)</property>
+                <property name="label" translatable="yes">Artical(_A)</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem2">
-                        <property name="label">Open(_O)</property>
+                        <property name="label" translatable="yes">Open(_O)</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="image">image1</property>
@@ -42,7 +42,7 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem5">
-                        <property name="label">Quit(_Q)</property>
+                        <property name="label" translatable="yes">Quit(_Q)</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="image">image2</property>
@@ -57,14 +57,14 @@
             <child>
               <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
-                <property name="label">Help(_H)</property>
+                <property name="label" translatable="yes">Help(_H)</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu3">
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem10">
-                        <property name="label">About(_A)</property>
+                        <property name="label" translatable="yes">About(_A)</property>
                         <property name="visible">True</property>
                         <property name="tooltip_text">About</property>
                         <property name="use_underline">True</property>
