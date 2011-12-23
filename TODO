@@ -1,6 +1,5 @@
 	-*- outline -*-
 * article training
-** chinese translation
 ** learn cairo, cairo_show_text(), learn freetype2, how bbox was generated?
 <code>
 scale = face->size->metrics.y_scale;
@@ -10,5 +9,6 @@ descent = FT_CEIL(FT_MulFix(face->bbox.yMin, scale));
 ** wubi input method
 ** UttArticle read training files and Layout
 ** Training Begin
+** desktop.in
 * word training
 * key training
