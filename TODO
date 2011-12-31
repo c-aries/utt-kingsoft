@@ -6,6 +6,7 @@ scale = face->size->metrics.y_scale;
 ascent = FT_CEIL(FT_MulFix(face->bbox.yMax, scale));
 descent = FT_CEIL(FT_MulFix(face->bbox.yMin, scale));
 </code>
+We can learn it from GtkTextView actually.
 ** wubi input method
 ** UttArticle read training files and Layout
 ** Training Begin
