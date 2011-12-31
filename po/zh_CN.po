@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: utt 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-01 00:53+0800\n"
-"PO-Revision-Date: 2012-01-01 00:52+0800\n"
+"POT-Creation-Date: 2012-01-01 01:01+0800\n"
+"PO-Revision-Date: 2012-01-01 01:02+0800\n"
 "Last-Translator: c-aries <babyaries2@gmail.com>\n"
 "Language-Team: Chinese (simplified)\n"
 "Language: zh_CN\n"
@@ -30,13 +30,17 @@ msgid "Article(_A)"
 msgstr "文章(_A)"
 
 #: ../data/article-ui.xml.h:4
+msgid "Choose a file"
+msgstr "选择一个文件"
+
+#: ../data/article-ui.xml.h:5
 msgid "Help(_H)"
 msgstr "帮助(_H)"
 
-#: ../data/article-ui.xml.h:5
+#: ../data/article-ui.xml.h:6
 msgid "Open(_O)"
 msgstr "打开(_O)"
 
-#: ../data/article-ui.xml.h:6
+#: ../data/article-ui.xml.h:7
 msgid "Quit(_Q)"
 msgstr "退出(_Q)"
