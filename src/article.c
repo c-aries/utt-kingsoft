@@ -27,7 +27,7 @@ int
 main (int argc, char *argv[])
 {
   GtkBuilder *builder;
-  GtkWidget *window, *open_item, *chooser, *article;
+  GtkWidget *window, *open_item, *chooser;
 
   utt_set_locale ();
 
@@ -44,8 +44,7 @@ main (int argc, char *argv[])
   }
 
   chooser = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserdialog1"));
-  article = GTK_WIDGET (gtk_builder_get_object (builder, "article1"));
-  gtk_widget_set_can_default (article, TRUE);
+  gtk_widget_set_can_default (window, TRUE);
 
   open_item = GTK_WIDGET (gtk_builder_get_object (builder, "imagemenuitem2"));
   g_signal_connect (open_item, "activate", G_CALLBACK (on_open_item_activate), chooser);

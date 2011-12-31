@@ -16,3 +16,22 @@ It register signal "populate-popup" at gtk_entry_class_init, just like below:
 		  G_TYPE_NONE, 1,
 		  GTK_TYPE_MENU);
 </code>
+1. How to fix the gtk_widget_get_can_default problem ?
+(article:17580): Gtk-CRITICAL **: gtk_widget_grab_default: assertion `gtk_widget_get_can_default (widget)' failed
+$ cat data/article-ui.xml 
+  <object class="GtkFileChooserDialog" id="filechooserdialog1">
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox1">
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
+            <child>
+              <object class="GtkButton" id="button1">
+                <property name="can_default">True</property>
+              </object>
+	    </child>
+	  </object>
+	</child>
+      </object>
+    </child>
+  </object>
+$

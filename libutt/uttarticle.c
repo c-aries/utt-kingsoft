@@ -260,7 +260,6 @@ utt_article_init (UttArticle *article)
 
   gtk_widget_set_has_window (GTK_WIDGET (article), TRUE);
   gtk_widget_set_can_focus (GTK_WIDGET (article), TRUE);
-  gtk_widget_set_can_default (GTK_WIDGET (article), TRUE);
 
   priv = UTT_ARTICLE_GET_PRIVATE (article);
   priv->data = NULL;
