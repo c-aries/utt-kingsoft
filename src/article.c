@@ -17,7 +17,6 @@ main (int argc, char *argv[])
 
   utt_set_locale ();
 
-  g_print ("Universal Typing Training %s Module\n", _("Artical"));
   gtk_init (&argc, &argv);
 
   g_debug("PKGDATADIR %s", PKGDATADIR);
