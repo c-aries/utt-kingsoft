@@ -29,6 +29,8 @@ main (int argc, char *argv[])
     g_error ("Can't get %s from %s", "window1", UIFILE);
   }
 
+  
+
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));
 

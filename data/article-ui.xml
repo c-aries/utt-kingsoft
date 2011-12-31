@@ -6,7 +6,7 @@
   <object class="GtkWindow" id="window1">
     <property name="width_request">640</property>
     <property name="height_request">320</property>
-    <property name="title" translatable="yes">Artical Typing Traning</property>
+    <property name="title" translatable="yes">Article Typing Traning</property>
     <property name="window_position">center</property>
     <property name="default_width">640</property>
     <property name="default_height">320</property>
@@ -21,7 +21,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Artical(_A)</property>
+                <property name="label" translatable="yes">Article(_A)</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu1">

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: utt 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-01 00:42+0800\n"
-"PO-Revision-Date: 2012-01-01 00:44+0800\n"
+"POT-Creation-Date: 2012-01-01 00:53+0800\n"
+"PO-Revision-Date: 2012-01-01 00:52+0800\n"
 "Last-Translator: c-aries <babyaries2@gmail.com>\n"
 "Language-Team: Chinese (simplified)\n"
 "Language: zh_CN\n"
@@ -22,11 +22,11 @@ msgid "About(_A)"
 msgstr "关于(_A)"
 
 #: ../data/article-ui.xml.h:2
-msgid "Artical Typing Traning"
+msgid "Article Typing Traning"
 msgstr "文章打字训练"
 
 #: ../data/article-ui.xml.h:3
-msgid "Artical(_A)"
+msgid "Article(_A)"
 msgstr "文章(_A)"
 
 #: ../data/article-ui.xml.h:4
