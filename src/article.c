@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <glib/gstdio.h>
 #include <utt/article.h>
 #include "common.h"
 
@@ -9,14 +10,35 @@
 
 #define UIFILE PKGDATADIR "/article-ui.xml"
 
+#if (GLIB_MAJOR_VERSION >= 2 && GLIB_MINOR_VERSION >= 26)
+static void
+test (FILE *fp, GStatBuf *buf)
+#else
+static void
+test (FILE *fp, struct stat *buf)
+#endif
+{
+  
+  fclose (fp);
+}
+
 static void
 on_open_item_activate (GtkMenuItem *menuitem, gpointer user_data)
 {
   GtkWidget *chooser = user_data;
+  FILE *fp;
+#if (GLIB_MAJOR_VERSION >= 2 && GLIB_MINOR_VERSION >= 26)
+  GStatBuf buf;
+#else
+  struct stat buf;
+#endif
   gchar *filename;
 
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT) {
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+    fp = g_fopen (filename, "r");
+    g_stat (filename, &buf);
+    test (fp, &buf);
     g_print ("open %s\n", filename);
     g_free (filename);
   }
