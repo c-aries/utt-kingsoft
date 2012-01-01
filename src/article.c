@@ -10,35 +10,31 @@
 
 #define UIFILE PKGDATADIR "/article-ui.xml"
 
-#if (GLIB_MAJOR_VERSION >= 2 && GLIB_MINOR_VERSION >= 26)
+static GtkTextBuffer *buffer;
+
 static void
-test (FILE *fp, GStatBuf *buf)
-#else
-static void
-test (FILE *fp, struct stat *buf)
-#endif
+test2 (gchar *filename)
 {
-  g_print ("size %ld\n", buf->st_size);
-  fclose (fp);
+  GtkTextIter iter;
+  gchar *contents;
+  gsize length;
+
+  if (g_file_get_contents (filename, &contents, &length, NULL)) {
+    gtk_text_buffer_get_iter_at_offset (buffer, &iter, 0);
+    gtk_text_buffer_insert (buffer, &iter, contents, -1);
+    g_free (contents);
+  }
 }
 
 static void
 on_open_item_activate (GtkMenuItem *menuitem, gpointer user_data)
 {
   GtkWidget *chooser = user_data;
-  FILE *fp;
-#if (GLIB_MAJOR_VERSION >= 2 && GLIB_MINOR_VERSION >= 26)
-  GStatBuf buf;
-#else
-  struct stat buf;
-#endif
   gchar *filename;
 
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT) {
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-    fp = g_fopen (filename, "r");
-    g_stat (filename, &buf);
-    test (fp, &buf);
+    test2 (filename);
     g_print ("open %s\n", filename);
     g_free (filename);
   }
@@ -50,6 +46,7 @@ main (int argc, char *argv[])
 {
   GtkBuilder *builder;
   GtkWidget *window, *open_item, *chooser;
+  GtkTextView *textview;
 
   utt_set_locale ();
 
@@ -71,6 +68,8 @@ main (int argc, char *argv[])
   open_item = GTK_WIDGET (gtk_builder_get_object (builder, "imagemenuitem2"));
   g_signal_connect (open_item, "activate", G_CALLBACK (on_open_item_activate), chooser);
 
+  textview = GTK_TEXT_VIEW (gtk_builder_get_object (builder, "textview1"));
+  buffer = gtk_text_view_get_buffer (textview);
 
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));
