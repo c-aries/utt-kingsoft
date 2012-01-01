@@ -69,6 +69,7 @@ AC_CONFIG_FILES([Makefile
 		libutt.pc
 		data/Makefile
 		data/utt.desktop.in
+		data/logo/Makefile
 		data/icons/Makefile
 		data/icons/48x48/Makefile
 		data/icons/48x48/apps/Makefile

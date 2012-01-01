@@ -1,4 +1,4 @@
-SUBDIRS = icons
+SUBDIRS = icons logo
 
 desktopdir = $(datadir)/applications
 desktop_in_files = utt.desktop.in

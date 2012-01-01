@@ -10,6 +10,7 @@
     <property name="window_position">center</property>
     <property name="default_width">640</property>
     <property name="default_height">320</property>
+    <property name="icon">utt-logo.png</property>
     <signal name="destroy" handler="gtk_main_quit"/>
     <child>
       <object class="GtkVBox" id="vbox1">

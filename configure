@@ -11655,7 +11655,7 @@ done
 
 # Checks for library functions.
 
-ac_config_files="$ac_config_files Makefile libutt.pc data/Makefile data/utt.desktop.in data/icons/Makefile data/icons/48x48/Makefile data/icons/48x48/apps/Makefile po/Makefile.in include/Makefile include/utt/Makefile libutt/Makefile glade/Makefile src/Makefile"
+ac_config_files="$ac_config_files Makefile libutt.pc data/Makefile data/utt.desktop.in data/logo/Makefile data/icons/Makefile data/icons/48x48/Makefile data/icons/48x48/apps/Makefile po/Makefile.in include/Makefile include/utt/Makefile libutt/Makefile glade/Makefile src/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -12650,6 +12650,7 @@ do
     "libutt.pc") CONFIG_FILES="$CONFIG_FILES libutt.pc" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
     "data/utt.desktop.in") CONFIG_FILES="$CONFIG_FILES data/utt.desktop.in" ;;
+    "data/logo/Makefile") CONFIG_FILES="$CONFIG_FILES data/logo/Makefile" ;;
     "data/icons/Makefile") CONFIG_FILES="$CONFIG_FILES data/icons/Makefile" ;;
     "data/icons/48x48/Makefile") CONFIG_FILES="$CONFIG_FILES data/icons/48x48/Makefile" ;;
     "data/icons/48x48/apps/Makefile") CONFIG_FILES="$CONFIG_FILES data/icons/48x48/apps/Makefile" ;;
