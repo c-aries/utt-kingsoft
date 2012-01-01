@@ -18,7 +18,7 @@ static void
 test (FILE *fp, struct stat *buf)
 #endif
 {
-  
+  g_print ("size %ld\n", buf->st_size);
   fclose (fp);
 }
 
