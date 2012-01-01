@@ -45,8 +45,9 @@ int
 main (int argc, char *argv[])
 {
   GtkBuilder *builder;
-  GtkWidget *window, *open_item, *chooser;
+  GtkWidget *window, *open_item, *chooser, *article;
   GtkTextView *textview;
+  gint border = 0;
 
   utt_set_locale ();
 
@@ -70,6 +71,12 @@ main (int argc, char *argv[])
 
   textview = GTK_TEXT_VIEW (gtk_builder_get_object (builder, "textview1"));
   buffer = gtk_text_view_get_buffer (textview);
+
+  article = GTK_WIDGET (gtk_builder_get_object (builder, "article1"));
+  g_object_get (G_OBJECT (article),
+		"border", &border,
+		NULL);
+  g_print ("border %d\n", border);
 
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));

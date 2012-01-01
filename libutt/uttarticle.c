@@ -1,5 +1,6 @@
 #include <utt/article.h>
 #include <gtk/gtkbindings.h>
+#include <gtk/gtkprivate.h>
 
 #define DEBUG
 
@@ -7,9 +8,29 @@ typedef struct {
   void *data;
 } UttArticlePrivate;
 
+enum {
+  PROP_0,
+  PROP_BORDER,
+};
+
 #define UTT_ARTICLE_GET_PRIVATE(obj)	G_TYPE_INSTANCE_GET_PRIVATE((obj), UTT_TYPE_ARTICLE, UttArticlePrivate)
 
+static void utt_article_get_property (GObject *object,
+				      guint prop_id,
+				      GValue *value,
+				      GParamSpec *pspec);
+static void utt_article_set_property (GObject *object,
+				      guint prop_id,
+				      const GValue *value,
+				      GParamSpec *pspec);
+
 G_DEFINE_TYPE(UttArticle, utt_article, GTK_TYPE_WIDGET);
+
+gboolean
+utt_article_open_file (UttArticle *article, gchar *filename)
+{
+  return TRUE;
+}
 
 /* when gtk_widget_set_has_window () set TRUE, should implement this function */
 /* learn from gtkeventbox.c */
@@ -229,11 +250,59 @@ utt_article_focus_out (GtkWidget *widget,
 }
 
 static void
+utt_article_get_property (GObject *object,
+			  guint prop_id,
+			  GValue *value,
+			  GParamSpec *pspec)
+{
+  UttArticle *article = UTT_ARTICLE (object);
+
+  switch (prop_id) {
+  case PROP_BORDER:
+    g_value_set_uint (value, article->border);
+    break;
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    break;
+  }
+}
+
+static void
+utt_article_set_property (GObject *object,
+			  guint prop_id,
+			  const GValue *value,
+			  GParamSpec *pspec)
+{
+  UttArticle *article = UTT_ARTICLE (object);
+
+  switch (prop_id) {
+  case PROP_BORDER:
+    article->border = g_value_get_uint (value);
+    break;
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    break;
+  }
+}
+
+static void
 utt_article_class_init (UttArticleClass *class)
 {
-/*   GObjectClass *gobject_class = G_OBJECT_CLASS(class); */
+  GObjectClass *gobject_class = G_OBJECT_CLASS(class);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(class);
 /*   GtkBindingSet *binding_set; */
+
+  gobject_class->get_property = utt_article_get_property;
+  gobject_class->set_property = utt_article_set_property;
+  g_object_class_install_property (gobject_class,
+				   PROP_BORDER,
+				   g_param_spec_uint ("border",
+						      "Border",
+						      "The border of article widget",
+						      1,
+						      65535,
+						      2,
+						      GTK_PARAM_READWRITE));
 
   widget_class->realize = utt_article_realize;
   widget_class->unrealize = utt_article_unrealize;
@@ -260,6 +329,8 @@ utt_article_init (UttArticle *article)
 
   gtk_widget_set_has_window (GTK_WIDGET (article), TRUE);
   gtk_widget_set_can_focus (GTK_WIDGET (article), TRUE);
+
+  article->border = 2;
 
   priv = UTT_ARTICLE_GET_PRIVATE (article);
   priv->data = NULL;

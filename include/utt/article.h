@@ -6,7 +6,7 @@
 G_BEGIN_DECLS
 
 #define UTT_TYPE_ARTICLE	(utt_article_get_type ())
-#define UTT_ARTICLE(obj)	(G_TYPE_CHECK_INSTANCE_CAST ((obj), UTT_TYPE_ARTICLE, GttArticle))
+#define UTT_ARTICLE(obj)	(G_TYPE_CHECK_INSTANCE_CAST ((obj), UTT_TYPE_ARTICLE, UttArticle))
 #define UTT_ARTICLE_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass), UTT_TYPE_ARTICLE, UttArticleClass))
 #define UTT_IS_ARTICLE(obj)	(G_TYPE_CHECK_INSTANCE_TYPE ((obj), UTT_TYPE_ARTICLE))
 #define UTT_IS_ARTICLE_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), UTT_TYPE_ARTICLE))
@@ -17,6 +17,7 @@ typedef struct _UttArticleClass UttArticleClass;
 
 struct _UttArticle {
   GtkWidget widget;
+  guint16 border;
 };
 
 struct _UttArticleClass {
@@ -25,6 +26,7 @@ struct _UttArticleClass {
 
 GType utt_article_get_type() G_GNUC_CONST;
 GtkWidget *utt_article_new();
+gboolean utt_article_open_file (UttArticle *article, gchar *filename);
 
 G_END_DECLS
 
