@@ -11,6 +11,7 @@
 #define UIFILE PKGDATADIR "/article-ui.xml"
 
 static GtkTextBuffer *buffer;
+static GtkWidget *article;
 
 static void
 test2 (gchar *filename)
@@ -36,6 +37,7 @@ on_open_item_activate (GtkMenuItem *menuitem, gpointer user_data)
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
     test2 (filename);
     g_print ("open %s\n", filename);
+    utt_article_open_file (UTT_ARTICLE (article), filename);
     g_free (filename);
   }
   gtk_widget_hide (chooser);
@@ -45,7 +47,7 @@ int
 main (int argc, char *argv[])
 {
   GtkBuilder *builder;
-  GtkWidget *window, *open_item, *chooser, *article;
+  GtkWidget *window, *open_item, *chooser;
   GtkTextView *textview;
   gint border = 0;
 

@@ -29,6 +29,16 @@ G_DEFINE_TYPE(UttArticle, utt_article, GTK_TYPE_WIDGET);
 gboolean
 utt_article_open_file (UttArticle *article, gchar *filename)
 {
+  gchar *contents;
+  gsize length;
+
+  g_return_if_fail (UTT_IS_ARTICLE (article));
+
+  if (g_file_get_contents (filename, &contents, &length, NULL)) {
+    g_print ("%s", contents);
+    g_free (contents);
+  }
+
   return TRUE;
 }
 
