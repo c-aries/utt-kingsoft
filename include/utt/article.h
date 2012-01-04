@@ -27,6 +27,7 @@ struct _UttArticleClass {
 GType utt_article_get_type() G_GNUC_CONST;
 GtkWidget *utt_article_new();
 gboolean utt_article_open_file (UttArticle *article, gchar *filename);
+void utt_article_close_file (UttArticle *article);
 
 G_END_DECLS
 

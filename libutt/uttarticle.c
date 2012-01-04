@@ -6,6 +6,7 @@
 #define DEBUG
 
 typedef struct {
+  gchar *text;
   void *data;
 } UttArticlePrivate;
 
@@ -27,17 +28,41 @@ static void utt_article_set_property (GObject *object,
 
 G_DEFINE_TYPE(UttArticle, utt_article, GTK_TYPE_WIDGET);
 
-gboolean
-utt_article_open_file (UttArticle *article, gchar *filename)
+void
+utt_article_close_file (UttArticle *article)
 {
-  gchar *contents, *p, *ret;
-  gchar word[4];
-  gsize length, len;
+  UttArticlePrivate *priv;
 
   g_return_if_fail (UTT_IS_ARTICLE (article));
 
+  priv = UTT_ARTICLE_GET_PRIVATE (article);
+  if (priv->text) {
+    g_free (priv->text);
+    priv->text = NULL;
+  }
+}
+
+gboolean
+utt_article_open_file (UttArticle *article, gchar *filename)
+{
+  UttArticlePrivate *priv;
+  gchar *contents, *p, *ret;
+  gchar word[4];
+  gsize length, len;
+/*   gboolean retval; */
+
+  g_return_val_if_fail (UTT_IS_ARTICLE (article), FALSE);
+
+  priv = UTT_ARTICLE_GET_PRIVATE (article);
+  if (priv->text) {
+    g_free (priv->text);
+    priv->text = NULL;
+  }
+
   if (g_file_get_contents (filename, &contents, &length, NULL)) {
-    g_print ("%s\n", contents);
+    priv->text = contents;
+/*     g_signal_emit_by_name (GTK_WIDGET (article), "expose-event", TRUE, &retval); */
+    gtk_widget_queue_draw (GTK_WIDGET (article));
     p = contents;
     do {
       g_utf8_strncpy (word, p, 1);
@@ -45,7 +70,6 @@ utt_article_open_file (UttArticle *article, gchar *filename)
       len = strlen (word);
       p += len;
     } while (len);
-    g_free (contents);
   }
 
   return TRUE;
@@ -140,10 +164,21 @@ utt_article_unmap (GtkWidget *widget)
 static gboolean
 utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 {
+  UttArticlePrivate *priv;
   cairo_t *cairo;
   GdkColor color;
-  gint utt_article_width, utt_article_height;
+  cairo_font_extents_t fe;
+  cairo_text_extents_t te;
+  gint utt_article_width, utt_article_height, len;
+  gchar word[4], *p;
+  gint rel_x = 20;
 
+  g_return_val_if_fail (UTT_IS_ARTICLE (widget), FALSE);
+#ifdef DEBUG
+  g_debug (G_STRFUNC);
+#endif
+
+  priv = UTT_ARTICLE_GET_PRIVATE (widget);
   if (gtk_widget_is_drawable (widget)) {
     utt_article_width = widget->allocation.width;
     utt_article_height = widget->allocation.height;
@@ -154,6 +189,28 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
     gdk_cairo_set_source_color (cairo, &color);
     cairo_rectangle (cairo, 6, 6, utt_article_width - 12, utt_article_height - 12);
     cairo_fill (cairo);
+
+    if (priv->text) {
+      gdk_color_parse ("black", &color);
+      gdk_cairo_set_source_color (cairo, &color);
+      cairo_set_line_width (cairo, 16.0);
+      cairo_set_font_size (cairo, 16.0);
+      cairo_select_font_face (cairo, "Georgia", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+      cairo_font_extents (cairo, &fe);
+      p = priv->text;
+      
+      do {
+	g_utf8_strncpy (word, p, 1);
+	if (!(len = strlen (word))) {
+	  break;
+	}
+	p += len;
+	cairo_text_extents (cairo, word, &te);
+	cairo_move_to (cairo, rel_x, 40);
+	cairo_show_text (cairo, word);
+	rel_x += te.x_advance;
+      } while (len);
+    }
 
     cairo_destroy (cairo);
   }
@@ -360,6 +417,7 @@ utt_article_init (UttArticle *article)
   article->border = 2;
 
   priv = UTT_ARTICLE_GET_PRIVATE (article);
+  priv->text = NULL;
   priv->data = NULL;
 }
 
