@@ -196,7 +196,11 @@ utt_article_key_press (GtkWidget *widget,
 #endif
     cairo_move_to (cairo, rel_x, 40);
     cairo_show_text (cairo, word);
+#if 1
+    rel_x += te.x_advance;
+#else
     rel_x += te.x_advance + (te.x_bearing < 0 ? -te.x_bearing : 0);
+#endif
     if (te.x_bearing < 0) {
 #ifdef DEBUG
       g_debug ("xbear %lf", te.x_bearing);
@@ -207,7 +211,11 @@ utt_article_key_press (GtkWidget *widget,
       cairo_text_extents (cairo, oops, &te);
       cairo_move_to (cairo, rel_x, 40);
       cairo_show_text (cairo, oops);
+#if 1
+      rel_x += te.x_advance;
+#else
       rel_x += te.x_advance + (te.x_bearing < 0 ? -te.x_bearing : 0);
+#endif
       oops_flag = TRUE;
     }
 
