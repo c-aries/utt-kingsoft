@@ -1,6 +1,7 @@
 #include <utt/article.h>
 #include <gtk/gtkbindings.h>
 #include <gtk/gtkprivate.h>
+#include <string.h>
 
 #define DEBUG
 
@@ -29,13 +30,21 @@ G_DEFINE_TYPE(UttArticle, utt_article, GTK_TYPE_WIDGET);
 gboolean
 utt_article_open_file (UttArticle *article, gchar *filename)
 {
-  gchar *contents;
-  gsize length;
+  gchar *contents, *p, *ret;
+  gchar word[4];
+  gsize length, len;
 
   g_return_if_fail (UTT_IS_ARTICLE (article));
 
   if (g_file_get_contents (filename, &contents, &length, NULL)) {
-    g_print ("%s", contents);
+    g_print ("%s\n", contents);
+    p = contents;
+    do {
+      g_utf8_strncpy (word, p, 1);
+      g_print ("%s %d\n", word, strlen (word));
+      len = strlen (word);
+      p += len;
+    } while (len);
     g_free (contents);
   }
 

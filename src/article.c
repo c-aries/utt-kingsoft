@@ -10,22 +10,7 @@
 
 #define UIFILE PKGDATADIR "/article-ui.xml"
 
-static GtkTextBuffer *buffer;
 static GtkWidget *article;
-
-static void
-test2 (gchar *filename)
-{
-  GtkTextIter iter;
-  gchar *contents;
-  gsize length;
-
-  if (g_file_get_contents (filename, &contents, &length, NULL)) {
-    gtk_text_buffer_get_iter_at_offset (buffer, &iter, 0);
-    gtk_text_buffer_insert (buffer, &iter, contents, -1);
-    g_free (contents);
-  }
-}
 
 static void
 on_open_item_activate (GtkMenuItem *menuitem, gpointer user_data)
@@ -35,7 +20,6 @@ on_open_item_activate (GtkMenuItem *menuitem, gpointer user_data)
 
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT) {
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
-    test2 (filename);
     g_print ("open %s\n", filename);
     utt_article_open_file (UTT_ARTICLE (article), filename);
     g_free (filename);
@@ -48,7 +32,6 @@ main (int argc, char *argv[])
 {
   GtkBuilder *builder;
   GtkWidget *window, *open_item, *chooser;
-  GtkTextView *textview;
   gint border = 0;
 
   utt_set_locale ();
@@ -70,9 +53,6 @@ main (int argc, char *argv[])
 
   open_item = GTK_WIDGET (gtk_builder_get_object (builder, "imagemenuitem2"));
   g_signal_connect (open_item, "activate", G_CALLBACK (on_open_item_activate), chooser);
-
-  textview = GTK_TEXT_VIEW (gtk_builder_get_object (builder, "textview1"));
-  buffer = gtk_text_view_get_buffer (textview);
 
   article = GTK_WIDGET (gtk_builder_get_object (builder, "article1"));
   g_object_get (G_OBJECT (article),
