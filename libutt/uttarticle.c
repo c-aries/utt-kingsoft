@@ -1,6 +1,7 @@
 #include <utt/article.h>
 #include <gtk/gtkbindings.h>
 #include <gtk/gtkprivate.h>
+#include <gconf/gconf-client.h>
 #include <string.h>
 
 #define DEBUG
@@ -45,11 +46,14 @@ utt_article_close_file (UttArticle *article)
 gboolean
 utt_article_open_file (UttArticle *article, gchar *filename)
 {
+#define DEFAULT_MONOSPACE_FONT "Monospace 10"
+  PangoFontDescription *font_desc;
   UttArticlePrivate *priv;
-  gchar *contents, *p, *ret;
-  gchar word[4];
-  gsize length, len;
-/*   gboolean retval; */
+  gchar *contents;
+  gsize length;
+  GConfClient *conf;
+  GConfValue *value;
+  const gchar *font;
 
   g_return_val_if_fail (UTT_IS_ARTICLE (article), FALSE);
 
@@ -61,18 +65,26 @@ utt_article_open_file (UttArticle *article, gchar *filename)
 
   if (g_file_get_contents (filename, &contents, &length, NULL)) {
     priv->text = contents;
-/*     g_signal_emit_by_name (GTK_WIDGET (article), "expose-event", TRUE, &retval); */
     gtk_widget_queue_draw (GTK_WIDGET (article));
-    p = contents;
-    do {
-      g_utf8_strncpy (word, p, 1);
-      g_print ("%s %d\n", word, strlen (word));
-      len = strlen (word);
-      p += len;
-    } while (len);
+  }
+
+  conf = gconf_client_get_default ();
+  value = gconf_client_get (conf, "/desktop/gnome/interface/monospace_font_name", NULL);
+  if (value && value->type == GCONF_VALUE_STRING) {
+    font = gconf_value_get_string (value);
+    if (!font) {
+      font = DEFAULT_MONOSPACE_FONT;
+    }
+    g_print ("%s\n", font);
+    font_desc = pango_font_description_from_string (font);
+    if (font_desc) {
+      pango_font_description_free (font_desc);
+      g_print ("%s\n", pango_font_description_get_family (font_desc));
+    }
   }
 
   return TRUE;
+#undef DEFAULT_MONOSPACE_FONT
 }
 
 /* when gtk_widget_set_has_window () set TRUE, should implement this function */
@@ -209,6 +221,7 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 	cairo_move_to (cairo, rel_x, 40);
 	cairo_show_text (cairo, word);
 	rel_x += te.x_advance;
+	g_print ("advance %lf\n", te.x_advance);
       } while (len);
     }
 

@@ -27,7 +27,7 @@ LT_INIT()
 
 # Checks for libraries.
 # Debian 6.0
-GTK_MODULES="gtk+-2.0 >= 2.20.1 glib-2.0 >= 2.24.2"
+GTK_MODULES="gtk+-2.0 >= 2.20.1 glib-2.0 >= 2.24.2 gconf-2.0 pangocairo"
 PKG_CHECK_MODULES(GTK,$GTK_MODULES)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
