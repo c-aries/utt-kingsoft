@@ -169,7 +169,8 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
   GdkColor color;
   gint utt_article_width, utt_article_height, len, width, height;
   gchar word[4], *p;
-  gint rel_x , border;
+  gdouble rel_x, rel_y, height_4, height_2, width_1;
+  gint border, end_x, end_y;
 
 #ifdef DEBUG
   g_debug (G_STRFUNC);
@@ -182,6 +183,8 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
   if (gtk_widget_is_drawable (widget)) {
     utt_article_width = widget->allocation.width;
     utt_article_height = widget->allocation.height;
+    end_x = utt_article_width - border;
+    end_y = utt_article_height - border;
 
     cairo = gdk_cairo_create (widget->window);
 
@@ -195,7 +198,11 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
       pango_layout_set_font_description (layout, priv->font_desc);
       cairo_set_source_rgb (cairo, 0.0, 0.0, 0.0);
       p = priv->text;
-      rel_x = border;
+      rel_x = rel_y = border;
+      pango_layout_set_text (layout, "六", -1);
+      pango_layout_get_size (layout, NULL, &height);
+      height_2 = 2 * (gdouble)height / PANGO_SCALE;
+      height_4 = 4 * (gdouble)height / PANGO_SCALE;
       do {
 	g_utf8_strncpy (word, p, 1);
 	if (!(len = strlen (word))) {
@@ -203,9 +210,25 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 	}
 	p += len;
 	pango_layout_set_text (layout, word, -1);
-	pango_layout_get_size (layout, &width, &height);
-	cairo_move_to (cairo, rel_x, border);
-	rel_x += (gdouble)width / PANGO_SCALE;
+	pango_layout_get_size (layout, &width, NULL);	
+	width_1 = (gdouble)width / PANGO_SCALE;
+	if (len == 1 && word[0] == '\n') {
+	  if (rel_y + height_4 > end_y) {
+	    break;
+	  }
+	  rel_y += height_2;
+	  rel_x = border;
+	  continue;
+	}
+	if (rel_x + width_1 > end_x)  {
+	  rel_x = border;
+	  if (rel_y + height_4 > end_y) {
+	    break;
+	  }
+	  rel_y += height_2;
+	}
+	cairo_move_to (cairo, rel_x, rel_y);
+	rel_x += width_1;
 	pango_cairo_show_layout (cairo, layout);
       } while (len);
       g_object_unref (layout);
