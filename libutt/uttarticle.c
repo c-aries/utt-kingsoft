@@ -1,12 +1,15 @@
 #include <utt/article.h>
 #include <gtk/gtkbindings.h>
 #include <gtk/gtkprivate.h>
+#include <pango/pangocairo.h>
 #include <gconf/gconf-client.h>
 #include <string.h>
 
 #define DEBUG
+#define DEFAULT_MONOSPACE_FONT "Monospace 10"
 
 typedef struct {
+  PangoFontDescription *font_desc;
   gchar *text;
   void *data;
 } UttArticlePrivate;
@@ -46,13 +49,9 @@ utt_article_close_file (UttArticle *article)
 gboolean
 utt_article_open_file (UttArticle *article, gchar *filename)
 {
-#define DEFAULT_MONOSPACE_FONT "Monospace 10"
-  PangoFontDescription *font_desc;
   UttArticlePrivate *priv;
   gchar *contents;
   gsize length;
-  GConfClient *conf;
-  GConfValue *value;
   const gchar *font;
 
   g_return_val_if_fail (UTT_IS_ARTICLE (article), FALSE);
@@ -68,23 +67,7 @@ utt_article_open_file (UttArticle *article, gchar *filename)
     gtk_widget_queue_draw (GTK_WIDGET (article));
   }
 
-  conf = gconf_client_get_default ();
-  value = gconf_client_get (conf, "/desktop/gnome/interface/monospace_font_name", NULL);
-  if (value && value->type == GCONF_VALUE_STRING) {
-    font = gconf_value_get_string (value);
-    if (!font) {
-      font = DEFAULT_MONOSPACE_FONT;
-    }
-    g_print ("%s\n", font);
-    font_desc = pango_font_description_from_string (font);
-    if (font_desc) {
-      pango_font_description_free (font_desc);
-      g_print ("%s\n", pango_font_description_get_family (font_desc));
-    }
-  }
-
   return TRUE;
-#undef DEFAULT_MONOSPACE_FONT
 }
 
 /* when gtk_widget_set_has_window () set TRUE, should implement this function */
@@ -176,20 +159,22 @@ utt_article_unmap (GtkWidget *widget)
 static gboolean
 utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 {
+  UttArticle *article;
   UttArticlePrivate *priv;
+  PangoLayout *layout;
   cairo_t *cairo;
   GdkColor color;
-  cairo_font_extents_t fe;
-  cairo_text_extents_t te;
-  gint utt_article_width, utt_article_height, len;
+  gint utt_article_width, utt_article_height, len, width, height;
   gchar word[4], *p;
-  gint rel_x = 20;
+  gint rel_x , border;
 
-  g_return_val_if_fail (UTT_IS_ARTICLE (widget), FALSE);
 #ifdef DEBUG
   g_debug (G_STRFUNC);
 #endif
+  g_return_val_if_fail (UTT_IS_ARTICLE (widget), FALSE);
 
+  article = UTT_ARTICLE (widget);
+  border = article->border;
   priv = UTT_ARTICLE_GET_PRIVATE (widget);
   if (gtk_widget_is_drawable (widget)) {
     utt_article_width = widget->allocation.width;
@@ -199,30 +184,28 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 
     gdk_color_parse ("yellow", &color);
     gdk_cairo_set_source_color (cairo, &color);
-    cairo_rectangle (cairo, 6, 6, utt_article_width - 12, utt_article_height - 12);
+    cairo_rectangle (cairo, border, border, utt_article_width - border, utt_article_height - border);
     cairo_fill (cairo);
 
     if (priv->text) {
-      gdk_color_parse ("black", &color);
-      gdk_cairo_set_source_color (cairo, &color);
-      cairo_set_line_width (cairo, 16.0);
-      cairo_set_font_size (cairo, 16.0);
-      cairo_select_font_face (cairo, "Georgia", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-      cairo_font_extents (cairo, &fe);
+      layout = pango_cairo_create_layout (cairo);
+      pango_layout_set_font_description (layout, priv->font_desc);
+      cairo_set_source_rgb (cairo, 0.0, 0.0, 0.0);
       p = priv->text;
-      
+      rel_x = border;
       do {
 	g_utf8_strncpy (word, p, 1);
 	if (!(len = strlen (word))) {
 	  break;
 	}
 	p += len;
-	cairo_text_extents (cairo, word, &te);
-	cairo_move_to (cairo, rel_x, 40);
-	cairo_show_text (cairo, word);
-	rel_x += te.x_advance;
-	g_print ("advance %lf\n", te.x_advance);
+	pango_layout_set_text (layout, word, -1);
+	pango_layout_get_size (layout, &width, &height);
+	cairo_move_to (cairo, rel_x, border);
+	rel_x += (gdouble)width / PANGO_SCALE;
+	pango_cairo_show_layout (cairo, layout);
       } while (len);
+      g_object_unref (layout);
     }
 
     cairo_destroy (cairo);
@@ -238,6 +221,8 @@ utt_article_key_press (GtkWidget *widget,
   g_debug (G_STRFUNC);
   g_debug ("%08x", event->keyval);
 #endif
+
+  g_return_val_if_fail (UTT_IS_ARTICLE (widget), TRUE);
 
   if (gtk_widget_is_drawable (widget)) {
     cairo_t *cairo;
@@ -383,6 +368,27 @@ utt_article_set_property (GObject *object,
 }
 
 static void
+utt_article_finalize (GObject *object)
+{
+  UttArticlePrivate *priv;
+
+  g_return_if_fail (UTT_IS_ARTICLE (object));
+
+  g_debug (G_STRFUNC);
+  priv = UTT_ARTICLE_GET_PRIVATE (object);
+  if (priv->text) {
+    g_free (priv->text);
+    priv->text = NULL;
+  }
+  if (priv->font_desc) {
+    pango_font_description_free (priv->font_desc);
+    priv->font_desc = NULL;
+  }
+
+  G_OBJECT_CLASS (utt_article_parent_class)->finalize (object);
+}
+
+static void
 utt_article_class_init (UttArticleClass *class)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS(class);
@@ -391,6 +397,7 @@ utt_article_class_init (UttArticleClass *class)
 
   gobject_class->get_property = utt_article_get_property;
   gobject_class->set_property = utt_article_set_property;
+  gobject_class->finalize = utt_article_finalize;
   g_object_class_install_property (gobject_class,
 				   PROP_BORDER,
 				   g_param_spec_uint ("border",
@@ -423,6 +430,9 @@ static void
 utt_article_init (UttArticle *article)
 {
   UttArticlePrivate *priv;
+  GConfClient *conf;
+  GConfValue *value;
+  gchar *font;
 
   gtk_widget_set_has_window (GTK_WIDGET (article), TRUE);
   gtk_widget_set_can_focus (GTK_WIDGET (article), TRUE);
@@ -432,12 +442,28 @@ utt_article_init (UttArticle *article)
   priv = UTT_ARTICLE_GET_PRIVATE (article);
   priv->text = NULL;
   priv->data = NULL;
+  priv->font_desc = NULL;
+
+  conf = gconf_client_get_default ();
+  value = gconf_client_get (conf, "/desktop/gnome/interface/monospace_font_name", NULL);
+  if (value && value->type == GCONF_VALUE_STRING) {
+    font = gconf_value_get_string (value);
+  }
+  if (!font) {
+    font = DEFAULT_MONOSPACE_FONT;
+  }
+  priv->font_desc = pango_font_description_from_string (font);
+  pango_font_description_set_weight (priv->font_desc, PANGO_WEIGHT_BOLD);
+  pango_font_description_set_absolute_size (priv->font_desc, 16 * PANGO_SCALE);
+  g_object_unref (conf);
 }
 
 GtkWidget *
 utt_article_new ()
 {
   UttArticle *article;
+
+  g_debug (G_STRFUNC);
 
   article = g_object_new (UTT_TYPE_ARTICLE,
 			  NULL);
