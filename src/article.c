@@ -11,22 +11,27 @@
 #define UIFILE PKGDATADIR "/article-ui.xml"
 
 static GtkWidget *article;
-static GtkWidget *window;
 
 static void
 on_open_item_activate (GtkMenuItem *menuitem, gpointer user_data)
 {
-  GtkWidget *chooser = user_data;
-  GtkWidget *msg;
+  GtkWindow *window = user_data;
+  GtkWidget *msg, *chooser;
   gchar *filename = NULL;
   gboolean ret = TRUE;
 
+  chooser = gtk_file_chooser_dialog_new (_("Choose a file"),
+					 window,
+					 GTK_FILE_CHOOSER_ACTION_OPEN,
+					 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+					 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					 NULL);
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT) {
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
     g_print ("open %s\n", filename);
     ret = utt_article_open_file (UTT_ARTICLE (article), filename);
   }
-  gtk_widget_hide (chooser);
+  gtk_widget_destroy (chooser);
   if (!ret) {
     msg = gtk_message_dialog_new (GTK_WINDOW (window),
 				  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -45,7 +50,7 @@ int
 main (int argc, char *argv[])
 {
   GtkBuilder *builder;
-  GtkWidget *open_item, *chooser;
+  GtkWidget *window, *open_item;
   gint border = 0;
 
   utt_set_locale ();
@@ -62,11 +67,10 @@ main (int argc, char *argv[])
     g_error ("Can't get %s from %s", "window1", UIFILE);
   }
 
-  chooser = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserdialog1"));
-  gtk_widget_set_can_default (window, TRUE);
+/*   gtk_widget_set_can_default (window, TRUE); */
 
   open_item = GTK_WIDGET (gtk_builder_get_object (builder, "imagemenuitem2"));
-  g_signal_connect (open_item, "activate", G_CALLBACK (on_open_item_activate), chooser);
+  g_signal_connect (open_item, "activate", G_CALLBACK (on_open_item_activate), window);
 
   article = GTK_WIDGET (gtk_builder_get_object (builder, "article1"));
   g_object_get (G_OBJECT (article),
