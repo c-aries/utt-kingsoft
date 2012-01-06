@@ -57,12 +57,15 @@ utt_article_open_file (UttArticle *article, gchar *filename)
   g_return_val_if_fail (UTT_IS_ARTICLE (article), FALSE);
 
   priv = UTT_ARTICLE_GET_PRIVATE (article);
-  if (priv->text) {
-    g_free (priv->text);
-    priv->text = NULL;
-  }
 
   if (g_file_get_contents (filename, &contents, &length, NULL)) {
+    if (!g_utf8_validate (contents, length, NULL)) {
+      g_free (contents);
+      return FALSE;
+    }
+    if (priv->text) {
+      g_free (priv->text);
+    }
     priv->text = contents;
     gtk_widget_queue_draw (GTK_WIDGET (article));
   }
