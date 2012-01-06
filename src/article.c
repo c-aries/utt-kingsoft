@@ -11,27 +11,41 @@
 #define UIFILE PKGDATADIR "/article-ui.xml"
 
 static GtkWidget *article;
+static GtkWidget *window;
 
 static void
 on_open_item_activate (GtkMenuItem *menuitem, gpointer user_data)
 {
   GtkWidget *chooser = user_data;
-  gchar *filename;
+  GtkWidget *msg;
+  gchar *filename = NULL;
+  gboolean ret = TRUE;
 
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT) {
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
     g_print ("open %s\n", filename);
-    utt_article_open_file (UTT_ARTICLE (article), filename);
-    g_free (filename);
+    ret = utt_article_open_file (UTT_ARTICLE (article), filename);
   }
   gtk_widget_hide (chooser);
+  if (!ret) {
+    msg = gtk_message_dialog_new (GTK_WINDOW (window),
+				  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+				  GTK_MESSAGE_INFO,
+				  GTK_BUTTONS_OK,
+				  _("%s is not a validate UTF-8 file."), filename);
+    gtk_dialog_run (GTK_DIALOG (msg));
+    gtk_widget_destroy (msg);
+  }
+  if (filename) {
+    g_free (filename);
+  }
 }
 
 int
 main (int argc, char *argv[])
 {
   GtkBuilder *builder;
-  GtkWidget *window, *open_item, *chooser;
+  GtkWidget *open_item, *chooser;
   gint border = 0;
 
   utt_set_locale ();
