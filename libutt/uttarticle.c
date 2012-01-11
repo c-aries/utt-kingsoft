@@ -11,8 +11,15 @@
 typedef struct {
   PangoFontDescription *font_desc;
   gchar *text;
+  GArray *array;
+  gint cur, total;
   void *data;
 } UttArticlePrivate;
+
+struct _pos {
+  gdouble x, y;
+  gchar word[4];
+};
 
 enum {
   PROP_0,
@@ -170,7 +177,8 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
   gint utt_article_width, utt_article_height, len, width, height;
   gchar word[4], *p;
   gdouble rel_x, rel_y, height_4, height_2, width_1;
-  gint border, end_x, end_y;
+  gint border, end_x, end_y, num = 0;
+  struct _pos pos;
 
 #ifdef DEBUG
   g_debug (G_STRFUNC);
@@ -228,12 +236,17 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 	  rel_y += height_2;
 	}
 	cairo_move_to (cairo, rel_x, rel_y);
+	pos.x = rel_x;
+	pos.y = rel_y + (gdouble)height / PANGO_SCALE;
+	strncpy (pos.word, word, 4);
+	g_array_insert_val (priv->array, num, pos);
+	num++;
 	rel_x += width_1;
 	pango_cairo_show_layout (cairo, layout);
       } while (len);
       g_object_unref (layout);
     }
-
+    priv->total = num;
     cairo_destroy (cairo);
   }
   return FALSE;
@@ -243,67 +256,41 @@ static gint
 utt_article_key_press (GtkWidget *widget,
 		       GdkEventKey *event)
 {
+  UttArticlePrivate *priv;
+  PangoLayout *layout;
+  struct _pos *pos;
+  cairo_t *cairo;
+  GdkColor color;
+  gchar word[4] = {};
+
 #ifdef DEBUG
   g_debug (G_STRFUNC);
   g_debug ("%08x", event->keyval);
 #endif
 
   g_return_val_if_fail (UTT_IS_ARTICLE (widget), TRUE);
+  priv = UTT_ARTICLE_GET_PRIVATE (widget);
 
-  if (gtk_widget_is_drawable (widget)) {
-    cairo_t *cairo;
-    GdkColor color;
-    gint width = widget->allocation.width;
-    gint height = widget->allocation.height;
-    gchar word[2] = {};
-    gchar oops[4] = {0xe8, 0xb6, 0x8a};
-    cairo_font_extents_t fe;
-    cairo_text_extents_t te;
-    static gint rel_x = 20;
-    static gint oops_flag = FALSE;
-
+  if (priv->text && gtk_widget_is_drawable (widget)) {
     word[0] = event->keyval;
 
     cairo = gdk_cairo_create (widget->window);
-    gdk_color_parse ("black", &color);
+    layout = pango_cairo_create_layout (cairo);
+    pango_layout_set_font_description (layout, priv->font_desc);
+
+    gdk_color_parse ("blue", &color);
     gdk_cairo_set_source_color (cairo, &color);
-    cairo_set_line_width (cairo, 16.0);
-    cairo_set_font_size (cairo, 16.0);
-    cairo_select_font_face (cairo, "Georgia", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-    cairo_font_extents (cairo, &fe);
-    cairo_text_extents (cairo, word, &te);
-#ifdef DEBUG
-    g_debug ("%lf, %lf, %lf", te.width, te.x_bearing, te.x_advance);
-#endif
-    cairo_move_to (cairo, rel_x, 40);
-    cairo_show_text (cairo, word);
-#if 1
-    rel_x += te.x_advance;
-#else
-    rel_x += te.x_advance + (te.x_bearing < 0 ? -te.x_bearing : 0);
-#endif
-    if (te.x_bearing < 0) {
-#ifdef DEBUG
-      g_debug ("xbear %lf", te.x_bearing);
-#endif
+    pango_layout_set_text (layout, word, -1);
+
+    pos = &g_array_index (priv->array ,struct _pos , priv->cur);
+    cairo_move_to (cairo, pos->x, pos->y);
+    priv->cur++;
+    if (priv->cur == priv->total) {
+      g_debug ("next page!");
     }
 
-    if (!oops_flag && rel_x > 100) {
-      cairo_text_extents (cairo, oops, &te);
-      cairo_move_to (cairo, rel_x, 40);
-      cairo_show_text (cairo, oops);
-#if 1
-      rel_x += te.x_advance;
-#else
-      rel_x += te.x_advance + (te.x_bearing < 0 ? -te.x_bearing : 0);
-#endif
-      oops_flag = TRUE;
-    }
-
-#ifdef DEBUG
-    g_debug ("%d, %d", width, height);
-#endif
-
+    pango_cairo_show_layout (cairo, layout);
+    g_object_unref (layout);
     cairo_destroy (cairo);
   }
 
@@ -410,6 +397,9 @@ utt_article_finalize (GObject *object)
     pango_font_description_free (priv->font_desc);
     priv->font_desc = NULL;
   }
+  if (priv->array) {
+    g_array_free (priv->array, TRUE);
+  }
 
   G_OBJECT_CLASS (utt_article_parent_class)->finalize (object);
 }
@@ -482,6 +472,9 @@ utt_article_init (UttArticle *article)
   pango_font_description_set_weight (priv->font_desc, PANGO_WEIGHT_BOLD);
   pango_font_description_set_absolute_size (priv->font_desc, 16 * PANGO_SCALE);
   g_object_unref (conf);
+
+  priv->array = g_array_new (FALSE, TRUE, sizeof (struct _pos));
+  priv->cur = 0;
 }
 
 GtkWidget *
