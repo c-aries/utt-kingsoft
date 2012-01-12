@@ -19,6 +19,7 @@ typedef struct {
 struct _pos {
   gdouble x, y;
   gchar word[4];
+  gchar input[4];
 };
 
 enum {
@@ -177,8 +178,8 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
   gint utt_article_width, utt_article_height, len, width, height;
   gchar word[4], *p;
   gdouble rel_x, rel_y, height_4, height_2, width_1;
-  gint border, end_x, end_y, num = 0;
-  struct _pos pos;
+  gint border, end_x, end_y, num = 0, i;
+  struct _pos pos, *ppos;
 
 #ifdef DEBUG
   g_debug (G_STRFUNC);
@@ -236,14 +237,31 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 	  rel_y += height_2;
 	}
 	cairo_move_to (cairo, rel_x, rel_y);
-	pos.x = rel_x;
-	pos.y = rel_y + (gdouble)height / PANGO_SCALE;
-	g_utf8_strncpy (pos.word, word, 1);
-	g_array_insert_val (priv->array, num, pos);
+	if (num == priv->array->len) {
+	  pos.x = rel_x;
+	  pos.y = rel_y + (gdouble)height / PANGO_SCALE;
+	  g_utf8_strncpy (pos.word, word, 1);
+	  g_array_insert_val (priv->array, num, pos);
+	}
+	else {
+	  ppos = &g_array_index (priv->array, struct _pos, num);
+	  ppos->x = rel_x;
+	  ppos->y = rel_y + (gdouble)height / PANGO_SCALE;
+	}
 	num++;
 	rel_x += width_1;
 	pango_cairo_show_layout (cairo, layout);
       } while (len);
+
+      gdk_color_parse ("blue", &color);
+      gdk_cairo_set_source_color (cairo, &color);
+      for (i = 0; i < priv->cur; i++) {
+	ppos = &g_array_index (priv->array, struct _pos, i);
+	g_print ("%x %x %x %x\n", ppos->input[0], ppos->input[1], ppos->input[2], ppos->input[3]);
+	cairo_move_to (cairo, ppos->x, ppos->y);
+	pango_layout_set_text (layout, ppos->input, -1);
+	pango_cairo_show_layout (cairo, layout);
+      }
       g_object_unref (layout);
     }
     priv->total = num;
@@ -258,12 +276,12 @@ utt_article_key_press (GtkWidget *widget,
 {
   UttArticlePrivate *priv;
   PangoLayout *layout;
-  struct _pos *pos;
+  struct _pos *pos, *ppos;
   cairo_t *cairo;
   GdkColor color;
   gchar word[4] = {};
   gunichar unicode;
-  gint ret;
+  gint ret, i;
 
 #ifdef DEBUG
   g_debug (G_STRFUNC);
@@ -298,6 +316,7 @@ utt_article_key_press (GtkWidget *widget,
     pango_layout_set_text (layout, word, -1);
 
     pos = &g_array_index (priv->array ,struct _pos , priv->cur);
+    g_utf8_strncpy (pos->input, word, 1);
     cairo_move_to (cairo, pos->x, pos->y);
     priv->cur++;
     if (priv->cur == priv->total) {
@@ -307,6 +326,11 @@ utt_article_key_press (GtkWidget *widget,
     pango_cairo_show_layout (cairo, layout);
     g_object_unref (layout);
     cairo_destroy (cairo);
+
+    for (i = 0; i < priv->cur; i++) {
+      ppos = &g_array_index (priv->array, struct _pos, i);
+      g_print ("%x %x %x %x\n", ppos->input[0], ppos->input[1], ppos->input[2], ppos->input[3]);
+    }
   }
 
   if (GTK_WIDGET_CLASS (utt_article_parent_class)->key_press_event (widget, event)) {
