@@ -262,6 +262,8 @@ utt_article_key_press (GtkWidget *widget,
   cairo_t *cairo;
   GdkColor color;
   gchar word[4] = {};
+  gunichar unicode;
+  gint ret;
 
 #ifdef DEBUG
   g_debug (G_STRFUNC);
@@ -271,8 +273,21 @@ utt_article_key_press (GtkWidget *widget,
   g_return_val_if_fail (UTT_IS_ARTICLE (widget), TRUE);
   priv = UTT_ARTICLE_GET_PRIVATE (widget);
 
-  if (priv->text && gtk_widget_is_drawable (widget)) {
-    word[0] = event->keyval;
+  if (event->keyval != 0xff09) {
+    unicode = gdk_keyval_to_unicode (event->keyval);
+  }
+  else {
+    unicode = 0x09;
+  }
+  ret = g_unichar_to_utf8 (unicode, word);
+  word[ret] = '\0';
+#if 0
+  g_print ("%x %x, %x %x %x %x, %d\n", event->keyval, unicode, word[0], word[1], word[2], word[3], ret);
+#endif
+  unicode = g_utf8_get_char (word);
+
+  if (priv->text && gtk_widget_is_drawable (widget) &&
+      (g_unichar_isprint (unicode) || unicode == 0x09)) {
 
     cairo = gdk_cairo_create (widget->window);
     layout = pango_cairo_create_layout (cairo);
