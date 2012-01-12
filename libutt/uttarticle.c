@@ -238,7 +238,7 @@ utt_article_expose (GtkWidget *widget, GdkEventExpose *event)
 	cairo_move_to (cairo, rel_x, rel_y);
 	pos.x = rel_x;
 	pos.y = rel_y + (gdouble)height / PANGO_SCALE;
-	strncpy (pos.word, word, 4);
+	g_utf8_strncpy (pos.word, word, 1);
 	g_array_insert_val (priv->array, num, pos);
 	num++;
 	rel_x += width_1;
