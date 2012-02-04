@@ -131,3 +131,8 @@ $ git clone git@github.com:c-aries/utt.git
 $ git pull
 * commit to network
 $ git push
+* remote branch
+$ git push -u wubi wubi
+$ git checkout wubi
+$ git pull
+$ git fetch origin wubi:wubi
