@@ -132,6 +132,7 @@ $ git pull
 * commit to network
 $ git push
 * remote branch
+$ git remote add wubi git@github.com:c-aries/utt.git
 $ git push -u wubi wubi
 $ git checkout wubi
 $ git pull
