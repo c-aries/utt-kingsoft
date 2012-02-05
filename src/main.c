@@ -64,17 +64,17 @@ main (int argc, char *argv[])
   ui.wubi_window = GTK_WIDGET (gtk_builder_get_object (builder, "wubi_window"));
 
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button3"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_english_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (on_english_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button4"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_wubi_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (on_wubi_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button10"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button12"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button14"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button16"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
 
   english_ui_init (builder);
 
