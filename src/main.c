@@ -60,7 +60,6 @@ main (int argc, char *argv[])
   gtk_builder_add_from_file (builder, UIFILE, NULL);
 
   ui.menu_window = ui.current_window = GTK_WIDGET (gtk_builder_get_object (builder, "menu_window"));
-  ui.english_window = GTK_WIDGET (gtk_builder_get_object (builder, "english_window"));
   ui.wubi_window = GTK_WIDGET (gtk_builder_get_object (builder, "wubi_window"));
 
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button3"));
