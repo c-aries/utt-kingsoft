@@ -5,6 +5,7 @@
   <object class="GtkWindow" id="menu_window">
     <property name="width_request">640</property>
     <property name="height_request">480</property>
+    <property name="resizable">False</property>
     <signal name="destroy" handler="gtk_main_quit"/>
     <child>
       <object class="GtkVBox" id="vbox1">
