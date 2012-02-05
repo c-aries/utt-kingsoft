@@ -192,6 +192,9 @@ top_srcdir = @top_srcdir@
 pkgdata_DATA = \
 	utt.glade
 
+EXTRA_DIST = \
+	$(pkgdata_DATA)
+
 all: all-am
 
 .SUFFIXES:

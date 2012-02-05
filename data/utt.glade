@@ -25,12 +25,12 @@
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <child>
-              <object class="GtkVButtonBox" id="vbuttonbox1">
+              <object class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <property name="homogeneous">True</property>
                 <child>
-                  <object class="GtkButton" id="button1">
+                  <object class="GtkButton" id="button3">
                     <property name="label" translatable="yes">English Typing</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -43,7 +43,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button2">
+                  <object class="GtkButton" id="button4">
                     <property name="label" translatable="yes">Wubi Typing</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -57,6 +57,7 @@
                 </child>
               </object>
               <packing>
+                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
