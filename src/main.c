@@ -12,7 +12,7 @@ int
 main (int argc, char *argv[])
 {
   GtkBuilder *builder;
-  GtkWidget *window;
+  GtkWidget *menu_window, *english_window, *wubi_window;
 
   gtk_init (&argc, &argv);
 
@@ -23,12 +23,16 @@ main (int argc, char *argv[])
   builder = gtk_builder_new ();
   gtk_builder_add_from_file (builder, UIFILE, NULL);
 
-  window = GTK_WIDGET (gtk_builder_get_object (builder, "menu_window"));
+  menu_window = GTK_WIDGET (gtk_builder_get_object (builder, "menu_window"));
+  english_window = GTK_WIDGET (gtk_builder_get_object (builder, "english_window"));
+  wubi_window = GTK_WIDGET (gtk_builder_get_object (builder, "wubi_window"));
 
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));
 
-  gtk_widget_show_all (window);
+  gtk_widget_show_all (menu_window);
+  gtk_widget_show_all (english_window);
+  gtk_widget_show_all (wubi_window);
   gtk_main ();
   exit (EXIT_SUCCESS);
 }
