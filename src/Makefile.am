@@ -3,7 +3,8 @@ AM_CFLAGS = -Werror -Wall
 bin_PROGRAMS = utt
 
 utt_SOURCES = \
-	main.c
+	main.c main.h \
+	english.c english.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \

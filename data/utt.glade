@@ -81,7 +81,7 @@
     </child>
   </object>
   <object class="GtkWindow" id="english_window">
-    <property name="width_request">640</property>
+    <property name="width_request">900</property>
     <property name="height_request">480</property>
     <property name="resizable">False</property>
     <property name="window_position">center</property>
@@ -160,9 +160,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label8">
+              <object class="GtkImage" id="image1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">keyboard</property>
+                <property name="stock">gtk-missing-image</property>
               </object>
               <packing>
                 <property name="position">2</property>

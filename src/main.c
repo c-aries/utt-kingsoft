@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include "english.h"
 
 #ifndef PKGDATADIR
 #error "PKGDATADIR doesn't exist"
@@ -37,7 +38,7 @@ on_wubi_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
   return FALSE;
 }
 
-static gboolean
+gboolean
 on_menu_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
   gtk_widget_hide_all (ui.current_window);
@@ -69,12 +70,6 @@ main (int argc, char *argv[])
   g_signal_connect (button, "button-press-event", G_CALLBACK (on_english_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button4"));
   g_signal_connect (button, "button-press-event", G_CALLBACK (on_wubi_press), NULL);
-  button = GTK_WIDGET (gtk_builder_get_object (builder, "button1"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
-  button = GTK_WIDGET (gtk_builder_get_object (builder, "button2"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
-  button = GTK_WIDGET (gtk_builder_get_object (builder, "button5"));
-  g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button10"));
   g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button12"));
@@ -84,7 +79,7 @@ main (int argc, char *argv[])
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button16"));
   g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
 
-  g_print ("datadir %s\n", DATADIR "/media/");
+  english_ui_init (builder);
 
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));
