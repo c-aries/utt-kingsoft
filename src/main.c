@@ -8,6 +8,10 @@
 
 #define UIFILE PKGDATADIR "/utt.glade"
 
+#ifndef DATADIR
+#error "DATADIR doesn't exist"
+#endif
+
 struct _ui {
   GtkWidget *current_window;
   GtkWidget *menu_window;
@@ -18,7 +22,7 @@ struct _ui {
 static gboolean
 on_english_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
-  gtk_widget_hide (ui.current_window);
+  gtk_widget_hide_all (ui.current_window);
   gtk_widget_show_all (ui.english_window);
   ui.current_window = ui.english_window;
   return FALSE;
@@ -27,7 +31,7 @@ on_english_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 static gboolean
 on_wubi_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
-  gtk_widget_hide (ui.current_window);
+  gtk_widget_hide_all (ui.current_window);
   gtk_widget_show_all (ui.wubi_window);
   ui.current_window = ui.wubi_window;
   return FALSE;
@@ -36,7 +40,7 @@ on_wubi_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 static gboolean
 on_menu_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
-  gtk_widget_hide (ui.current_window);
+  gtk_widget_hide_all (ui.current_window);
   gtk_widget_show_all (ui.menu_window);
   ui.current_window = ui.menu_window;
   return FALSE;
@@ -79,6 +83,8 @@ main (int argc, char *argv[])
   g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button16"));
   g_signal_connect (button, "button-press-event", G_CALLBACK (on_menu_press), NULL);
+
+  g_print ("datadir %s\n", DATADIR "/media/");
 
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));

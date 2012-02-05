@@ -7,7 +7,8 @@ utt_SOURCES = \
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \
-	-DPKGDATADIR=\"$(pkgdatadir)\"
+	-DPKGDATADIR=\"$(pkgdatadir)\" \
+	-DDATADIR=\"$(datadir)/$(PACKAGE)\"
 
 utt_LDADD = \
 	$(GTK_LIBS)

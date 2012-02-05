@@ -1,3 +1,5 @@
+SUBDIRS = media
+
 pkgdata_DATA = \
 	utt.glade
 
