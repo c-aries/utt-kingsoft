@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include "main.h"
 #include "english.h"
 
 #ifndef PKGDATADIR
@@ -13,12 +14,7 @@
 #error "DATADIR doesn't exist"
 #endif
 
-struct _ui {
-  GtkWidget *current_window;
-  GtkWidget *menu_window;
-  GtkWidget *english_window;
-  GtkWidget *wubi_window;
-} ui;
+struct _ui ui;
 
 static gboolean
 on_english_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -26,6 +22,7 @@ on_english_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
   gtk_widget_hide_all (ui.current_window);
   gtk_widget_show_all (ui.english_window);
   ui.current_window = ui.english_window;
+  gtk_window_fullscreen (GTK_WINDOW (ui.current_window));
   return FALSE;
 }
 
