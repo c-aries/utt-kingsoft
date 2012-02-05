@@ -1,1 +1,14 @@
+AUTOTOOLS
+=========
+
+autoscan
+mkdir m4
+autoreconf --install
+
+GIT
+===
+
+= =b> create a new branch
+git checkout -b wubi
+remote add wubi git@github.com:c-aries/utt.git
 git push -u wubi wubi
