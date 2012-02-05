@@ -1,2 +1,4 @@
 a new beginning
 learn ui from http://www.51dzt.com/
+
+./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --enable-shared

@@ -190,11 +190,11 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -Werror -Wall
 utt_SOURCES = \
-	main.c \
-	-DPKGDATADIR=\"$(pkgdatadir)\"
+	main.c
 
 utt_CPPFLAGS = \
-	$(GTK_CFLAGS)
+	$(GTK_CFLAGS) \
+	-DPKGDATADIR=\"$(pkgdatadir)\"
 
 utt_LDADD = \
 	$(GTK_LIBS)

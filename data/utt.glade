@@ -2,9 +2,10 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="menu_window">
     <property name="width_request">640</property>
     <property name="height_request">480</property>
+    <signal name="destroy" handler="gtk_main_quit"/>
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
@@ -15,6 +16,8 @@
             <property name="label" translatable="yes">require a title here</property>
           </object>
           <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -25,6 +28,7 @@
               <object class="GtkVButtonBox" id="vbuttonbox1">
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkButton" id="button1">
                     <property name="label" translatable="yes">English Typing</property>
