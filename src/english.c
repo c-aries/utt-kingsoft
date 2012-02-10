@@ -13,7 +13,17 @@ on_key_press (GtkWidget *widget, GdkEventKey *key, gpointer data)
 static gboolean
 on_image_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  g_print ("%s\n", G_STRLOC);
+  cairo_t *cr;
+  GdkColor color;
+
+  cr = gdk_cairo_create (widget->window);
+
+  gdk_color_parse ("yellow", &color);
+  gdk_cairo_set_source_color (cr, &color);
+  cairo_rectangle (cr, 5, 5, 60, 60);
+  cairo_fill (cr);
+
+  cairo_destroy (cr);
   return FALSE;
 }
 
