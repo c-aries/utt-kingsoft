@@ -8,6 +8,8 @@ struct _ui {
   GtkWidget *menu_window;
   GtkWidget *english_window;
   GtkWidget *wubi_window;
+  GtkWidget *english_notebook;
+  GtkWidget *wubi_notebook;
 };
 
 extern struct _ui ui;
