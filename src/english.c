@@ -10,6 +10,13 @@ on_key_press (GtkWidget *widget, GdkEventKey *key, gpointer data)
   return FALSE;
 }
 
+static gboolean
+on_image_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  g_print ("%s\n", G_STRLOC);
+  return FALSE;
+}
+
 void
 english_ui_init (GtkBuilder *builder)
 {
@@ -32,6 +39,7 @@ english_ui_init (GtkBuilder *builder)
 
   image = GTK_IMAGE (gtk_builder_get_object (builder, "image1"));
   gtk_image_set_from_file (image, ENGLISH_KEYBOARD);
+  g_signal_connect_after (image, "expose-event", G_CALLBACK (on_image_expose), NULL);
 
   g_signal_connect (ui.english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
 }
