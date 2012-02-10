@@ -22,7 +22,7 @@ on_english_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
   gtk_widget_hide_all (ui.current_window);
   gtk_widget_show_all (ui.english_window);
   ui.current_window = ui.english_window;
-  gtk_window_fullscreen (GTK_WINDOW (ui.current_window));
+/*   gtk_window_fullscreen (GTK_WINDOW (ui.current_window)); */
   return FALSE;
 }
 
