@@ -1,6 +1,10 @@
 #include <gtk/gtk.h>
 #include "main.h"
 
+#ifndef DATADIR
+#error "DATADIR doesn't exist"
+#endif
+
 #define ENGLISH_KEYBOARD DATADIR "/media/en-kb.png"
 
 static gboolean
@@ -43,6 +47,7 @@ english_ui_init (GtkBuilder *builder)
 
   kb_draw = GTK_WIDGET (gtk_builder_get_object (builder, "kb_draw"));
   g_signal_connect (kb_draw, "expose-event", G_CALLBACK (on_expose), NULL);
+  gtk_widget_set_size_request (kb_draw, ui.icon[DATA_ENGLISH_KB].w, ui.icon[DATA_ENGLISH_KB].h);
 
   g_signal_connect (ui.english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
 }

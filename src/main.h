@@ -2,6 +2,7 @@
 #define __MAIN_H__
 
 #include <gtk/gtk.h>
+#include "data.h"
 
 struct _ui {
   GtkWidget *current_window;
@@ -10,6 +11,8 @@ struct _ui {
   GtkWidget *wubi_window;
   GtkWidget *english_notebook;
   GtkWidget *wubi_notebook;
+  struct icon *icon;
+  struct key *key;
 };
 
 extern struct _ui ui;

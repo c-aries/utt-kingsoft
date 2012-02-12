@@ -4,7 +4,8 @@ bin_PROGRAMS = utt
 
 utt_SOURCES = \
 	main.c main.h \
-	english.c english.h
+	english.c english.h \
+	data.c data.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \

@@ -85,6 +85,9 @@ main (int argc, char *argv[])
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));
 
+  ui.icon = load_icons ();
+  ui.key = load_keys ();
+
   gtk_widget_show_all (ui.menu_window);
   gtk_main ();
   exit (EXIT_SUCCESS);
