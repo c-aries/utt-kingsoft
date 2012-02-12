@@ -17,5 +17,5 @@ GIT
 
 = =b> create a new branch
 git checkout -b wubi
-remote add wubi git@github.com:c-aries/utt.git
-git push -u wubi wubi
+remote add origin git@github.com:c-aries/utt.git
+git push origin wubi
