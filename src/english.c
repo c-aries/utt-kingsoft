@@ -10,18 +10,12 @@ on_key_press (GtkWidget *widget, GdkEventKey *key, gpointer data)
   return FALSE;
 }
 
-static gboolean
-on_image_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+static gint
+on_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr;
-  GdkColor color;
 
-  cr = gdk_cairo_create (widget->window);
-
-  gdk_color_parse ("yellow", &color);
-  gdk_cairo_set_source_color (cr, &color);
-  cairo_rectangle (cr, 5, 5, 60, 60);
-  cairo_fill (cr);
+  cr = gdk_cairo_create (event->window);
 
   cairo_destroy (cr);
   return FALSE;
@@ -31,7 +25,7 @@ void
 english_ui_init (GtkBuilder *builder)
 {
   GtkWidget *button;
-  GtkImage *image;
+  GtkWidget *kb_draw;
 
   if (!g_file_test (ENGLISH_KEYBOARD, G_FILE_TEST_EXISTS)) { /* pre check */
     g_error ("%s doesn't exists", ENGLISH_KEYBOARD);
@@ -47,9 +41,8 @@ english_ui_init (GtkBuilder *builder)
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button5"));
   g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
 
-  image = GTK_IMAGE (gtk_builder_get_object (builder, "image1"));
-  gtk_image_set_from_file (image, ENGLISH_KEYBOARD);
-  g_signal_connect_after (image, "expose-event", G_CALLBACK (on_image_expose), NULL);
+  kb_draw = GTK_WIDGET (gtk_builder_get_object (builder, "kb_draw"));
+  g_signal_connect (kb_draw, "expose-event", G_CALLBACK (on_expose), NULL);
 
   g_signal_connect (ui.english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
 }
