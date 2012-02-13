@@ -36,7 +36,7 @@ load_icons ()
     icon[i].pix = gdk_pixbuf_new_from_file (path, NULL);
     g_free (path);
     icon[i].w = gdk_pixbuf_get_width (icon[i].pix);
-    icon[i].h = gdk_pixbuf_get_width (icon[i].pix);
+    icon[i].h = gdk_pixbuf_get_height (icon[i].pix);
   }
 
   return icon;

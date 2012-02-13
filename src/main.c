@@ -61,6 +61,9 @@ main (int argc, char *argv[])
   builder = gtk_builder_new ();
   gtk_builder_add_from_file (builder, UIFILE, NULL);
 
+  ui.icon = load_icons ();
+  ui.key = load_keys ();
+
   ui.menu_window = ui.current_window = GTK_WIDGET (gtk_builder_get_object (builder, "menu_window"));
   ui.wubi_window = GTK_WIDGET (gtk_builder_get_object (builder, "wubi_window"));
 
@@ -84,9 +87,6 @@ main (int argc, char *argv[])
 
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));
-
-  ui.icon = load_icons ();
-  ui.key = load_keys ();
 
   gtk_widget_show_all (ui.menu_window);
   gtk_main ();
