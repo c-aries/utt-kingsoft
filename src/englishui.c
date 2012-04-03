@@ -5,6 +5,8 @@
 
 /* static GdkPixbuf *frame; */
 
+static cairo_surface_t *kb_surface;	/* keyboard surface */
+
 static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *key, gpointer data)
 {
@@ -15,15 +17,22 @@ on_key_press (GtkWidget *widget, GdkEventKey *key, gpointer data)
 static gint
 on_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-/*   cairo_t *cr; */
+  cairo_t *cr;
 
-/*   cr = gdk_cairo_create (event->window); */
+  cr = gdk_cairo_create (event->window);
+  cairo_set_source_surface(cr, kb_surface, 0, 0);
+  cairo_paint(cr);
+
+  cairo_set_line_width(cr, 1);
+  cairo_set_source_rgba(cr, 0, 0, 1, 0.3);
+  cairo_rectangle(cr, 119, 115, 53, 52);
+  cairo_fill(cr);
 /*   gdk_pixbuf_copy_area (ui.icon[DATA_ENGLISH_KB].pix, 0, 0, ui.icon[DATA_ENGLISH_KB].w, ui.icon[DATA_ENGLISH_KB].h, frame, 0, 0); */
 /*   gdk_cairo_set_source_pixbuf (cr, frame, 0, 0); */
 /*   gdk_cairo_rectangle (cr, &event->area); */
 /*   cairo_fill (cr); */
 
-/*   cairo_destroy (cr); */
+  cairo_destroy (cr);
   return FALSE;
 }
 
@@ -41,11 +50,9 @@ void
 englishui_init (GtkBuilder *builder)			/* english ui init */
 {
   GtkWidget *english_window;
-  cairo_surface_t *kb_surface;	/* keyboard surface */
   gint kb_width, kb_height;
   GtkWidget *button;
   GtkWidget *kb_draw;
-/*   gint width, height; */
 
   english_window = global.english_window = GTK_WIDGET (gtk_builder_get_object (builder, "english_window"));
 
@@ -57,8 +64,6 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button5")); /* change to english->article menu */
   g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
 
-/*   width = ui.icon[DATA_ENGLISH_KB].w; */
-/*   height = ui.icon[DATA_ENGLISH_KB].h; */
 /*   frame = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height); */
 
   kb_surface = cairo_image_surface_create_from_png(icon[ICON_KB_EN].path);
@@ -70,4 +75,11 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   gtk_widget_set_size_request (kb_draw, kb_width, kb_height);
 
   g_signal_connect (english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
+}
+
+void englishui_deinit()
+{
+  if (kb_surface) {
+    cairo_surface_destroy(kb_surface);
+  }
 }

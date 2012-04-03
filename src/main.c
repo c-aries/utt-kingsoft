@@ -66,6 +66,7 @@ main (int argc, char *argv[])
 
   gtk_widget_show_all (current_window);
   gtk_main ();
+  englishui_deinit();
   data_deinit();
   exit (EXIT_SUCCESS);
 }

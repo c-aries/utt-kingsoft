@@ -2,7 +2,7 @@
 #define __GLOBAL_H__
 
 #include <gtk/gtk.h>
-#include "data.h"
+#include "data.h"		/* ICON_NUM etc. */
 
 /* not so frequecely use */
 struct _global {
@@ -19,4 +19,3 @@ extern struct _icon icon[ICON_NUM]; /* data.c */
 extern GtkWidget *current_window;   /* global.c */
 
 #endif
-
