@@ -11,8 +11,8 @@ struct _ui {
   GtkWidget *wubi_window;
   GtkWidget *english_notebook;
   GtkWidget *wubi_notebook;
-  struct icon *icon;
-  struct key *key;
+/*   struct icon *icon; */
+/*   struct key *key; */
 };
 
 extern struct _ui ui;

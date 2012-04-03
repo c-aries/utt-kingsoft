@@ -50,8 +50,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_utt_OBJECTS = utt-main.$(OBJEXT) utt-english.$(OBJEXT) \
-	utt-data.$(OBJEXT)
+am_utt_OBJECTS = utt-main.$(OBJEXT) utt-englishui.$(OBJEXT) \
+	utt-data.$(OBJEXT) utt-global.$(OBJEXT)
 utt_OBJECTS = $(am_utt_OBJECTS)
 am__DEPENDENCIES_1 =
 utt_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -192,8 +192,9 @@ top_srcdir = @top_srcdir@
 AM_CFLAGS = -Werror -Wall
 utt_SOURCES = \
 	main.c main.h \
-	english.c english.h \
-	data.c data.h
+	englishui.c englishui.h \
+	data.c data.h \
+	global.c global.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \
@@ -291,7 +292,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-data.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-english.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-englishui.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-global.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-main.Po@am__quote@
 
 .c.o:
@@ -329,19 +331,19 @@ utt-main.obj: main.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
 
-utt-english.o: english.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-english.o -MD -MP -MF $(DEPDIR)/utt-english.Tpo -c -o utt-english.o `test -f 'english.c' || echo '$(srcdir)/'`english.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-english.Tpo $(DEPDIR)/utt-english.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='english.c' object='utt-english.o' libtool=no @AMDEPBACKSLASH@
+utt-englishui.o: englishui.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-englishui.o -MD -MP -MF $(DEPDIR)/utt-englishui.Tpo -c -o utt-englishui.o `test -f 'englishui.c' || echo '$(srcdir)/'`englishui.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-englishui.Tpo $(DEPDIR)/utt-englishui.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='englishui.c' object='utt-englishui.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-english.o `test -f 'english.c' || echo '$(srcdir)/'`english.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-englishui.o `test -f 'englishui.c' || echo '$(srcdir)/'`englishui.c
 
-utt-english.obj: english.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-english.obj -MD -MP -MF $(DEPDIR)/utt-english.Tpo -c -o utt-english.obj `if test -f 'english.c'; then $(CYGPATH_W) 'english.c'; else $(CYGPATH_W) '$(srcdir)/english.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-english.Tpo $(DEPDIR)/utt-english.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='english.c' object='utt-english.obj' libtool=no @AMDEPBACKSLASH@
+utt-englishui.obj: englishui.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-englishui.obj -MD -MP -MF $(DEPDIR)/utt-englishui.Tpo -c -o utt-englishui.obj `if test -f 'englishui.c'; then $(CYGPATH_W) 'englishui.c'; else $(CYGPATH_W) '$(srcdir)/englishui.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-englishui.Tpo $(DEPDIR)/utt-englishui.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='englishui.c' object='utt-englishui.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-english.obj `if test -f 'english.c'; then $(CYGPATH_W) 'english.c'; else $(CYGPATH_W) '$(srcdir)/english.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-englishui.obj `if test -f 'englishui.c'; then $(CYGPATH_W) 'englishui.c'; else $(CYGPATH_W) '$(srcdir)/englishui.c'; fi`
 
 utt-data.o: data.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-data.o -MD -MP -MF $(DEPDIR)/utt-data.Tpo -c -o utt-data.o `test -f 'data.c' || echo '$(srcdir)/'`data.c
@@ -356,6 +358,20 @@ utt-data.obj: data.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='data.c' object='utt-data.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-data.obj `if test -f 'data.c'; then $(CYGPATH_W) 'data.c'; else $(CYGPATH_W) '$(srcdir)/data.c'; fi`
+
+utt-global.o: global.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-global.o -MD -MP -MF $(DEPDIR)/utt-global.Tpo -c -o utt-global.o `test -f 'global.c' || echo '$(srcdir)/'`global.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-global.Tpo $(DEPDIR)/utt-global.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='global.c' object='utt-global.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-global.o `test -f 'global.c' || echo '$(srcdir)/'`global.c
+
+utt-global.obj: global.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-global.obj -MD -MP -MF $(DEPDIR)/utt-global.Tpo -c -o utt-global.obj `if test -f 'global.c'; then $(CYGPATH_W) 'global.c'; else $(CYGPATH_W) '$(srcdir)/global.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-global.Tpo $(DEPDIR)/utt-global.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='global.c' object='utt-global.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-global.obj `if test -f 'global.c'; then $(CYGPATH_W) 'global.c'; else $(CYGPATH_W) '$(srcdir)/global.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
