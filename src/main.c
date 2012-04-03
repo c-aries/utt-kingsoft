@@ -36,7 +36,7 @@ main (int argc, char *argv[])
   gtk_init (&argc, &argv);
   data_precheck_and_init();
 
-  builder = global.builder = gtk_builder_new (); /* record builder to global */
+  builder = gtk_builder_new ();
   gtk_builder_add_from_file (builder, UIFILE, NULL); /* UIFILE from data.h */
 
   global.menu_window = GTK_WIDGET (gtk_builder_get_object (builder, "menu_window"));
@@ -59,7 +59,7 @@ main (int argc, char *argv[])
   global.english_notebook = GTK_WIDGET (gtk_builder_get_object (builder, "english_notebook"));
   global.wubi_notebook = GTK_WIDGET (gtk_builder_get_object (builder, "wubi_notebook"));
 
-  englishui_init ();		/* english.c */
+  englishui_init (builder);		/* english.c */
 
   gtk_builder_connect_signals (builder, NULL);
   g_object_unref (G_OBJECT (builder));

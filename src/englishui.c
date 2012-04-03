@@ -38,9 +38,8 @@ on_englishui_press(GtkWidget *widget, GdkEventButton *event, gpointer data)
 }
 
 void
-englishui_init ()			/* english ui init */
+englishui_init (GtkBuilder *builder)			/* english ui init */
 {
-  GtkBuilder *builder = global.builder;
   GtkWidget *english_window;
   cairo_surface_t *kb_surface;	/* keyboard surface */
   gint kb_width, kb_height;

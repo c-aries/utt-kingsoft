@@ -4,8 +4,8 @@
 #include <gtk/gtk.h>
 #include "data.h"
 
+/* not so frequecely use */
 struct _global {
-  GtkBuilder *builder;		/* plan to remove */
   GtkWidget *menu_window;
   GtkWidget *english_window;
   GtkWidget *wubi_window;
@@ -14,8 +14,9 @@ struct _global {
   void *padding;
 } global;
 
-extern struct _icon icon[ICON_NUM];
-extern GtkWidget *current_window;
+/* frequencely use variablies */
+extern struct _icon icon[ICON_NUM]; /* data.c */
+extern GtkWidget *current_window;   /* global.c */
 
 #endif
 
