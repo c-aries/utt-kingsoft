@@ -27,11 +27,13 @@ enum {
 struct _icon {
   gchar *path;
 };
-/* struct icon { */
-/*   gchar *filename; */
-/*   GdkPixbuf *pix; */
-/*   gint w, h; */
-/* }; */
+struct _key {
+  gchar *name;
+  gint value;
+  /* fill area infromation, need to improve, in order to satisfy ENTER button, etc. */
+  int startx, starty;
+  int width, height;
+};
 
 struct key {
   guint keyval, state;

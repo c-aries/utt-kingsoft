@@ -8,10 +8,15 @@ static gchar *icon_filename[ICON_NUM] = {	/* icon path prefix with MEDIADIR(in d
 
 struct _icon icon[ICON_NUM];
 
-struct key key[] = {
-  { GDK_g, 0, 351, 115},
-  { GDK_G, 0, 351, 115},
+struct _key key[] = {
+  {"a", 0x061, 119, 115, 53, 52},
+  {"shift", -1, -1, -1, -1, -1}
 };
+
+/* struct key key[] = { */
+/*   { GDK_g, 0, 351, 115}, */
+/*   { GDK_G, 0, 351, 115}, */
+/* }; */
 
 void
 data_precheck_and_init()
