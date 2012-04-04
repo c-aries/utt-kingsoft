@@ -27,18 +27,11 @@ enum {
 struct _icon {
   gchar *path;
 };
-struct _key {
-  gchar *name;
-  gint value;
-  /* fill area infromation, need to improve, in order to satisfy ENTER button, etc. */
-  int startx, starty;
-  int width, height;
-};
 
-struct key {
-  guint keyval, state;
-  gint x, y;
-};
+/* struct key { */
+/*   guint keyval, state; */
+/*   gint x, y; */
+/* }; */
 
 void data_precheck_and_init();
 void data_deinit();
