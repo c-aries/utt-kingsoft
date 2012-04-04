@@ -3,31 +3,28 @@
 #include <glib/ghash.h>
 #include "data.h"
 
+#define DEBUG 1
+
 static gchar *icon_filename[ICON_NUM] = {	/* icon path prefix with MEDIADIR(in data.h) and filename */
   "en-kb.png",
 };
 
 struct _icon icon[ICON_NUM];
 
-struct _key {			/* place it to data.c ? */
-  gchar *name;
-  gint value;
-  /* fill area infromation, need to improve, in order to satisfy ENTER button, etc. */
-  int startx, starty;
-  int width, height;
-};
-
-static struct _key key[] = {
+struct _key key[] = {
   {"a", 0x061, 119, 115, 53, 52},
   {"s", 0x073, 177, 115, 53, 52},
 };
 
-/* struct key key[] = { */
-/*   { GDK_g, 0, 351, 115}, */
-/*   { GDK_G, 0, 351, 115}, */
-/* }; */
+GHashTable *key_ht;		/* key's hash table */
 
-static GHashTable *ht;		/* key's hash table */
+#ifdef DEBUG
+static void
+print_vals (gpointer key, gpointer value, gpointer user_data)
+{
+  g_print ("key %p, value %d\n", key, GPOINTER_TO_INT (value));
+}
+#endif
 
 void
 data_precheck_and_init()
@@ -48,10 +45,15 @@ data_precheck_and_init()
     g_error ("%s doesn't exists", UIFILE);
   }
 
-  ht = g_hash_table_new (g_str_hash, g_str_equal);
+  /* key hash table */
+  key_ht = g_hash_table_new (g_int_hash, g_int_equal);
   for (i = 0; i < G_N_ELEMENTS (key); i++) {
-    g_hash_table_insert (ht, key[i].name, GINT_TO_POINTER (i));
+    g_hash_table_insert (key_ht, &key[i].val_debug, GINT_TO_POINTER (i));
   }
+  g_print ("debug2 %x\n", key[0].val_debug);
+#ifdef DEBUG
+  g_hash_table_foreach (key_ht, print_vals, NULL);
+#endif
 }
 
 void
@@ -62,7 +64,7 @@ data_deinit()
   for (i = 0; i < ICON_NUM; i++) {
     g_free(icon[i].path);
   }
-  g_hash_table_destroy (ht);
+  g_hash_table_destroy (key_ht);
 }
 
 /* struct icon * */

@@ -3,14 +3,42 @@
 #include "data.h"		/* ICON_KB_EN */
 #include "main.h"
 
+#define DEBUG 1
+
 /* static GdkPixbuf *frame; */
 
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 
-static gboolean
-on_key_press (GtkWidget *widget, GdkEventKey *key, gpointer data)
+#ifdef DEBUG
+static void
+print_vals (gpointer key, gpointer value, gpointer user_data)
 {
-  g_print ("key press %08x\n", key->keyval);
+  g_print ("key %p, value %d\n", key, GPOINTER_TO_INT (value));
+}
+#endif
+
+static gboolean
+on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
+{
+  gpointer ret;
+  gint index;
+
+#ifdef DEBUG
+  g_hash_table_foreach (key_ht, print_vals, NULL);
+#endif
+
+  g_print ("debug %x\n", key[0].val_debug);
+
+  g_print ("key press %08x\n", event->keyval);
+  ret = g_hash_table_lookup (key_ht, &event->keyval);
+  if (ret) {
+    index = GPOINTER_TO_INT (ret);
+    g_print ("hash table ret %d\n", index);
+    g_print ("key %s\n", key[index].name);
+  }
+  else {
+    g_print ("hash table ret NULL\n");
+  }
   return FALSE;
 }
 
@@ -23,14 +51,10 @@ on_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_set_source_surface(cr, kb_surface, 0, 0);
   cairo_paint(cr);
 
-  cairo_set_line_width(cr, 1);
-  cairo_set_source_rgba(cr, 0, 0, 1, 0.3);
-  cairo_rectangle(cr, 119, 115, 53, 52);
-  cairo_fill(cr);
-/*   gdk_pixbuf_copy_area (ui.icon[DATA_ENGLISH_KB].pix, 0, 0, ui.icon[DATA_ENGLISH_KB].w, ui.icon[DATA_ENGLISH_KB].h, frame, 0, 0); */
-/*   gdk_cairo_set_source_pixbuf (cr, frame, 0, 0); */
-/*   gdk_cairo_rectangle (cr, &event->area); */
-/*   cairo_fill (cr); */
+/*   cairo_set_line_width(cr, 1); */
+/*   cairo_set_source_rgba(cr, 0, 0, 1, 0.3); */
+/*   cairo_rectangle(cr, 119, 115, 53, 52); */
+/*   cairo_fill(cr); */
 
   cairo_destroy (cr);
   return FALSE;
