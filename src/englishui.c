@@ -5,17 +5,8 @@
 
 #define DEBUG 1
 
-/* static GdkPixbuf *frame; */
-
 static cairo_surface_t *kb_surface;	/* keyboard surface */
-
-#ifdef DEBUG
-static void
-print_vals (gpointer key, gpointer value, gpointer user_data)
-{
-  g_print ("key %p, value %d\n", key, GPOINTER_TO_INT (value));
-}
-#endif
+static gint key_index = 0;
 
 static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
@@ -23,22 +14,17 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   gpointer ret;
   gint index;
 
-#ifdef DEBUG
-  g_hash_table_foreach (key_ht, print_vals, NULL);
-#endif
-
-  g_print ("debug %x\n", key[0].val_debug);
-
   g_print ("key press %08x\n", event->keyval);
-  ret = g_hash_table_lookup (key_ht, &event->keyval);
+  ret = g_hash_table_lookup (key_ht, GUINT_TO_POINTER (event->keyval));
   if (ret) {
-    index = GPOINTER_TO_INT (ret);
-    g_print ("hash table ret %d\n", index);
+    key_index = index = GPOINTER_TO_INT (ret);
     g_print ("key %s\n", key[index].name);
   }
   else {
     g_print ("hash table ret NULL\n");
+    key_index = 0;
   }
+  gtk_widget_queue_draw (widget);
   return FALSE;
 }
 
@@ -46,11 +32,20 @@ static gint
 on_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr;
+  struct _key *keyp;
 
   cr = gdk_cairo_create (event->window);
-  cairo_set_source_surface(cr, kb_surface, 0, 0);
-  cairo_paint(cr);
+  cairo_set_source_surface (cr, kb_surface, 0, 0);
+  cairo_paint (cr);
 
+  if (key_index) {
+    g_print ("key index %d\n", key_index);
+    cairo_set_line_width (cr, 1);
+    cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+    keyp = &key[key_index];
+    cairo_rectangle (cr, keyp->startx, keyp->starty, keyp->width, keyp->height);
+    cairo_fill (cr);
+  }
 /*   cairo_set_line_width(cr, 1); */
 /*   cairo_set_source_rgba(cr, 0, 0, 1, 0.3); */
 /*   cairo_rectangle(cr, 119, 115, 53, 52); */
@@ -87,8 +82,6 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button5")); /* change to english->article menu */
   g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
-
-/*   frame = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height); */
 
   kb_surface = cairo_image_surface_create_from_png(icon[ICON_KB_EN].path);
   kb_width = cairo_image_surface_get_width(kb_surface);

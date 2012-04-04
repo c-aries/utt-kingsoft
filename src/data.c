@@ -12,6 +12,7 @@ static gchar *icon_filename[ICON_NUM] = {	/* icon path prefix with MEDIADIR(in d
 struct _icon icon[ICON_NUM];
 
 struct _key key[] = {
+  {"nil", 0, 0, 0, 0, 0},				/* eliminate the 0 index, beacause GUINT_TO_POINTER (0) equals to NULL */
   {"a", 0x061, 119, 115, 53, 52},
   {"s", 0x073, 177, 115, 53, 52},
 };
@@ -31,6 +32,7 @@ data_precheck_and_init()
 {
   gchar *path;
   gint i;
+/*   gpointer ret; */
 
   /* init and check icons' path */
   for (i = 0; i < ICON_NUM; i++) {
@@ -46,11 +48,20 @@ data_precheck_and_init()
   }
 
   /* key hash table */
-  key_ht = g_hash_table_new (g_int_hash, g_int_equal);
+  key_ht = g_hash_table_new (g_direct_hash, g_direct_equal);
   for (i = 0; i < G_N_ELEMENTS (key); i++) {
-    g_hash_table_insert (key_ht, &key[i].val_debug, GINT_TO_POINTER (i));
+    g_hash_table_insert (key_ht, GUINT_TO_POINTER (key[i].val), GINT_TO_POINTER (i));
   }
-  g_print ("debug2 %x\n", key[0].val_debug);
+  
+/*   i = 0x61; */
+/*   ret = g_hash_table_lookup (key_ht, GUINT_TO_POINTER (i)); */
+/*   if (ret) { */
+/*     g_print ("debug: yes\n"); */
+/*   } */
+/*   else { */
+/*     g_print ("debug: no\n"); */
+/*   } */
+
 #ifdef DEBUG
   g_hash_table_foreach (key_ht, print_vals, NULL);
 #endif

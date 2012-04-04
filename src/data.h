@@ -30,7 +30,7 @@ struct _icon {
 
 struct _key {
   gchar *name;
-  gint val_debug;			/* key value */
+  guint val;			/* key value */
   /* fill area infromation, need to improve, in order to satisfy ENTER button, etc. */
   int startx, starty;
   int width, height;
