@@ -12,16 +12,14 @@ static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
   gpointer ret;
-  gint index;
 
   g_print ("key press %08x\n", event->keyval);
   ret = g_hash_table_lookup (key_ht, GUINT_TO_POINTER (event->keyval));
   if (ret) {
-    key_index = index = GPOINTER_TO_INT (ret);
-    g_print ("key %s\n", key[index].name);
+    key_index = GPOINTER_TO_INT (ret);
+    g_print ("key %s\n", key[key_index].name);
   }
   else {
-    g_print ("hash table ret NULL\n");
     key_index = 0;
   }
   gtk_widget_queue_draw (widget);
@@ -39,17 +37,12 @@ on_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_paint (cr);
 
   if (key_index) {
-    g_print ("key index %d\n", key_index);
     cairo_set_line_width (cr, 1);
     cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
     keyp = &key[key_index];
     cairo_rectangle (cr, keyp->startx, keyp->starty, keyp->width, keyp->height);
     cairo_fill (cr);
   }
-/*   cairo_set_line_width(cr, 1); */
-/*   cairo_set_source_rgba(cr, 0, 0, 1, 0.3); */
-/*   cairo_rectangle(cr, 119, 115, 53, 52); */
-/*   cairo_fill(cr); */
 
   cairo_destroy (cr);
   return FALSE;
