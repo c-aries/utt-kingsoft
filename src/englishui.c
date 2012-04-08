@@ -74,16 +74,29 @@ on_choose_press (GtkWidget *widget, gpointer data)
   content = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
   gtk_container_add (GTK_CONTAINER (content), choose_treeview);
   gtk_widget_show_all (dialog);
+  if (GTK_IS_WIDGET (choose_treeview)) {
+    g_print ("%s yes\n", G_STRLOC);
+  }
+  else {
+    g_print ("%s no\n", G_STRLOC);
+  }
   gtk_dialog_run (GTK_DIALOG (dialog));
+  if (GTK_IS_WIDGET (choose_treeview)) {
+    g_print ("%s yes\n", G_STRLOC);
+  }
+  else {
+    g_print ("%s no\n", G_STRLOC);
+  }
+  g_object_ref (choose_treeview);
   gtk_container_remove (GTK_CONTAINER (content), choose_treeview);
-  if (GTK_IS_WIDGET (dialog)) {
+  if (GTK_IS_WIDGET (choose_treeview)) {
     g_print ("%s yes\n", G_STRLOC);
   }
   else {
     g_print ("%s no\n", G_STRLOC);
   }
   gtk_widget_destroy (dialog);
-  if (GTK_IS_WIDGET (dialog)) {
+  if (GTK_IS_WIDGET (choose_treeview)) {
     g_print ("%s yes\n", G_STRLOC);
   }
   else {
