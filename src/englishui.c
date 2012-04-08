@@ -8,6 +8,7 @@
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 static gint key_index = 0;
 static GtkWidget *choose_treeview; /* class choose list */
+static GtkWidget *choose_dialog;
 
 static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
@@ -62,46 +63,15 @@ on_englishui_press(GtkWidget *widget, GdkEventButton *event, gpointer data)
 static gboolean
 on_choose_press (GtkWidget *widget, gpointer data)
 {
-  GtkWidget *dialog;
   GtkWidget *content;
 
-  dialog = gtk_dialog_new_with_buttons ("choose class",
-					GTK_WINDOW (global.english_window),
-					GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-					GTK_STOCK_OK, GTK_RESPONSE_OK,
-					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-					NULL);
-  content = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+  content = gtk_dialog_get_content_area (GTK_DIALOG (choose_dialog));
   gtk_container_add (GTK_CONTAINER (content), choose_treeview);
-  gtk_widget_show_all (dialog);
-  if (GTK_IS_WIDGET (choose_treeview)) {
-    g_print ("%s yes\n", G_STRLOC);
-  }
-  else {
-    g_print ("%s no\n", G_STRLOC);
-  }
-  gtk_dialog_run (GTK_DIALOG (dialog));
-  if (GTK_IS_WIDGET (choose_treeview)) {
-    g_print ("%s yes\n", G_STRLOC);
-  }
-  else {
-    g_print ("%s no\n", G_STRLOC);
-  }
+  gtk_widget_show_all (choose_dialog);
+  gtk_dialog_run (GTK_DIALOG (choose_dialog));
   g_object_ref (choose_treeview);
   gtk_container_remove (GTK_CONTAINER (content), choose_treeview);
-  if (GTK_IS_WIDGET (choose_treeview)) {
-    g_print ("%s yes\n", G_STRLOC);
-  }
-  else {
-    g_print ("%s no\n", G_STRLOC);
-  }
-  gtk_widget_destroy (dialog);
-  if (GTK_IS_WIDGET (choose_treeview)) {
-    g_print ("%s yes\n", G_STRLOC);
-  }
-  else {
-    g_print ("%s no\n", G_STRLOC);
-  }
+  gtk_widget_hide_all (choose_dialog);
   return FALSE;
 }
 
@@ -169,15 +139,14 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   choose_store = gtk_list_store_new (NUM_CLASS_COLS,
 				     G_TYPE_STRING);
   for (i = 0; i < G_N_ELEMENTS (class); i++) {
-    g_print ("%s\n", class[i].name);
     gtk_list_store_append (choose_store, &iter);
     gtk_list_store_set (choose_store, &iter,
 			COL_CLASS_NAME, class[i].name,
 			-1);
   }
   choose_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (choose_store));
-  /* gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (choose_treeview), TRUE); */
   gtk_tree_view_set_search_column (GTK_TREE_VIEW (choose_treeview), COL_CLASS_NAME);
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (choose_treeview), FALSE);
   g_object_unref (choose_store);
   renderer = gtk_cell_renderer_text_new ();
   col = gtk_tree_view_column_new_with_attributes ("class name",
@@ -185,8 +154,14 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 						  "text",
 						  COL_CLASS_NAME,
 						  NULL);
-  gtk_tree_view_column_set_sort_column_id (col, COL_CLASS_NAME);
   gtk_tree_view_append_column (GTK_TREE_VIEW (choose_treeview), col);
+
+  choose_dialog = gtk_dialog_new_with_buttons ("choose class",
+					GTK_WINDOW (english_window),
+					GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_STOCK_OK, GTK_RESPONSE_OK,
+					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+					NULL);
 }
 
 void englishui_deinit()
