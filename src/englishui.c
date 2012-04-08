@@ -7,7 +7,6 @@
 
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 static gint key_index = 0;
-static GtkWidget *choose_treeview; /* class choose list */
 static GtkWidget *choose_dialog;
 
 static gboolean
@@ -64,13 +63,12 @@ static gboolean
 on_choose_press (GtkWidget *widget, gpointer data)
 {
   GtkWidget *content;
+  gint ret;
 
   content = gtk_dialog_get_content_area (GTK_DIALOG (choose_dialog));
-  gtk_container_add (GTK_CONTAINER (content), choose_treeview);
   gtk_widget_show_all (choose_dialog);
-  gtk_dialog_run (GTK_DIALOG (choose_dialog));
-  g_object_ref (choose_treeview);
-  gtk_container_remove (GTK_CONTAINER (content), choose_treeview);
+  ret = gtk_dialog_run (GTK_DIALOG (choose_dialog)); /* ret GTK_RESPONSE_OK -5, GTK_RESPONSE_CANCEL -6, GTK_RESPONSE_DELETE_EVENT -4 */
+  g_print ("ret %d, %d, %d\n", ret, GTK_RESPONSE_OK, GTK_RESPONSE_CANCEL);
   gtk_widget_hide_all (choose_dialog);
   return FALSE;
 }
@@ -83,6 +81,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   GtkWidget *button;
   GtkWidget *kb_draw;
   /* choose list widgets */
+  GtkWidget *choose_treeview;
   GtkListStore *choose_store;
   GtkTreeIter iter;
   GtkCellRenderer *renderer;
@@ -99,6 +98,11 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button6")); /* english->layout->choose */
   g_signal_connect (button, "clicked", G_CALLBACK (on_choose_press), english_window);
+  choose_dialog = GTK_WIDGET (gtk_builder_get_object (builder, "choose_dialog1")); /* english->layout->choose dialog */
+  gtk_widget_set_parent_window (choose_dialog, gtk_widget_get_window (english_window)); /* FIXME: I don't know how to set parent window in glade. */
+  gtk_window_set_transient_for (GTK_WINDOW (choose_dialog), GTK_WINDOW (english_window));
+  choose_store = GTK_LIST_STORE (gtk_builder_get_object (builder, "liststore1"));
+  choose_treeview = GTK_WIDGET (gtk_builder_get_object (builder, "treeview2"));
 
   kb_surface = cairo_image_surface_create_from_png(icon[ICON_KB_EN].path); /* english keyboard image */
   kb_width = cairo_image_surface_get_width(kb_surface);
@@ -136,15 +140,12 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
     {"Class 11: 0-9"},
     {"Class 12: punctuation"},
   };
-  choose_store = gtk_list_store_new (NUM_CLASS_COLS,
-				     G_TYPE_STRING);
   for (i = 0; i < G_N_ELEMENTS (class); i++) {
     gtk_list_store_append (choose_store, &iter);
     gtk_list_store_set (choose_store, &iter,
 			COL_CLASS_NAME, class[i].name,
 			-1);
   }
-  choose_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (choose_store));
   gtk_tree_view_set_search_column (GTK_TREE_VIEW (choose_treeview), COL_CLASS_NAME);
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (choose_treeview), FALSE);
   g_object_unref (choose_store);
@@ -155,13 +156,6 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 						  COL_CLASS_NAME,
 						  NULL);
   gtk_tree_view_append_column (GTK_TREE_VIEW (choose_treeview), col);
-
-  choose_dialog = gtk_dialog_new_with_buttons ("choose class",
-					GTK_WINDOW (english_window),
-					GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-					GTK_STOCK_OK, GTK_RESPONSE_OK,
-					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-					NULL);
 }
 
 void englishui_deinit()

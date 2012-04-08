@@ -799,7 +799,12 @@
       </object>
     </child>
   </object>
-  <object class="GtkListStore" id="liststore1"/>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name COL_CLASS_NAME -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="choose_window1">
     <child>
       <object class="GtkVBox" id="vbox10">
@@ -859,6 +864,8 @@
   </object>
   <object class="GtkDialog" id="choose_dialog1">
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">choose class</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
@@ -926,8 +933,9 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">button19</action-widget>
-      <action-widget response="0">button20</action-widget>
+      <action-widget response="-5">button19</action-widget>
+      <action-widget response="-6">button20</action-widget>
     </action-widgets>
   </object>
+  <object class="GtkAction" id="action1"/>
 </interface>
