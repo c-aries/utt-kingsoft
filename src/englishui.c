@@ -75,7 +75,20 @@ on_choose_press (GtkWidget *widget, gpointer data)
   gtk_container_add (GTK_CONTAINER (content), choose_treeview);
   gtk_widget_show_all (dialog);
   gtk_dialog_run (GTK_DIALOG (dialog));
+  gtk_container_remove (GTK_CONTAINER (content), choose_treeview);
+  if (GTK_IS_WIDGET (dialog)) {
+    g_print ("%s yes\n", G_STRLOC);
+  }
+  else {
+    g_print ("%s no\n", G_STRLOC);
+  }
   gtk_widget_destroy (dialog);
+  if (GTK_IS_WIDGET (dialog)) {
+    g_print ("%s yes\n", G_STRLOC);
+  }
+  else {
+    g_print ("%s no\n", G_STRLOC);
+  }
   return FALSE;
 }
 
@@ -150,7 +163,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 			-1);
   }
   choose_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (choose_store));
-  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (choose_treeview), TRUE);
+  /* gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (choose_treeview), TRUE); */
   gtk_tree_view_set_search_column (GTK_TREE_VIEW (choose_treeview), COL_CLASS_NAME);
   g_object_unref (choose_store);
   renderer = gtk_cell_renderer_text_new ();
