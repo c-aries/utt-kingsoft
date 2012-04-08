@@ -8,6 +8,29 @@
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 static gint key_index = 0;
 static GtkWidget *choose_dialog;
+static GtkWidget *choose_treeview;
+
+struct _class {
+  const gchar *name;
+};
+struct _class class[] = {
+  {"Keyboard Layout"},
+  {"Finger One by One"},
+  {"Wrong?"},
+  {"Class 0: asdfjkl;"},
+  {"Class 1: ei"},
+  {"Class 2: ru"},
+  {"Class 3: gh"},
+  {"Class 4: C,"},
+  {"Class 5: yt"},
+  {"Class 6: mv"},
+  {"Class 7: bn"},
+  {"Class 8: ow"},
+  {"Class 9: pqz"},
+  {"Class 10: x."},
+  {"Class 11: 0-9"},
+  {"Class 12: punctuation"},
+};
 
 static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
@@ -63,12 +86,25 @@ static gboolean
 on_choose_press (GtkWidget *widget, gpointer data)
 {
   GtkWidget *content;
-  gint ret;
+  GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW (choose_treeview));
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (choose_treeview));
+  GtkTreeIter iter;
+  GtkTreePath *path;
+  gint ret, choose;
 
+  if (!gtk_tree_selection_get_selected (sel, NULL, &iter)) {
+    gtk_tree_model_get_iter_first (model, &iter);
+    gtk_tree_selection_select_iter (sel, &iter);
+  }
   content = gtk_dialog_get_content_area (GTK_DIALOG (choose_dialog));
   gtk_widget_show_all (choose_dialog);
   ret = gtk_dialog_run (GTK_DIALOG (choose_dialog)); /* ret GTK_RESPONSE_OK -5, GTK_RESPONSE_CANCEL -6, GTK_RESPONSE_DELETE_EVENT -4 */
-  g_print ("ret %d, %d, %d\n", ret, GTK_RESPONSE_OK, GTK_RESPONSE_CANCEL);
+  if (ret == GTK_RESPONSE_OK) {
+    gtk_tree_selection_get_selected (sel, NULL, &iter);
+    path = gtk_tree_model_get_path (model, &iter);
+    choose = gtk_tree_path_get_indices (path)[0];
+    g_print ("choose index %d '%s'\n", choose, class[choose].name);
+  }
   gtk_widget_hide_all (choose_dialog);
   return FALSE;
 }
@@ -81,7 +117,6 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   GtkWidget *button;
   GtkWidget *kb_draw;
   /* choose list widgets */
-  GtkWidget *choose_treeview;
   GtkListStore *choose_store;
   GtkTreeIter iter;
   GtkCellRenderer *renderer;
@@ -118,27 +153,6 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   enum {
     COL_CLASS_NAME,		/* string */
     NUM_CLASS_COLS,
-  };
-  struct _class {
-    const gchar *name;
-  };
-  struct _class class[] = {
-    {"Keyboard Layout"},
-    {"Finger One by One"},
-    {"Wrong?"},
-    {"Class 0: asdfjkl;"},
-    {"Class 1: ei"},
-    {"Class 2: ru"},
-    {"Class 3: gh"},
-    {"Class 4: C,"},
-    {"Class 5: yt"},
-    {"Class 6: mv"},
-    {"Class 7: bn"},
-    {"Class 8: ow"},
-    {"Class 9: pqz"},
-    {"Class 10: x."},
-    {"Class 11: 0-9"},
-    {"Class 12: punctuation"},
   };
   for (i = 0; i < G_N_ELEMENTS (class); i++) {
     gtk_list_store_append (choose_store, &iter);
