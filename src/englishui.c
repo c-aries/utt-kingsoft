@@ -7,6 +7,7 @@
 
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 static gint key_index = 0;
+static GtkWidget *choose_dialog;
 
 static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
@@ -58,6 +59,16 @@ on_englishui_press(GtkWidget *widget, GdkEventButton *event, gpointer data)
   return FALSE;
 }
 
+static gboolean
+on_choose_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+  gint ret;
+
+  ret = gtk_dialog_run (GTK_DIALOG (choose_dialog));
+  g_print ("ret %d\n", ret);
+  return FALSE;
+}
+
 void
 englishui_init (GtkBuilder *builder)			/* english ui init */
 {
@@ -75,6 +86,9 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button5")); /* change to english->article menu */
   g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
+  choose_dialog = GTK_WIDGET (gtk_builder_get_object (builder, "choose_dialog1"));
+  button = GTK_WIDGET (gtk_builder_get_object (builder, "button6")); /* english->layout->choose */
+  g_signal_connect (button, "clicked", G_CALLBACK (on_choose_press), NULL);
 
   kb_surface = cairo_image_surface_create_from_png(icon[ICON_KB_EN].path);
   kb_width = cairo_image_surface_get_width(kb_surface);
