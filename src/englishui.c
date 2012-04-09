@@ -6,6 +6,7 @@
 #define DEBUG 1
 
 static cairo_surface_t *kb_surface;	/* keyboard surface */
+static cairo_surface_t *dash_surface;	/* dashboard surface */
 static gint key_index = 0;
 static GtkWidget *choose_dialog;
 static GtkWidget *choose_treeview;
@@ -51,7 +52,7 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 }
 
 static gint
-on_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+on_keyboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr;
   struct _key *keyp;
@@ -68,6 +69,18 @@ on_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
     cairo_fill (cr);
   }
 
+  cairo_destroy (cr);
+  return FALSE;
+}
+
+static gint
+on_dashboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  cairo_t *cr;
+
+  cr = gdk_cairo_create (event->window);
+  cairo_set_source_surface (cr, dash_surface, 0, 0);
+  cairo_paint (cr);
   cairo_destroy (cr);
   return FALSE;
 }
@@ -113,9 +126,9 @@ void
 englishui_init (GtkBuilder *builder)			/* english ui init */
 {
   GtkWidget *english_window;
-  gint kb_width, kb_height, i;
+  gint kb_width, kb_height, dash_width, dash_height, i;
   GtkWidget *button;
-  GtkWidget *kb_draw;
+  GtkWidget *kb_draw, *dashboard;
   /* choose list widgets */
   GtkListStore *choose_store;
   GtkTreeIter iter;
@@ -139,13 +152,19 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   choose_store = GTK_LIST_STORE (gtk_builder_get_object (builder, "liststore1"));
   choose_treeview = GTK_WIDGET (gtk_builder_get_object (builder, "treeview2"));
 
-  kb_surface = cairo_image_surface_create_from_png(icon[ICON_KB_EN].path); /* english keyboard image */
-  kb_width = cairo_image_surface_get_width(kb_surface);
-  kb_height = cairo_image_surface_get_height(kb_surface);
-
+  kb_surface = cairo_image_surface_create_from_png (icon[ICON_KB_EN].path); /* english keyboard image */
+  kb_width = cairo_image_surface_get_width (kb_surface);
+  kb_height = cairo_image_surface_get_height (kb_surface);
   kb_draw = GTK_WIDGET (gtk_builder_get_object (builder, "kb_draw"));
-  g_signal_connect (kb_draw, "expose-event", G_CALLBACK (on_expose), NULL);
+  g_signal_connect (kb_draw, "expose-event", G_CALLBACK (on_keyboard_expose), NULL);
   gtk_widget_set_size_request (kb_draw, kb_width, kb_height);
+
+  dash_surface = cairo_image_surface_create_from_png (icon[ICON_DASHBOARD].path);
+  dash_width = cairo_image_surface_get_width (dash_surface);
+  dash_height = cairo_image_surface_get_height (dash_surface);
+  dashboard = GTK_WIDGET (gtk_builder_get_object (builder, "dashboard1"));
+  g_signal_connect (dashboard, "expose-event", G_CALLBACK (on_dashboard_expose), NULL);
+  gtk_widget_set_size_request (dashboard, dash_width, dash_height);
 
   g_signal_connect (english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
 

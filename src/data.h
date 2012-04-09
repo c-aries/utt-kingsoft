@@ -21,6 +21,7 @@
 
 enum {
   ICON_KB_EN,
+  ICON_DASHBOARD,
   ICON_NUM,			/* icons number */
 };
 
