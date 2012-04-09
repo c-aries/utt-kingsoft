@@ -155,7 +155,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   kb_surface = cairo_image_surface_create_from_png (icon[ICON_KB_EN].path); /* english keyboard image */
   kb_width = cairo_image_surface_get_width (kb_surface);
   kb_height = cairo_image_surface_get_height (kb_surface);
-  kb_draw = GTK_WIDGET (gtk_builder_get_object (builder, "kb_draw"));
+  kb_draw = GTK_WIDGET (gtk_builder_get_object (builder, "kb_draw1"));
   g_signal_connect (kb_draw, "expose-event", G_CALLBACK (on_keyboard_expose), NULL);
   gtk_widget_set_size_request (kb_draw, kb_width, kb_height);
 

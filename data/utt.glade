@@ -157,7 +157,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkDrawingArea" id="kb_draw">
+              <object class="GtkDrawingArea" id="kb_draw1">
                 <property name="visible">True</property>
               </object>
               <packing>
