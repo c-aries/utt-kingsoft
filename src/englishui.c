@@ -10,6 +10,7 @@ static cairo_surface_t *dash_surface;	/* dashboard surface */
 static gint key_index = 0;
 static GtkWidget *choose_dialog;
 static GtkWidget *choose_treeview;
+static GtkWidget *layout_label;
 
 struct _class {
   const gchar *name;
@@ -116,6 +117,7 @@ on_choose_press (GtkWidget *widget, gpointer data)
     gtk_tree_selection_get_selected (sel, NULL, &iter);
     path = gtk_tree_model_get_path (model, &iter);
     choose = gtk_tree_path_get_indices (path)[0];
+    gtk_label_set_text (GTK_LABEL (layout_label), class[choose].name);
     g_print ("choose index %d '%s'\n", choose, class[choose].name);
   }
   gtk_widget_hide_all (choose_dialog);
@@ -146,11 +148,15 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button6")); /* english->layout->choose */
   g_signal_connect (button, "clicked", G_CALLBACK (on_choose_press), english_window);
+  /* choose dialog */
   choose_dialog = GTK_WIDGET (gtk_builder_get_object (builder, "choose_dialog1")); /* english->layout->choose dialog */
   gtk_widget_set_parent_window (choose_dialog, gtk_widget_get_window (english_window)); /* FIXME: I don't know how to set parent window in glade. */
   gtk_window_set_transient_for (GTK_WINDOW (choose_dialog), GTK_WINDOW (english_window));
   choose_store = GTK_LIST_STORE (gtk_builder_get_object (builder, "liststore1"));
   choose_treeview = GTK_WIDGET (gtk_builder_get_object (builder, "treeview2"));
+  /* others */
+  layout_label = GTK_WIDGET (gtk_builder_get_object (builder, "label6"));
+  gtk_label_set_text (GTK_LABEL (layout_label), class[0].name);
 
   kb_surface = cairo_image_surface_create_from_png (icon[ICON_KB_EN].path); /* english keyboard image */
   kb_width = cairo_image_surface_get_width (kb_surface);
