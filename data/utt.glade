@@ -157,8 +157,15 @@
               </packing>
             </child>
             <child>
-              <object class="GtkDrawingArea" id="kb_draw1">
+              <object class="GtkAlignment" id="alignment1">
                 <property name="visible">True</property>
+                <property name="xscale">0</property>
+                <property name="yscale">0</property>
+                <child>
+                  <object class="GtkDrawingArea" id="kb_draw1">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="position">2</property>
@@ -169,8 +176,15 @@
                 <property name="visible">True</property>
                 <property name="spacing">2</property>
                 <child>
-                  <object class="GtkDrawingArea" id="dashboard1">
+                  <object class="GtkAlignment" id="alignment2">
                     <property name="visible">True</property>
+                    <property name="xscale">0</property>
+                    <property name="yscale">0</property>
+                    <child>
+                      <object class="GtkDrawingArea" id="dashboard1">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">0</property>
@@ -182,8 +196,6 @@
                     <property name="label" translatable="yes">press 'Pause' to pause</property>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
