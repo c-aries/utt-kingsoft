@@ -148,11 +148,26 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label7">
+              <object class="GtkHBox" id="hbox18">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">display</property>
+                <child>
+                  <object class="GtkAlignment" id="alignment3">
+                    <property name="visible">True</property>
+                    <property name="xscale">0</property>
+                    <property name="yscale">0</property>
+                    <child>
+                      <object class="GtkDrawingArea" id="key_draw1">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
               </object>
               <packing>
+                <property name="padding">4</property>
                 <property name="position">1</property>
               </packing>
             </child>

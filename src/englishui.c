@@ -124,13 +124,37 @@ on_choose_press (GtkWidget *widget, gpointer data)
   return FALSE;
 }
 
+static gboolean
+on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  GdkPixbuf *pixbuf = NULL;
+  GdkPixbuf *dest = NULL;
+  cairo_t *cr;
+
+  pixbuf = gdk_pixbuf_new_from_file (icon[ICON_KB_EN].path, NULL);
+  dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, key[1].width, key[1].height);
+  gdk_pixbuf_copy_area (pixbuf, key[1].startx, key[1].starty, key[1].width, key[1].height,
+			dest, 0, 0); /* got it from mei meng maid cafe */
+  cr = gdk_cairo_create (event->window);
+
+  gdk_cairo_set_source_pixbuf (cr, dest, 0, 0);
+  cairo_paint (cr);
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_paint (cr);
+
+  cairo_destroy (cr);
+  g_object_unref (dest);
+  g_object_unref (pixbuf);
+  return FALSE;
+}
+
 void
 englishui_init (GtkBuilder *builder)			/* english ui init */
 {
   GtkWidget *english_window;
   gint kb_width, kb_height, dash_width, dash_height, i;
   GtkWidget *button;
-  GtkWidget *kb_draw, *dashboard;
+  GtkWidget *kb_draw, *dashboard, *key_draw1;
   /* choose list widgets */
   GtkListStore *choose_store;
   GtkTreeIter iter;
@@ -173,6 +197,12 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   gtk_widget_set_size_request (dashboard, dash_width, dash_height);
 
   g_signal_connect (english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
+
+  /* keys */
+  key_draw1 = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw1"));
+  g_debug ("width %d, height %d\n", key[1].width, key[1].height);
+  gtk_widget_set_size_request (key_draw1, key[1].width, key[1].height);
+  g_signal_connect (key_draw1, "expose-event", G_CALLBACK (on_keydraw_expose), NULL);
 
   /* choose layout class, assume them to be local variables first */
   enum {
