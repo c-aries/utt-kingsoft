@@ -6,6 +6,7 @@
 #define DEBUG 1
 
 static cairo_surface_t *kb_surface;	/* keyboard surface */
+static GdkPixbuf *kb_pixbuf;		/* keyboard pixbuf */
 static cairo_surface_t *dash_surface;	/* dashboard surface */
 static gint key_index = 0;
 static GtkWidget *choose_dialog;
@@ -66,7 +67,7 @@ on_keyboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
     cairo_set_line_width (cr, 1);
     cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
     keyp = &key[key_index];
-    cairo_rectangle (cr, keyp->startx, keyp->starty, keyp->width, keyp->height);
+    cairo_rectangle (cr, keyp->x, keyp->y, keyp->width, keyp->height);
     cairo_fill (cr);
   }
 
@@ -127,24 +128,23 @@ on_choose_press (GtkWidget *widget, gpointer data)
 static gboolean
 on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  GdkPixbuf *pixbuf = NULL;
   GdkPixbuf *dest = NULL;
   cairo_t *cr;
+  gint index = GPOINTER_TO_INT (data);
+  struct _key *keyp = &key[index];
 
-  pixbuf = gdk_pixbuf_new_from_file (icon[ICON_KB_EN].path, NULL);
-  dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, key[1].width, key[1].height);
-  gdk_pixbuf_copy_area (pixbuf, key[1].startx, key[1].starty, key[1].width, key[1].height,
+  dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, keyp->width, keyp->height);
+  gdk_pixbuf_copy_area (kb_pixbuf, keyp->x, keyp->y, keyp->width, keyp->height,
 			dest, 0, 0); /* got it from mei meng maid cafe */
   cr = gdk_cairo_create (event->window);
 
   gdk_cairo_set_source_pixbuf (cr, dest, 0, 0);
   cairo_paint (cr);
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_paint (cr);
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_paint (cr); */
 
   cairo_destroy (cr);
   g_object_unref (dest);
-  g_object_unref (pixbuf);
   return FALSE;
 }
 
@@ -154,7 +154,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   GtkWidget *english_window;
   gint kb_width, kb_height, dash_width, dash_height, i;
   GtkWidget *button;
-  GtkWidget *kb_draw, *dashboard, *key_draw1;
+  GtkWidget *kb_draw, *dashboard, *key_draw;
   /* choose list widgets */
   GtkListStore *choose_store;
   GtkTreeIter iter;
@@ -182,7 +182,8 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   layout_label = GTK_WIDGET (gtk_builder_get_object (builder, "label6"));
   gtk_label_set_text (GTK_LABEL (layout_label), class[0].name);
 
-  kb_surface = cairo_image_surface_create_from_png (icon[ICON_KB_EN].path); /* english keyboard image */
+  kb_pixbuf = gdk_pixbuf_new_from_file (icon[ICON_KB_EN].path, NULL);	/* english keyboard image */
+  kb_surface = cairo_image_surface_create_from_png (icon[ICON_KB_EN].path);
   kb_width = cairo_image_surface_get_width (kb_surface);
   kb_height = cairo_image_surface_get_height (kb_surface);
   kb_draw = GTK_WIDGET (gtk_builder_get_object (builder, "kb_draw1"));
@@ -199,10 +200,24 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
 
   /* keys */
-  key_draw1 = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw1"));
-  g_debug ("width %d, height %d\n", key[1].width, key[1].height);
-  gtk_widget_set_size_request (key_draw1, key[1].width, key[1].height);
-  g_signal_connect (key_draw1, "expose-event", G_CALLBACK (on_keydraw_expose), NULL);
+  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw1"));
+  gtk_widget_set_size_request (key_draw, key[1].width, key[1].height);
+  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (1));
+  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw2"));
+  gtk_widget_set_size_request (key_draw, key[2].width, key[2].height);
+  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (2));
+  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw3"));
+  gtk_widget_set_size_request (key_draw, key[1].width, key[1].height);
+  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (1));
+  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw4"));
+  gtk_widget_set_size_request (key_draw, key[2].width, key[2].height);
+  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (2));
+  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw5"));
+  gtk_widget_set_size_request (key_draw, key[1].width, key[1].height);
+  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (1));
+  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw6"));
+  gtk_widget_set_size_request (key_draw, key[2].width, key[2].height);
+  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (2));
 
   /* choose layout class, assume them to be local variables first */
   enum {
@@ -230,6 +245,9 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 void englishui_deinit()
 {
   if (kb_surface) {
-    cairo_surface_destroy(kb_surface);
+    cairo_surface_destroy (kb_surface);
+  }
+  if (kb_pixbuf) {
+    g_object_unref (kb_pixbuf);
   }
 }

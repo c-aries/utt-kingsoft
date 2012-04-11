@@ -33,7 +33,7 @@ struct _key {
   gchar *name;
   guint val;			/* key value */
   /* fill area infromation, need to improve, in order to satisfy ENTER button, etc. */
-  int startx, starty;
+  int x, y;			/* start x, start y */
   int width, height;
 };
 
