@@ -9,6 +9,8 @@ static cairo_surface_t *kb_surface;	/* keyboard surface */
 static GdkPixbuf *kb_pixbuf;		/* keyboard pixbuf */
 static cairo_surface_t *dash_surface;	/* dashboard surface */
 static gint key_index = 0;
+static GtkWidget *key_draw[6];
+static gint keydraw_index = 0;	/* keydraw index */
 static GtkWidget *choose_dialog;
 static GtkWidget *choose_treeview;
 static GtkWidget *layout_label;
@@ -20,6 +22,7 @@ struct _class class[] = {
   {"Keyboard Layout"},
   {"Finger One by One"},
   {"Wrong?"},
+  {"Test 'a', 's'"},
   {"Class 0: asdfjkl;"},
   {"Class 1: ei"},
   {"Class 2: ru"},
@@ -45,6 +48,7 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   if (ret) {
     key_index = GPOINTER_TO_INT (ret);
     g_print ("key %s\n", key[key_index].name);
+    keydraw_index = (keydraw_index + 1) % 6;
   }
   else {
     key_index = 0;
@@ -140,8 +144,10 @@ on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 
   gdk_cairo_set_source_pixbuf (cr, dest, 0, 0);
   cairo_paint (cr);
-/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
-/*   cairo_paint (cr); */
+  if (key_draw[keydraw_index] == widget) {
+    cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+    cairo_paint (cr);
+  }
 
   cairo_destroy (cr);
   g_object_unref (dest);
@@ -154,12 +160,13 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   GtkWidget *english_window;
   gint kb_width, kb_height, dash_width, dash_height, i;
   GtkWidget *button;
-  GtkWidget *kb_draw, *dashboard, *key_draw;
+  GtkWidget *kb_draw, *dashboard;
   /* choose list widgets */
   GtkListStore *choose_store;
   GtkTreeIter iter;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *col;
+  gchar *tempstr;
 
   english_window = global.english_window = GTK_WIDGET (gtk_builder_get_object (builder, "english_window"));
 
@@ -200,24 +207,13 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
 
   /* keys */
-  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw1"));
-  gtk_widget_set_size_request (key_draw, key[1].width, key[1].height);
-  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (1));
-  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw2"));
-  gtk_widget_set_size_request (key_draw, key[2].width, key[2].height);
-  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (2));
-  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw3"));
-  gtk_widget_set_size_request (key_draw, key[1].width, key[1].height);
-  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (1));
-  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw4"));
-  gtk_widget_set_size_request (key_draw, key[2].width, key[2].height);
-  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (2));
-  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw5"));
-  gtk_widget_set_size_request (key_draw, key[1].width, key[1].height);
-  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (1));
-  key_draw = GTK_WIDGET (gtk_builder_get_object (builder, "key_draw6"));
-  gtk_widget_set_size_request (key_draw, key[2].width, key[2].height);
-  g_signal_connect (key_draw, "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (2));
+  for (i = 0; i < 6; i++) {
+    tempstr = g_strdup_printf ("key_draw%d", i + 1);
+    key_draw[i] = GTK_WIDGET (gtk_builder_get_object (builder, tempstr));
+    g_free (tempstr);
+    gtk_widget_set_size_request (key_draw[i], key[1].width, key[1].height);
+    g_signal_connect (key_draw[i], "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (i % 2 + 1));
+  }
 
   /* choose layout class, assume them to be local variables first */
   enum {
