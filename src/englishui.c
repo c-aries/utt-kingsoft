@@ -15,6 +15,8 @@ static GtkWidget *choose_dialog;
 static GtkWidget *choose_treeview;
 static GtkWidget *layout_label;
 
+/* static gchar *text = "aasasa"; */
+
 struct _class {
   const gchar *name;
 };
@@ -44,7 +46,7 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   gpointer ret;
 
   g_print ("key press %08x\n", event->keyval);
-  ret = g_hash_table_lookup (key_ht, GUINT_TO_POINTER (event->keyval));
+  ret = g_hash_table_lookup (key_val_ht, GUINT_TO_POINTER (event->keyval));
   if (ret) {
     key_index = GPOINTER_TO_INT (ret);
     g_print ("key %s\n", key[key_index].name);

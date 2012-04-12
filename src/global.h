@@ -16,7 +16,7 @@ struct _global {
 
 /* frequencely use variablies */
 extern struct _icon icon[ICON_NUM]; /* data.c */
-extern GHashTable *key_ht;		/* key's hash table */
+extern GHashTable *key_val_ht, *key_name_ht;		/* key's hash table */
 extern struct _key key[];		/* keys array */
 extern GtkWidget *current_window;   /* global.c */
 
