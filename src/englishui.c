@@ -5,6 +5,7 @@
 
 #define DEBUG 1
 
+static gint current_pageid;	      /* current notebook page num */
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 static GdkPixbuf *kb_pixbuf;		/* keyboard pixbuf */
 static cairo_surface_t *dash_surface;	/* dashboard surface */
@@ -141,7 +142,8 @@ on_englishui_press(GtkWidget *widget, GdkEventButton *event, gpointer data)
   gtk_widget_hide_all(current_window);
   current_window = global.english_window;
   gtk_widget_show_all(current_window);
-/*   gtk_notebook_set_current_page(GTK_NOTEBOOK(global.english_notebook), 0); */
+  /* GtkNotebook hide, we should set page by ourself after show */
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(global.english_notebook), current_pageid);
   return FALSE;
 }
 
@@ -225,6 +227,22 @@ on_note_switch (GtkNotebook *note, GtkNotebookPage *page, guint page_num, gpoint
   g_print ("%s: index %d\n", __func__, page_num);
 }
 
+static void
+on_note_hide (GtkWidget *widget, gpointer data)
+{
+  g_print ("%s\n", __func__);
+}
+
+static gboolean
+englishui_on_menu_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+  current_pageid = gtk_notebook_get_current_page (GTK_NOTEBOOK (global.english_notebook));
+  gtk_widget_hide_all (current_window);
+  current_window = global.menu_window;
+  gtk_widget_show_all (current_window);
+  return FALSE;
+}
+
 void
 englishui_init (GtkBuilder *builder)			/* english ui init */
 {
@@ -244,11 +262,11 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 
   /* menu button */
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button1")); /* change to english->layout menu */
-  g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (englishui_on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button2")); /* change to english->character menu */
-  g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (englishui_on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button5")); /* change to english->article menu */
-  g_signal_connect (button, "clicked", G_CALLBACK (on_menu_press), NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (englishui_on_menu_press), NULL);
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button6")); /* english->layout->choose */
   g_signal_connect (button, "clicked", G_CALLBACK (on_choose_press), english_window);
   /* choose dialog */
@@ -259,6 +277,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   choose_treeview = GTK_WIDGET (gtk_builder_get_object (builder, "treeview2"));
   notebook = GTK_NOTEBOOK (gtk_builder_get_object (builder, "english_notebook"));
   g_signal_connect (notebook, "switch-page", G_CALLBACK (on_note_switch), NULL);
+  g_signal_connect_after (notebook, "hide", G_CALLBACK (on_note_hide), NULL);
   /* others */
   layout_label = GTK_WIDGET (gtk_builder_get_object (builder, "label6"));
   gtk_label_set_text (GTK_LABEL (layout_label), class[0].name);

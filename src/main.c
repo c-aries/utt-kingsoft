@@ -18,6 +18,7 @@ on_wubi_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
   return FALSE;
 }
 
+/* FIXME: shouldn't be global */
 gboolean
 on_menu_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {

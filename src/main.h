@@ -17,7 +17,7 @@ struct _ui {
 
 extern struct _ui ui;
 
+/* FIXME: shouldn't be global */
 gboolean on_menu_press (GtkWidget *widget, GdkEventButton *event, gpointer data);
 
 #endif
-
