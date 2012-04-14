@@ -321,7 +321,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   }
   gtk_tree_view_set_search_column (GTK_TREE_VIEW (choose_treeview), COL_CLASS_NAME);
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (choose_treeview), FALSE);
-  g_object_unref (choose_store);
+/*   g_object_unref (choose_store); */
   renderer = gtk_cell_renderer_text_new ();
   col = gtk_tree_view_column_new_with_attributes ("class name",
 						  renderer,
