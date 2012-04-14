@@ -8,15 +8,16 @@
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 static GdkPixbuf *kb_pixbuf;		/* keyboard pixbuf */
 static cairo_surface_t *dash_surface;	/* dashboard surface */
-static gint key_index = 0;
-static GtkWidget *key_draw[6];
-static gint keydraw_index = 0;	/* keydraw index */
+/* static gint key_index = 0; */
+static GtkWidget *key_draw[6];	/* english ui, basic keyboard layout class */
+static gint keydraw_index = 0;	/* blue keydraw index */
 static GtkWidget *choose_dialog;
 static GtkWidget *choose_treeview;
 static GtkWidget *layout_label;
 static gint class_index = 0;
 
-static gchar *text = "aasasa";
+static gchar *text = "asdfg";
+static gchar gentext[7];	/* the last character is NUL */
 
 struct _class {
   const gchar *name;
@@ -46,19 +47,41 @@ static struct _class class[] = {
 static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
-  gpointer ret;
+  gpointer ret, found;
+  gint i, texti, keyi;
+  gchar ch = gentext[keydraw_index];
 
   g_print ("key press %08x\n", event->keyval);
   ret = g_hash_table_lookup (key_val_ht, GUINT_TO_POINTER (event->keyval));
   if (ret) {
-    key_index = GPOINTER_TO_INT (ret);
-    g_print ("key %s\n", key[key_index].name);
+    keyi = GPOINTER_TO_INT (ret);
+    g_print ("key %s\n", key[keyi].name);
+    if (ch && key[keyi].ch != ch) {
+      goto fail;
+    }
     keydraw_index = (keydraw_index + 1) % 6;
+    if (keydraw_index == 0) {	/* next turn */
+      g_print ("gen text\n");
+      for (i = 0; i < 6; i++) {	/* i is gentext index */
+	texti = g_random_int_range (0, 4);
+	found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
+	if (found) {
+	  keyi = GPOINTER_TO_INT (found);
+	  g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name);
+	  gentext[i] = text[texti];
+	}
+	else {
+	  g_print ("not found\n");
+	}
+      }
+      g_print ("gentext %s\n", gentext);
+    }
   }
   else {
-    key_index = 0;
+    keyi = 0;
   }
   gtk_widget_queue_draw (widget);
+ fail:
   return FALSE;
 }
 
@@ -67,17 +90,33 @@ on_keyboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr;
   struct _key *keyp;
+  gchar ch = gentext[keydraw_index];
+  gpointer found;
+  gint keyi;
 
   cr = gdk_cairo_create (event->window);
   cairo_set_source_surface (cr, kb_surface, 0, 0);
   cairo_paint (cr);
 
-  if (key_index) {
-    cairo_set_line_width (cr, 1);
-    cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-    keyp = &key[key_index];
-    cairo_rectangle (cr, keyp->x, keyp->y, keyp->width, keyp->height);
-    cairo_fill (cr);
+/*   if (key_index) { */
+/*     g_print ("keyboard index %d\n", key_index); */
+/*     cairo_set_line_width (cr, 1); */
+/*     cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*     keyp = &key[key_index]; */
+/*     cairo_rectangle (cr, keyp->x, keyp->y, keyp->width, keyp->height); */
+/*     cairo_fill (cr); */
+/*   } */
+  if (ch) {
+    /* FIXME: we can cache here */
+    found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)ch));
+    if (found) {
+      keyi = GPOINTER_TO_INT (found);
+      keyp = &key[keyi];
+      cairo_set_line_width (cr, 1);
+      cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+      cairo_rectangle (cr, keyp->x, keyp->y, keyp->width, keyp->height);
+      cairo_fill (cr);
+    }
   }
 
   cairo_destroy (cr);
@@ -141,29 +180,30 @@ on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   GdkPixbuf *dest = NULL;
   cairo_t *cr;
-  struct _key *keyp;
-  gint texti, keyi;
+  gint index = GPOINTER_TO_INT (data); /* current common keydraw index */
+  struct _key *keyp = NULL;
+  gint keyi;
   gpointer found;
+  gchar ch;
 
-  texti = g_random_int_range (0, 5);
-  found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
-  if (found) {
-    keyi = GPOINTER_TO_INT (found);
-    g_print ("%d %c, %d %s\n", texti, text[texti], keyi, key[keyi].name);
-  }
-  else {
-    g_print ("nothing\n");
+  ch = gentext[index];
+  if (ch) {
+    /* FIXME: we can cache here */
+    found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)ch));
+    if (found) {
+      keyi = GPOINTER_TO_INT (found);
+      keyp = &key[keyi];
+    }
   }
 
-  if (found) {
-    keyp = &key[keyi];
+  if (keyp) {
     dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, keyp->width, keyp->height);
     gdk_pixbuf_copy_area (kb_pixbuf, keyp->x, keyp->y, keyp->width, keyp->height,
 			  dest, 0, 0); /* got it from mei meng maid cafe */
   }
 
   cr = gdk_cairo_create (event->window);
-  if (found) {
+  if (keyp) {
     gdk_cairo_set_source_pixbuf (cr, dest, 0, 0);
   }
   cairo_paint (cr);
@@ -173,7 +213,9 @@ on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   }
 
   cairo_destroy (cr);
-  /* g_object_unref (dest); */
+  if (keyp) {
+    g_object_unref (dest);
+  }
   return FALSE;
 }
 
@@ -244,7 +286,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
     key_draw[i] = GTK_WIDGET (gtk_builder_get_object (builder, tempstr));
     g_free (tempstr);
     gtk_widget_set_size_request (key_draw[i], key[1].width, key[1].height);
-    g_signal_connect (key_draw[i], "expose-event", G_CALLBACK (on_keydraw_expose), /* GINT_TO_POINTER (i % 2 + 1) */ NULL);
+    g_signal_connect (key_draw[i], "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (i));
   }
 
   /* choose layout class, assume them to be local variables first */
