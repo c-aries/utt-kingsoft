@@ -6,7 +6,7 @@
     <property name="width_request">640</property>
     <property name="height_request">480</property>
     <property name="resizable">False</property>
-    <property name="window_position">center</property>
+    <property name="window_position">center-always</property>
     <signal name="destroy" handler="gtk_main_quit"/>
     <child>
       <object class="GtkVBox" id="vbox1">
@@ -81,7 +81,7 @@
     </child>
   </object>
   <object class="GtkWindow" id="english_window">
-    <property name="window_position">center</property>
+    <property name="window_position">center-always</property>
     <signal name="destroy" handler="gtk_main_quit"/>
     <child>
       <object class="GtkNotebook" id="english_notebook">
@@ -525,8 +525,7 @@
   <object class="GtkWindow" id="wubi_window">
     <property name="width_request">640</property>
     <property name="height_request">480</property>
-    <property name="resizable">False</property>
-    <property name="window_position">center</property>
+    <property name="window_position">center-always</property>
     <signal name="destroy" handler="gtk_main_quit"/>
     <child>
       <object class="GtkNotebook" id="wubi_notebook">
@@ -936,66 +935,10 @@
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkWindow" id="choose_window1">
-    <child>
-      <object class="GtkVBox" id="vbox10">
-        <property name="visible">True</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow1">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
-            <child>
-              <object class="GtkTreeView" id="treeview1">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="model">liststore1</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkHBox" id="hbox16">
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkButton" id="button17">
-                <property name="label" translatable="yes">ok</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="button18">
-                <property name="label" translatable="yes">cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkDialog" id="choose_dialog1">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">choose class</property>
+    <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
