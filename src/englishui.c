@@ -233,6 +233,12 @@ on_note_hide (GtkWidget *widget, gpointer data)
   g_print ("%s\n", __func__);
 }
 
+static void
+on_note_pageadd (GtkNotebook *notebook, GtkWidget *child, guint page_num, gpointer user_data)
+{
+  g_print ("%s: pageadd %d\n", __func__, page_num);
+}
+
 static gboolean
 englishui_on_menu_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
@@ -257,6 +263,9 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *col;
   gchar *tempstr;
+  /* gentext */
+  gint texti, keyi;
+  gpointer found;
 
   english_window = global.english_window = GTK_WIDGET (gtk_builder_get_object (builder, "english_window"));
 
@@ -276,6 +285,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   choose_store = GTK_LIST_STORE (gtk_builder_get_object (builder, "liststore1"));
   choose_treeview = GTK_WIDGET (gtk_builder_get_object (builder, "treeview2"));
   notebook = GTK_NOTEBOOK (gtk_builder_get_object (builder, "english_notebook"));
+  g_signal_connect (notebook, "page-added", G_CALLBACK (on_note_pageadd), NULL);
   g_signal_connect (notebook, "switch-page", G_CALLBACK (on_note_switch), NULL);
   g_signal_connect_after (notebook, "hide", G_CALLBACK (on_note_hide), NULL);
   /* others */
@@ -329,6 +339,20 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 						  COL_CLASS_NAME,
 						  NULL);
   gtk_tree_view_append_column (GTK_TREE_VIEW (choose_treeview), col);
+
+  /* initialize gentext */
+  for (i = 0; i < 6; i++) {	/* i is gentext index */
+    texti = g_random_int_range (0, 4);
+    found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
+    if (found) {
+      keyi = GPOINTER_TO_INT (found);
+      g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name);
+      gentext[i] = text[texti];
+    }
+    else {
+      g_print ("not found\n");
+    }
+  }
 }
 
 void englishui_deinit()
