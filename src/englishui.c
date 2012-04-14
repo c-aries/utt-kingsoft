@@ -174,6 +174,7 @@ on_choose_press (GtkWidget *widget, gpointer data)
   if (class_index == 1) {	/* "asdfg" */
   }
   gtk_widget_hide_all (choose_dialog);
+/*   gtk_widget_grab_focus (title_label); /\* focus title label, if not, when you press enter, it will press choose button again *\/ */
   return FALSE;
 }
 
@@ -269,6 +270,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 
   english_window = global.english_window = GTK_WIDGET (gtk_builder_get_object (builder, "english_window"));
 
+  /* title label */
   /* menu button */
   button = GTK_WIDGET (gtk_builder_get_object (builder, "button1")); /* change to english->layout menu */
   g_signal_connect (button, "clicked", G_CALLBACK (englishui_on_menu_press), NULL);
