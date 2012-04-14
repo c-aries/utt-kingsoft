@@ -14,13 +14,16 @@ static gint keydraw_index = 0;	/* keydraw index */
 static GtkWidget *choose_dialog;
 static GtkWidget *choose_treeview;
 static GtkWidget *layout_label;
+static gint class_index = 0;
 
-/* static gchar *text = "aasasa"; */
+static gchar *text = "aasasa";
 
 struct _class {
   const gchar *name;
 };
-struct _class class[] = {
+static struct _class class[] = {
+  {"Random"},
+  {"asdfg"},
   {"Keyboard Layout"},
   {"Finger One by One"},
   {"Wrong?"},
@@ -98,8 +101,8 @@ on_englishui_press(GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
   gtk_widget_hide_all(current_window);
   current_window = global.english_window;
-  gtk_notebook_set_current_page(GTK_NOTEBOOK(global.english_notebook), 0);
   gtk_widget_show_all(current_window);
+/*   gtk_notebook_set_current_page(GTK_NOTEBOOK(global.english_notebook), 0); */
   return FALSE;
 }
 
@@ -123,9 +126,11 @@ on_choose_press (GtkWidget *widget, gpointer data)
   if (ret == GTK_RESPONSE_OK) {
     gtk_tree_selection_get_selected (sel, NULL, &iter);
     path = gtk_tree_model_get_path (model, &iter);
-    choose = gtk_tree_path_get_indices (path)[0];
+    class_index = choose = gtk_tree_path_get_indices (path)[0];
     gtk_label_set_text (GTK_LABEL (layout_label), class[choose].name);
     g_print ("choose index %d '%s'\n", choose, class[choose].name);
+  }
+  if (class_index == 1) {	/* "asdfg" */
   }
   gtk_widget_hide_all (choose_dialog);
   return FALSE;
@@ -136,15 +141,31 @@ on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   GdkPixbuf *dest = NULL;
   cairo_t *cr;
-  gint index = GPOINTER_TO_INT (data);
-  struct _key *keyp = &key[index];
+  struct _key *keyp;
+  gint texti, keyi;
+  gpointer found;
 
-  dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, keyp->width, keyp->height);
-  gdk_pixbuf_copy_area (kb_pixbuf, keyp->x, keyp->y, keyp->width, keyp->height,
-			dest, 0, 0); /* got it from mei meng maid cafe */
+  texti = g_random_int_range (0, 5);
+  found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
+  if (found) {
+    keyi = GPOINTER_TO_INT (found);
+    g_print ("%d %c, %d %s\n", texti, text[texti], keyi, key[keyi].name);
+  }
+  else {
+    g_print ("nothing\n");
+  }
+
+  if (found) {
+    keyp = &key[keyi];
+    dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, keyp->width, keyp->height);
+    gdk_pixbuf_copy_area (kb_pixbuf, keyp->x, keyp->y, keyp->width, keyp->height,
+			  dest, 0, 0); /* got it from mei meng maid cafe */
+  }
+
   cr = gdk_cairo_create (event->window);
-
-  gdk_cairo_set_source_pixbuf (cr, dest, 0, 0);
+  if (found) {
+    gdk_cairo_set_source_pixbuf (cr, dest, 0, 0);
+  }
   cairo_paint (cr);
   if (key_draw[keydraw_index] == widget) {
     cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
@@ -152,8 +173,14 @@ on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   }
 
   cairo_destroy (cr);
-  g_object_unref (dest);
+  /* g_object_unref (dest); */
   return FALSE;
+}
+
+static void
+on_note_switch (GtkNotebook *note, GtkNotebookPage *page, guint page_num, gpointer data)
+{
+  g_print ("%s: index %d\n", __func__, page_num);
 }
 
 void
@@ -163,6 +190,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   gint kb_width, kb_height, dash_width, dash_height, i;
   GtkWidget *button;
   GtkWidget *kb_draw, *dashboard;
+  GtkNotebook *notebook;
   /* choose list widgets */
   GtkListStore *choose_store;
   GtkTreeIter iter;
@@ -187,6 +215,8 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   gtk_window_set_transient_for (GTK_WINDOW (choose_dialog), GTK_WINDOW (english_window));
   choose_store = GTK_LIST_STORE (gtk_builder_get_object (builder, "liststore1"));
   choose_treeview = GTK_WIDGET (gtk_builder_get_object (builder, "treeview2"));
+  notebook = GTK_NOTEBOOK (gtk_builder_get_object (builder, "english_notebook"));
+  g_signal_connect (notebook, "switch-page", G_CALLBACK (on_note_switch), NULL);
   /* others */
   layout_label = GTK_WIDGET (gtk_builder_get_object (builder, "label6"));
   gtk_label_set_text (GTK_LABEL (layout_label), class[0].name);
@@ -214,7 +244,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
     key_draw[i] = GTK_WIDGET (gtk_builder_get_object (builder, tempstr));
     g_free (tempstr);
     gtk_widget_set_size_request (key_draw[i], key[1].width, key[1].height);
-    g_signal_connect (key_draw[i], "expose-event", G_CALLBACK (on_keydraw_expose), GINT_TO_POINTER (i % 2 + 1));
+    g_signal_connect (key_draw[i], "expose-event", G_CALLBACK (on_keydraw_expose), /* GINT_TO_POINTER (i % 2 + 1) */ NULL);
   }
 
   /* choose layout class, assume them to be local variables first */

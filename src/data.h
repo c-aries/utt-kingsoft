@@ -31,6 +31,7 @@ struct _icon {
 
 struct _key {
   gchar *name;
+  guchar ch;			/* printable character */
   guint val;			/* key value */
   /* fill area infromation, need to improve, in order to satisfy ENTER button, etc. */
   int x, y;			/* start x, start y */
