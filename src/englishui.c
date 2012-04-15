@@ -1,4 +1,6 @@
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
+#include <glib/gprintf.h>
 #include "global.h"		/* icon */
 #include "data.h"		/* ICON_KB_EN */
 #include "main.h"
@@ -8,6 +10,7 @@
 static gint current_pageid;	      /* current notebook page num */
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 static GdkPixbuf *kb_pixbuf;		/* keyboard pixbuf */
+static GtkWidget *dashboard;		/* dashboard, timeout need to update it */
 static cairo_surface_t *dash_surface;	/* dashboard surface */
 /* static gint key_index = 0; */
 static GtkWidget *key_draw[6];	/* english ui, basic keyboard layout class */
@@ -19,6 +22,10 @@ static gint class_index = 0;
 
 static gchar *text = "asdfg";
 static gchar gentext[7];	/* the last character is NUL */
+
+static guint elapse;
+static guint timeout_id;
+static gboolean class_begin_flag = FALSE;
 
 struct _class {
   const gchar *name;
@@ -46,6 +53,15 @@ static struct _class class[] = {
 };
 
 static gboolean
+on_timeout (gpointer data)
+{
+  elapse++;
+/*   g_print ("%u\n", elapse); */
+  gtk_widget_queue_draw (dashboard);
+  return TRUE;
+}
+
+static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
   gpointer ret, found;
@@ -53,18 +69,34 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   gchar ch = gentext[keydraw_index];
 
   g_print ("key press %08x\n", event->keyval);
+  if (event->keyval == GDK_Pause) { /* deal with pause key */
+    if (timeout_id) {
+      g_source_remove (timeout_id);
+      timeout_id = 0;
+    }
+    else {
+      timeout_id = g_timeout_add_seconds (1, on_timeout, NULL);
+    }
+    return FALSE;
+  }
   ret = g_hash_table_lookup (key_val_ht, GUINT_TO_POINTER (event->keyval));
   if (ret) {
     keyi = GPOINTER_TO_INT (ret);
     g_print ("key %s\n", key[keyi].name);
+    if (!class_begin_flag) {
+      class_begin_flag = TRUE;
+      if (!timeout_id) {
+	timeout_id = g_timeout_add_seconds (1, on_timeout, NULL);
+      }
+    }
     if (ch && key[keyi].ch != ch) {
-      goto fail;
+      return FALSE;
     }
     keydraw_index = (keydraw_index + 1) % 6;
     if (keydraw_index == 0) {	/* next turn */
       g_print ("gen text\n");
       for (i = 0; i < 6; i++) {	/* i is gentext index */
-	texti = g_random_int_range (0, 4);
+	texti = g_random_int_range (0, 5);
 	found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
 	if (found) {
 	  keyi = GPOINTER_TO_INT (found);
@@ -77,12 +109,8 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
       }
       g_print ("gentext %s\n", gentext);
     }
+    gtk_widget_queue_draw (widget);
   }
-  else {
-    keyi = 0;
-  }
-  gtk_widget_queue_draw (widget);
- fail:
   return FALSE;
 }
 
@@ -99,14 +127,6 @@ on_keyboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_set_source_surface (cr, kb_surface, 0, 0);
   cairo_paint (cr);
 
-/*   if (key_index) { */
-/*     g_print ("keyboard index %d\n", key_index); */
-/*     cairo_set_line_width (cr, 1); */
-/*     cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
-/*     keyp = &key[key_index]; */
-/*     cairo_rectangle (cr, keyp->x, keyp->y, keyp->width, keyp->height); */
-/*     cairo_fill (cr); */
-/*   } */
   if (ch) {
     /* FIXME: we can cache here */
     found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)ch));
@@ -128,12 +148,42 @@ static gint
 on_dashboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr;
+  cairo_text_extents_t te;
+  gchar timestamp[9];		/* format:"00:00:00" */
+  gint sec, min, hour, min_left;
+
+  sec = elapse % 60;
+  min_left = elapse / 60;
+  min = min_left % 60;
+  hour = min_left / 60;
+  g_sprintf (timestamp, "%02d:%02d:%02d", hour, min, sec);
+  g_print ("%s\n", timestamp);
 
   cr = gdk_cairo_create (event->window);
   cairo_set_source_surface (cr, dash_surface, 0, 0);
   cairo_paint (cr);
+
+  /* FIXME: maybe we can cache here */
+  cairo_set_source_rgb (cr, 0, 0, 0);
+  cairo_select_font_face (cr, "Monospace",
+			  CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+  cairo_set_font_size (cr, 18.0);
+  cairo_text_extents (cr, timestamp, &te);
+  g_print ("width %lf, height %lf, x %lf, y %lf\n", te.width, te.height, te.x_bearing, te.y_bearing);
+#define DEBUG_X 80
+#define DEBUG_Y 43
+  cairo_move_to (cr, DEBUG_X, DEBUG_Y);
+  cairo_show_text (cr, timestamp);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+
   cairo_destroy (cr);
-  return FALSE;
+  return TRUE;
 }
 
 gboolean
@@ -222,6 +272,27 @@ on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   return FALSE;
 }
 
+static gboolean
+on_english_window_focus_in (GtkWidget *widget, GdkEventFocus *event, gpointer data)
+{
+  g_print ("%s\n", __func__);
+  if (class_begin_flag && !timeout_id) {
+    timeout_id = g_timeout_add_seconds (1, on_timeout, NULL);
+  }
+  return TRUE;
+}
+
+static gboolean
+on_english_window_focus_out (GtkWidget *widget, GdkEventFocus *event, gpointer data)
+{
+  g_print ("%s\n", __func__);
+  if (class_begin_flag && timeout_id) {
+    g_source_remove (timeout_id);
+    timeout_id = 0;
+  }
+  return TRUE;
+}
+
 static void
 on_note_switch (GtkNotebook *note, GtkNotebookPage *page, guint page_num, gpointer data)
 {
@@ -256,7 +327,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   GtkWidget *english_window;
   gint kb_width, kb_height, dash_width, dash_height, i;
   GtkWidget *button;
-  GtkWidget *kb_draw, *dashboard;
+  GtkWidget *kb_draw;
   GtkNotebook *notebook;
   /* choose list widgets */
   GtkListStore *choose_store;
@@ -269,6 +340,8 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   gpointer found;
 
   english_window = global.english_window = GTK_WIDGET (gtk_builder_get_object (builder, "english_window"));
+  g_signal_connect (english_window, "focus-out-event", G_CALLBACK (on_english_window_focus_out), NULL);
+  g_signal_connect (english_window, "focus-in-event", G_CALLBACK (on_english_window_focus_in), NULL);
 
   /* title label */
   /* menu button */
@@ -344,7 +417,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 
   /* initialize gentext */
   for (i = 0; i < 6; i++) {	/* i is gentext index */
-    texti = g_random_int_range (0, 4);
+    texti = g_random_int_range (0, 5);
     found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
     if (found) {
       keyi = GPOINTER_TO_INT (found);
@@ -364,5 +437,11 @@ void englishui_deinit()
   }
   if (kb_pixbuf) {
     g_object_unref (kb_pixbuf);
+  }
+  if (timeout_id) {
+    g_source_remove (timeout_id);
+    timeout_id = 0;
+    elapse = 0;			/* end of the session */
+    class_begin_flag = FALSE;
   }
 }
