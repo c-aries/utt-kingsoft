@@ -6,7 +6,8 @@ utt_SOURCES = \
 	main.c main.h \
 	englishui.c englishui.h \
 	data.c data.h \
-	global.c global.h
+	global.c global.h \
+	stat.c stat.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \

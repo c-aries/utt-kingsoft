@@ -51,7 +51,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_utt_OBJECTS = utt-main.$(OBJEXT) utt-englishui.$(OBJEXT) \
-	utt-data.$(OBJEXT) utt-global.$(OBJEXT)
+	utt-data.$(OBJEXT) utt-global.$(OBJEXT) utt-stat.$(OBJEXT)
 utt_OBJECTS = $(am_utt_OBJECTS)
 am__DEPENDENCIES_1 =
 utt_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -194,7 +194,8 @@ utt_SOURCES = \
 	main.c main.h \
 	englishui.c englishui.h \
 	data.c data.h \
-	global.c global.h
+	global.c global.h \
+	stat.c stat.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \
@@ -295,6 +296,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-englishui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-global.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-stat.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -372,6 +374,20 @@ utt-global.obj: global.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='global.c' object='utt-global.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-global.obj `if test -f 'global.c'; then $(CYGPATH_W) 'global.c'; else $(CYGPATH_W) '$(srcdir)/global.c'; fi`
+
+utt-stat.o: stat.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-stat.o -MD -MP -MF $(DEPDIR)/utt-stat.Tpo -c -o utt-stat.o `test -f 'stat.c' || echo '$(srcdir)/'`stat.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-stat.Tpo $(DEPDIR)/utt-stat.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='stat.c' object='utt-stat.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-stat.o `test -f 'stat.c' || echo '$(srcdir)/'`stat.c
+
+utt-stat.obj: stat.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-stat.obj -MD -MP -MF $(DEPDIR)/utt-stat.Tpo -c -o utt-stat.obj `if test -f 'stat.c'; then $(CYGPATH_W) 'stat.c'; else $(CYGPATH_W) '$(srcdir)/stat.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-stat.Tpo $(DEPDIR)/utt-stat.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='stat.c' object='utt-stat.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-stat.obj `if test -f 'stat.c'; then $(CYGPATH_W) 'stat.c'; else $(CYGPATH_W) '$(srcdir)/stat.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

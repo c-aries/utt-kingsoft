@@ -27,6 +27,16 @@ static guint elapse;
 static guint timeout_id;
 static gboolean class_begin_flag = FALSE;
 
+struct _stat {		     /* statistics system */
+  guint right;			/* right characaters */
+  guint sum;			/* sum of characters you have input */
+  guint total;			/* totoal of characters the class have */
+  guint elapse;			/* time elapse */
+};
+/* speed = right units / minutes */
+/* percent to finish = right units / class units */
+/* correntness = right units / total units */
+
 struct _class {
   const gchar *name;
 };
