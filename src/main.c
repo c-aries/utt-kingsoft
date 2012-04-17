@@ -36,6 +36,7 @@ main (int argc, char *argv[])
 
   gtk_init (&argc, &argv);
   data_precheck_and_init();
+  stat_reset (&stat);
 
   builder = gtk_builder_new ();
   gtk_builder_add_from_file (builder, UIFILE, NULL); /* UIFILE from data.h */

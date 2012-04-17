@@ -23,19 +23,19 @@ static gint class_index = 0;
 static gchar *text = "asdfg";
 static gchar gentext[7];	/* the last character is NUL */
 
-static guint elapse;
+/* static guint elapse; */
 static guint timeout_id;
 static gboolean class_begin_flag = FALSE;
 
-struct _stat {		     /* statistics system */
-  guint right;			/* right characaters */
-  guint sum;			/* sum of characters you have input */
-  guint total;			/* totoal of characters the class have */
-  guint elapse;			/* time elapse */
-};
-/* speed = right units / minutes */
-/* percent to finish = right units / class units */
-/* correntness = right units / total units */
+/* struct _stat {		     /\* statistics system *\/ */
+/*   guint right;			/\* right characaters *\/ */
+/*   guint sum;			/\* sum of characters you have input *\/ */
+/*   guint total;			/\* totoal of characters the class have *\/ */
+/*   guint elapse;			/\* time elapse *\/ */
+/* }; */
+/* /\* speed = right units / minutes *\/ */
+/* /\* percent to finish = right units / class units *\/ */
+/* /\* correntness = right units / total units *\/ */
 
 struct _class {
   const gchar *name;
@@ -65,8 +65,9 @@ static struct _class class[] = {
 static gboolean
 on_timeout (gpointer data)
 {
-  elapse++;
+  stat.elapse++;
 /*   g_print ("%u\n", elapse); */
+  g_print ("speed: %.2lfunit/min, %.2lfunit/min\n", stat_pass_speed (&stat), stat_correct_speed (&stat));
   gtk_widget_queue_draw (dashboard);
   return TRUE;
 }
@@ -99,8 +100,17 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 	timeout_id = g_timeout_add_seconds (1, on_timeout, NULL);
       }
     }
-    if (ch && key[keyi].ch != ch) {
+    stat.sum++;
+    if (ch && key[keyi].ch != ch) { /* keys don't equal */
+      stat_show (&stat);
       return FALSE;
+    }
+    /* key equals */
+    stat.right++;
+    stat.pass++;
+    stat_show (&stat);
+    if (stat.pass == stat.total) {
+      /* finish this class */
     }
     keydraw_index = (keydraw_index + 1) % 6;
     if (keydraw_index == 0) {	/* next turn */
@@ -160,14 +170,18 @@ on_dashboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_t *cr;
   cairo_text_extents_t te;
   gchar timestamp[9];		/* format:"00:00:00" */
+  gchar speedstamp[9];		/* format:"000.00/m" */
+  gchar correctstamp[5];		/* format:"100%" */
   gint sec, min, hour, min_left;
 
-  sec = elapse % 60;
-  min_left = elapse / 60;
+  sec = stat.elapse % 60;
+  min_left = stat.elapse / 60;
   min = min_left % 60;
   hour = min_left / 60;
   g_sprintf (timestamp, "%02d:%02d:%02d", hour, min, sec);
   g_print ("%s\n", timestamp);
+  g_sprintf (speedstamp, "%.2lf/m", stat_pass_speed (&stat));
+  g_sprintf (correctstamp, "%d%%", (gint)stat_correct (&stat));
 
   cr = gdk_cairo_create (event->window);
   cairo_set_source_surface (cr, dash_surface, 0, 0);
@@ -178,12 +192,39 @@ on_dashboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_select_font_face (cr, "Monospace",
 			  CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
   cairo_set_font_size (cr, 18.0);
+
   cairo_text_extents (cr, timestamp, &te);
-  g_print ("width %lf, height %lf, x %lf, y %lf\n", te.width, te.height, te.x_bearing, te.y_bearing);
+  /* g_print ("width %lf, height %lf, x %lf, y %lf\n", te.width, te.height, te.x_bearing, te.y_bearing); */
 #define DEBUG_X 80
 #define DEBUG_Y 43
   cairo_move_to (cr, DEBUG_X, DEBUG_Y);
   cairo_show_text (cr, timestamp);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+
+  cairo_text_extents (cr, speedstamp, &te);
+#define DEBUG_X 284
+#define DEBUG_Y 43
+  cairo_move_to (cr, DEBUG_X, DEBUG_Y);
+  cairo_show_text (cr, speedstamp);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+
+  cairo_text_extents (cr, correctstamp, &te);
+#define DEBUG_X 708
+#define DEBUG_Y 43
+  cairo_move_to (cr, DEBUG_X, DEBUG_Y);
+  cairo_show_text (cr, correctstamp);
 #if 0
   cairo_set_source_rgb (cr, 1, 0, 0);
   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
@@ -438,6 +479,10 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
       g_print ("not found\n");
     }
   }
+
+  /* statistics */
+  stat.total = 6 * 20;
+  g_print ("[total] %u\n", stat.total);
 }
 
 void englishui_deinit()
@@ -451,7 +496,8 @@ void englishui_deinit()
   if (timeout_id) {
     g_source_remove (timeout_id);
     timeout_id = 0;
-    elapse = 0;			/* end of the session */
+    stat_reset (&stat);
+/*     elapse = 0;			/\* end of the session *\/ */
     class_begin_flag = FALSE;
   }
 }

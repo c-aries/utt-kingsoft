@@ -1,7 +1,9 @@
 #include "stat.h"
 
+struct _stat stat;
+
 void
-stat_init (struct _stat *stat)
+stat_reset (struct _stat *stat)
 {
   stat->right = \
     stat->sum = \
@@ -15,7 +17,7 @@ stat_new ()
   struct _stat *stat;
 
   stat = g_new (struct _stat, 1);
-  stat_init (stat);
+  stat_reset (stat);
   return stat;
 }
 
@@ -71,9 +73,19 @@ stat_correct (struct _stat *stat)
 {
   gdouble ret;
 
-  if (stat->total == 0) {
+  if (stat->sum == 0) {
     return 0;
   }
   ret = stat->right * 100.0 / stat->sum;
   return ret;
+}
+
+void
+stat_show (struct _stat *stat)
+{
+  g_print ("right %u, pass %u, sum %u, total %u, elapse %u\n", stat->right,
+	   stat->pass, stat->sum, stat->total, stat->elapse);
+  g_print ("correct: %.2lf%%\n", stat_correct (stat));
+  g_print ("finish: %.2lf%%\n", stat_finish (stat));
+  g_print ("speed: %.2lf/m, %.2lf/m\n", stat_pass_speed (stat), stat_correct_speed (stat));
 }

@@ -12,12 +12,13 @@ struct _stat {		     /* statistics system */
   guint elapse;			/* time elapse */
 };
 
-void stat_init (struct _stat *stat);
+void stat_reset (struct _stat *stat);
 struct _stat *stat_new ();
 void stat_destroy (struct _stat **stat);
 gdouble stat_pass_speed (struct _stat *stat);
 gdouble stat_correct_speed (struct _stat *stat);
 gdouble stat_finish (struct _stat *stat);
 gdouble stat_correct (struct _stat *stat);
+void stat_show (struct _stat *stat);
 
 #endif
