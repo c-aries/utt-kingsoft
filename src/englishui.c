@@ -106,13 +106,12 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     }
     stat.sum++;
     if (ch && key[keyi].ch != ch) { /* keys don't equal */
-      stat_show (&stat);
+      gtk_widget_queue_draw (dashboard);
       return FALSE;
     }
     /* key equals */
     stat.right++;
     stat.pass++;
-    stat_show (&stat);
     if (stat.pass == stat.total) {
       /* finish this class */
     }
@@ -134,6 +133,7 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
       g_print ("gentext %s\n", gentext);
     }
     gtk_widget_queue_draw (widget);
+    gtk_widget_queue_draw (dashboard);
   }
   return FALSE;
 }
