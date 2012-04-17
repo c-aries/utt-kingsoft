@@ -26,6 +26,7 @@ static gchar gentext[7];	/* the last character is NUL */
 /* static guint elapse; */
 static guint timeout_id;
 static gboolean class_begin_flag = FALSE;
+static GtkWidget *progress;
 
 /* struct _stat {		     /\* statistics system *\/ */
 /*   guint right;			/\* right characaters *\/ */
@@ -465,6 +466,9 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 						  COL_CLASS_NAME,
 						  NULL);
   gtk_tree_view_append_column (GTK_TREE_VIEW (choose_treeview), col);
+
+  progress = gtk_progress_bar_new ();
+  gtk_widget_size_request (progress, 6, 60);
 
   /* initialize gentext */
   for (i = 0; i < 6; i++) {	/* i is gentext index */
