@@ -20,6 +20,7 @@ static GtkWidget *choose_treeview;
 static GtkWidget *layout_label;
 static GtkWidget *pause_label;
 static gint class_index = 0;
+static GtkWidget *fix;
 
 static gchar *text = "asdfg";
 static gchar gentext[7];	/* the last character is NUL */
@@ -80,6 +81,8 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   gpointer ret, found;
   gint i, texti, keyi;
   gchar ch = gentext[keydraw_index];
+  gchar finishstamp[5];	/* format:"100%" */
+  gdouble finish;
 
   g_print ("key press %08x\n", event->keyval);
   if (event->keyval == GDK_Pause && class_begin_flag) { /* deal with pause key */
@@ -112,6 +115,11 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     /* key equals */
     stat.right++;
     stat.pass++;
+    finish = stat_finish (&stat);
+    g_sprintf (finishstamp, "%d%%", (gint)finish);
+    finish /= 100;
+    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress), finishstamp);
+    gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress), finish);
     if (stat.pass == stat.total) {
       /* finish this class */
     }
@@ -432,12 +440,17 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (kb_draw, "expose-event", G_CALLBACK (on_keyboard_expose), NULL);
   gtk_widget_set_size_request (kb_draw, kb_width, kb_height);
 
+  fix = GTK_WIDGET (gtk_builder_get_object (builder, "fixed1"));
   dash_surface = cairo_image_surface_create_from_png (icon[ICON_DASHBOARD].path);
   dash_width = cairo_image_surface_get_width (dash_surface);
   dash_height = cairo_image_surface_get_height (dash_surface);
   dashboard = GTK_WIDGET (gtk_builder_get_object (builder, "dashboard1"));
   g_signal_connect (dashboard, "expose-event", G_CALLBACK (on_dashboard_expose), NULL);
   gtk_widget_set_size_request (dashboard, dash_width, dash_height);
+  progress = gtk_progress_bar_new ();
+  gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress), "0%");
+  gtk_widget_set_size_request (progress, 120, -1);
+  gtk_fixed_put (GTK_FIXED (fix), progress, 480, 23);
 
   g_signal_connect (english_window, "key-press-event", G_CALLBACK (on_key_press), NULL);
 
@@ -471,9 +484,6 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 						  COL_CLASS_NAME,
 						  NULL);
   gtk_tree_view_append_column (GTK_TREE_VIEW (choose_treeview), col);
-
-  progress = gtk_progress_bar_new ();
-  gtk_widget_set_size_request (progress, 6, 60);
 
   /* initialize gentext */
   for (i = 0; i < 6; i++) {	/* i is gentext index */
