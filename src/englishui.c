@@ -18,6 +18,7 @@ static gint keydraw_index = 0;	/* blue keydraw index */
 static GtkWidget *choose_dialog;
 static GtkWidget *choose_treeview;
 static GtkWidget *layout_label;
+static GtkWidget *pause_label;
 static gint class_index = 0;
 
 static gchar *text = "asdfg";
@@ -81,13 +82,15 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   gchar ch = gentext[keydraw_index];
 
   g_print ("key press %08x\n", event->keyval);
-  if (event->keyval == GDK_Pause) { /* deal with pause key */
+  if (event->keyval == GDK_Pause && class_begin_flag) { /* deal with pause key */
     if (timeout_id) {
       g_source_remove (timeout_id);
       timeout_id = 0;
+      gtk_label_set_text (GTK_LABEL (pause_label), "'Pause' to resume");
     }
     else {
       timeout_id = g_timeout_add_seconds (1, on_timeout, NULL);
+      gtk_label_set_text (GTK_LABEL (pause_label), "'Pause' to pause");
     }
     return FALSE;
   }
@@ -415,6 +418,8 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (notebook, "page-added", G_CALLBACK (on_note_pageadd), NULL);
   g_signal_connect (notebook, "switch-page", G_CALLBACK (on_note_switch), NULL);
   g_signal_connect_after (notebook, "hide", G_CALLBACK (on_note_hide), NULL);
+  /* pause label */
+  pause_label = GTK_WIDGET (gtk_builder_get_object (builder, "label8"));
   /* others */
   layout_label = GTK_WIDGET (gtk_builder_get_object (builder, "label6"));
   gtk_label_set_text (GTK_LABEL (layout_label), class[0].name);
@@ -468,7 +473,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   gtk_tree_view_append_column (GTK_TREE_VIEW (choose_treeview), col);
 
   progress = gtk_progress_bar_new ();
-  gtk_widget_size_request (progress, 6, 60);
+  gtk_widget_set_size_request (progress, 6, 60);
 
   /* initialize gentext */
   for (i = 0; i < 6; i++) {	/* i is gentext index */

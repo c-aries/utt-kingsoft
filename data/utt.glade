@@ -291,7 +291,7 @@
                 <child>
                   <object class="GtkLabel" id="label8">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">press 'Pause' to pause</property>
+                    <property name="label" translatable="yes">'Pause' to pause</property>
                   </object>
                   <packing>
                     <property name="padding">4</property>
