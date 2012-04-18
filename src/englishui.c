@@ -21,6 +21,7 @@ static GtkWidget *layout_label;
 static GtkWidget *pause_label;
 static gint class_index = 0;
 static GtkWidget *fix;
+static GtkWidget *continue_dialog;
 
 static gchar *text = "asdfg";
 static gchar gentext[7];	/* the last character is NUL */
@@ -79,7 +80,7 @@ static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
   gpointer ret, found;
-  gint i, texti, keyi;
+  gint i, texti, keyi, reti;
   gchar ch = gentext[keydraw_index];
   gchar finishstamp[5];	/* format:"100%" */
   gdouble finish;
@@ -122,6 +123,16 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress), finish);
     if (stat.pass == stat.total) {
       /* finish this class */
+      gtk_widget_show_all (continue_dialog);
+      reti = gtk_dialog_run (GTK_DIALOG (continue_dialog));
+      if (reti == GTK_RESPONSE_OK) {
+	g_print ("ok\n");
+      }
+      else {
+	g_print ("cancel\n");
+      }
+      stat_reset (&stat);
+      gtk_widget_hide_all (continue_dialog);
     }
     keydraw_index = (keydraw_index + 1) % 6;
     if (keydraw_index == 0) {	/* next turn */
@@ -263,7 +274,7 @@ on_englishui_press(GtkWidget *widget, GdkEventButton *event, gpointer data)
 static gboolean
 on_choose_press (GtkWidget *widget, gpointer data)
 {
-  GtkWidget *content;
+/*   GtkWidget *content; */
   GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW (choose_treeview));
   GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (choose_treeview));
   GtkTreeIter iter;
@@ -274,7 +285,7 @@ on_choose_press (GtkWidget *widget, gpointer data)
     gtk_tree_model_get_iter_first (model, &iter);
     gtk_tree_selection_select_iter (sel, &iter);
   }
-  content = gtk_dialog_get_content_area (GTK_DIALOG (choose_dialog));
+/*   content = gtk_dialog_get_content_area (GTK_DIALOG (choose_dialog)); */
   gtk_widget_show_all (choose_dialog);
   ret = gtk_dialog_run (GTK_DIALOG (choose_dialog)); /* ret GTK_RESPONSE_OK -5, GTK_RESPONSE_CANCEL -6, GTK_RESPONSE_DELETE_EVENT -4 */
   if (ret == GTK_RESPONSE_OK) {
@@ -426,6 +437,10 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   g_signal_connect (notebook, "page-added", G_CALLBACK (on_note_pageadd), NULL);
   g_signal_connect (notebook, "switch-page", G_CALLBACK (on_note_switch), NULL);
   g_signal_connect_after (notebook, "hide", G_CALLBACK (on_note_hide), NULL);
+  /* continue dialog */
+  continue_dialog = GTK_WIDGET (gtk_builder_get_object (builder, "continue_dialog1"));
+  gtk_widget_set_parent_window (continue_dialog, gtk_widget_get_window (english_window));
+  gtk_window_set_transient_for (GTK_WINDOW (continue_dialog), GTK_WINDOW (english_window));
   /* pause label */
   pause_label = GTK_WIDGET (gtk_builder_get_object (builder, "label8"));
   /* others */
@@ -500,7 +515,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   }
 
   /* statistics */
-  stat.total = 6 * 20;
+  stat.total = 6 * 2;
   g_print ("[total] %u\n", stat.total);
 }
 
