@@ -7,7 +7,8 @@ utt_SOURCES = \
 	englishui.c englishui.h \
 	data.c data.h \
 	global.c global.h \
-	stat.c stat.h
+	stat.c stat.h \
+	commonui.c commonui.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \

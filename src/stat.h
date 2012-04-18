@@ -13,7 +13,8 @@ struct _stat {		     /* statistics system */
 };
 
 void stat_reset (struct _stat *stat);
-struct _stat *stat_new ();
+void stat_init (struct _stat *stat, guint total);
+struct _stat *stat_new (guint total);
 void stat_destroy (struct _stat **stat);
 gdouble stat_pass_speed (struct _stat *stat);
 gdouble stat_correct_speed (struct _stat *stat);

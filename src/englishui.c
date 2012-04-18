@@ -4,6 +4,7 @@
 #include "global.h"		/* icon */
 #include "data.h"		/* ICON_KB_EN */
 #include "main.h"
+#include "commonui.h"
 
 #define DEBUG 1
 
@@ -82,8 +83,8 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   gpointer ret, found;
   gint i, texti, keyi, reti;
   gchar ch = gentext[keydraw_index];
-  gchar finishstamp[5];	/* format:"100%" */
-  gdouble finish;
+/*   gchar finishstamp[5];	/\* format:"100%" *\/ */
+/*   gdouble finish; */
 
   g_print ("key press %08x\n", event->keyval);
   if (event->keyval == GDK_Pause && class_begin_flag) { /* deal with pause key */
@@ -116,11 +117,12 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     /* key equals */
     stat.right++;
     stat.pass++;
-    finish = stat_finish (&stat);
-    g_sprintf (finishstamp, "%d%%", (gint)finish);
-    finish /= 100;
-    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress), finishstamp);
-    gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress), finish);
+    progress_bar_update (progress, &stat);
+/*     finish = stat_finish (&stat); */
+/*     g_sprintf (finishstamp, "%d%%", (gint)finish); */
+/*     finish /= 100; */
+/*     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress), finishstamp); */
+/*     gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress), finish); */
     if (stat.pass == stat.total) {
       /* finish this class */
       gtk_widget_show_all (continue_dialog);
@@ -132,6 +134,12 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 	g_print ("cancel\n");
       }
       stat_reset (&stat);
+      progress_bar_update (progress, &stat);
+/*       finish = stat_finish (&stat); */
+/*       g_sprintf (finishstamp, "%d%%", (gint)finish); */
+/*       finish /= 100; */
+/*       gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress), finishstamp); */
+/*       gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progress), finish); */
       gtk_widget_hide_all (continue_dialog);
     }
     keydraw_index = (keydraw_index + 1) % 6;
@@ -515,7 +523,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   }
 
   /* statistics */
-  stat.total = 6 * 2;
+  stat_init (&stat, 6 * 2);
   g_print ("[total] %u\n", stat.total);
 }
 

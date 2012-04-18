@@ -7,17 +7,24 @@ stat_reset (struct _stat *stat)
 {
   stat->right = \
     stat->sum = \
-    stat->total = \
+    stat->pass = \
     stat->elapse = 0;
 }
 
+void
+stat_init (struct _stat *stat, guint total)
+{
+  stat->total = total;
+  stat_reset (stat);
+}
+
 struct _stat *
-stat_new ()
+stat_new (guint total)
 {
   struct _stat *stat;
 
   stat = g_new (struct _stat, 1);
-  stat_reset (stat);
+  stat_init (stat, total);
   return stat;
 }
 
