@@ -120,15 +120,21 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
       /* finish this class */
       gtk_widget_show_all (continue_dialog);
       reti = gtk_dialog_run (GTK_DIALOG (continue_dialog));
+      stat_reset (&stat);
+      progress_bar_update (progress, &stat);
       if (reti == GTK_RESPONSE_OK) {
 	g_print ("ok\n");
+	gtk_widget_hide_all (continue_dialog);
       }
       else {
 	g_print ("cancel\n");
+	/* window already focus out, timeout_id remove, class_begin_flag still is TRUE */
+	class_begin_flag = FALSE; /* FIXME: all clear to a new class */
+	gtk_widget_hide_all (continue_dialog);
+	gtk_widget_queue_draw (widget);
+	gtk_widget_queue_draw (dashboard);
+	return FALSE;
       }
-      stat_reset (&stat);
-      progress_bar_update (progress, &stat);
-      gtk_widget_hide_all (continue_dialog);
     }
     keydraw_index = (keydraw_index + 1) % 6;
     if (keydraw_index == 0) {	/* next turn */
