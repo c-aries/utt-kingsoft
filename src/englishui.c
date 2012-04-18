@@ -9,6 +9,7 @@
 #define DEBUG 1
 
 static gint current_pageid;	      /* current notebook page num */
+static GtkWidget *kb_draw;	      /* keyboard drawing area */
 static cairo_surface_t *kb_surface;	/* keyboard surface */
 static GdkPixbuf *kb_pixbuf;		/* keyboard pixbuf */
 static GtkWidget *dashboard;		/* dashboard, timeout need to update it */
@@ -276,7 +277,8 @@ on_choose_press (GtkWidget *widget, gpointer data)
   GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (choose_treeview));
   GtkTreeIter iter;
   GtkTreePath *path;
-  gint ret, choose;
+  gint ret, choose, texti, keyi, i;
+  gpointer found;
 
   if (!gtk_tree_selection_get_selected (sel, NULL, &iter)) {
     gtk_tree_model_get_iter_first (model, &iter);
@@ -291,6 +293,30 @@ on_choose_press (GtkWidget *widget, gpointer data)
     class_index = choose = gtk_tree_path_get_indices (path)[0];
     gtk_label_set_text (GTK_LABEL (layout_label), class[choose].name);
     g_print ("choose index %d '%s'\n", choose, class[choose].name);
+    /* set a new class */
+    stat_reset (&stat);
+    progress_bar_update (progress, &stat);
+    gtk_widget_queue_draw (dashboard);
+    keydraw_index = 0;
+    for (i = 0; i < 6; i++) {
+      texti = g_random_int_range (0, 5);
+      found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
+      if (found) {
+	keyi = GPOINTER_TO_INT (found);
+	g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name);
+	gentext[i] = text[texti];
+      }
+      else {
+	g_print ("not found\n");
+      }
+    }
+    g_print ("gentext %s\n", gentext);
+    for (i = 0; i < 6; i++) {
+      gtk_widget_queue_draw (key_draw[i]);
+    }
+    gtk_widget_queue_draw (kb_draw);
+    class_begin_flag = FALSE;
+    class_stop_flag = FALSE;
   }
   if (class_index == 1) {	/* "asdfg" */
   }
@@ -398,7 +424,6 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   GtkWidget *english_window;
   gint kb_width, kb_height, dash_width, dash_height, i;
   GtkWidget *button;
-  GtkWidget *kb_draw;
   GtkNotebook *notebook;
   /* choose list widgets */
   GtkListStore *choose_store;
