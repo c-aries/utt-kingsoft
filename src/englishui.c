@@ -30,17 +30,8 @@ static gchar gentext[7];	/* the last character is NUL */
 /* static guint elapse; */
 static guint timeout_id;
 static gboolean class_begin_flag = FALSE;
+static gboolean class_stop_flag = FALSE;
 static GtkWidget *progress;
-
-/* struct _stat {		     /\* statistics system *\/ */
-/*   guint right;			/\* right characaters *\/ */
-/*   guint sum;			/\* sum of characters you have input *\/ */
-/*   guint total;			/\* totoal of characters the class have *\/ */
-/*   guint elapse;			/\* time elapse *\/ */
-/* }; */
-/* /\* speed = right units / minutes *\/ */
-/* /\* percent to finish = right units / class units *\/ */
-/* /\* correntness = right units / total units *\/ */
 
 struct _class {
   const gchar *name;
@@ -84,6 +75,9 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   gint i, texti, keyi, reti;
   gchar ch = gentext[keydraw_index];
 
+  if (class_stop_flag) {
+    return FALSE;
+  }
   g_print ("key press %08x\n", event->keyval);
   if (event->keyval == GDK_Pause && class_begin_flag) { /* deal with pause key */
     if (timeout_id) {
@@ -118,21 +112,22 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     progress_bar_update (progress, &stat);
     if (stat.pass == stat.total) {
       /* finish this class */
+      gtk_widget_queue_draw (widget);
+      gtk_widget_queue_draw (dashboard);
       gtk_widget_show_all (continue_dialog);
       reti = gtk_dialog_run (GTK_DIALOG (continue_dialog));
-      stat_reset (&stat);
-      progress_bar_update (progress, &stat);
       if (reti == GTK_RESPONSE_OK) {
 	g_print ("ok\n");
+	stat_reset (&stat);
+	progress_bar_update (progress, &stat);
 	gtk_widget_hide_all (continue_dialog);
       }
       else {
 	g_print ("cancel\n");
 	/* window already focus out, timeout_id remove, class_begin_flag still is TRUE */
-	class_begin_flag = FALSE; /* FIXME: all clear to a new class */
+	class_begin_flag = FALSE; /* FIXME: all clear to a new class, what if to change to a new page? */
+	class_stop_flag = TRUE;
 	gtk_widget_hide_all (continue_dialog);
-	gtk_widget_queue_draw (widget);
-	gtk_widget_queue_draw (dashboard);
 	return FALSE;
       }
     }
