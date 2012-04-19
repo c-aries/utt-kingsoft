@@ -5,7 +5,8 @@ media_DATA = \
 	key.png \
 	key1.png \
 	key2.png \
-	dashboard.png
+	dashboard.png \
+	hand.png
 
 EXTRA_DIST = \
 	$(media_DATA)

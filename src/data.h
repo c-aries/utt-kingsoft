@@ -1,7 +1,6 @@
-/* data path macros */
-
 #ifndef __DATA_H__
 #define __DATA_H__
+/* data path macros */
 
 #include <gtk/gtk.h>
 
@@ -22,6 +21,7 @@
 enum {
   ICON_KB_EN,
   ICON_DASHBOARD,
+  ICON_HAND,
   ICON_NUM,			/* icons number */
 };
 

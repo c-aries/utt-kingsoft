@@ -25,6 +25,9 @@ static gint class_index = 0;
 static GtkWidget *fix;
 static GtkWidget *continue_dialog;
 
+/* hand */
+static cairo_surface_t *hand_surface;
+
 static gchar *text = "asdfg";
 static gchar gentext[7];	/* the last character is NUL */
 
@@ -370,6 +373,27 @@ on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 }
 
 static gboolean
+on_hand_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  cairo_t *cr;
+
+  cr = gdk_cairo_create (event->window);
+  cairo_set_source_surface (cr, hand_surface, 0, 0);
+  cairo_paint (cr);
+#define DEBUG_X 40
+#define DEBUG_Y 40
+#if 1
+  cairo_set_source_rgba (cr, 1, 0, 0, 0.5);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 20, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+  cairo_destroy (cr);
+  return FALSE;
+}
+
+static gboolean
 on_english_window_focus_in (GtkWidget *widget, GdkEventFocus *event, gpointer data)
 {
   g_print ("%s\n", __func__);
@@ -422,8 +446,9 @@ void
 englishui_init (GtkBuilder *builder)			/* english ui init */
 {
   GtkWidget *english_window;
-  gint kb_width, kb_height, dash_width, dash_height, i;
+  gint kb_width, kb_height, dash_width, dash_height, hand_width, hand_height, i;
   GtkWidget *button;
+  GtkWidget *hand_draw;
   GtkNotebook *notebook;
   /* choose list widgets */
   GtkListStore *choose_store;
@@ -476,6 +501,13 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   kb_draw = GTK_WIDGET (gtk_builder_get_object (builder, "kb_draw1"));
   g_signal_connect (kb_draw, "expose-event", G_CALLBACK (on_keyboard_expose), NULL);
   gtk_widget_set_size_request (kb_draw, kb_width, kb_height);
+
+  hand_surface = cairo_image_surface_create_from_png (icon[ICON_HAND].path);
+  hand_width = cairo_image_surface_get_width (hand_surface);
+  hand_height = cairo_image_surface_get_height (hand_surface);
+  hand_draw = GTK_WIDGET (gtk_builder_get_object (builder, "hand_draw1"));
+  g_signal_connect (hand_draw, "expose-event", G_CALLBACK (on_hand_expose), NULL);
+  gtk_widget_set_size_request (hand_draw, hand_width, hand_height);
 
   fix = GTK_WIDGET (gtk_builder_get_object (builder, "fixed1"));
   dash_surface = cairo_image_surface_create_from_png (icon[ICON_DASHBOARD].path);

@@ -8,6 +8,7 @@
 static gchar *icon_filename[ICON_NUM] = {	/* icon path prefix with MEDIADIR(in data.h) and filename */
   "en-kb.png",
   "dashboard.png",
+  "hand.png",
 };
 
 struct _icon icon[ICON_NUM];
