@@ -380,15 +380,128 @@ on_hand_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cr = gdk_cairo_create (event->window);
   cairo_set_source_surface (cr, hand_surface, 0, 0);
   cairo_paint (cr);
-#define DEBUG_X 40
-#define DEBUG_Y 40
-#if 1
-  cairo_set_source_rgba (cr, 1, 0, 0, 0.5);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 20, 0, 2 * G_PI);
+#define DEBUG_R 16
+#define DEBUG_X 36
+#define DEBUG_Y 82
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
   cairo_fill (cr);
 #endif
 #undef DEBUG_X
 #undef DEBUG_Y
+#define DEBUG_X 64
+#define DEBUG_Y 38
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#define DEBUG_X 89
+#define DEBUG_Y 21
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#define DEBUG_X 118
+#define DEBUG_Y 43
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#define DEBUG_X 160
+#define DEBUG_Y 125
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#define DEBUG_X 371
+#define DEBUG_Y 125
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#define DEBUG_X 413
+#define DEBUG_Y 43
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#define DEBUG_X 442
+#define DEBUG_Y 21
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#define DEBUG_X 468
+#define DEBUG_Y 38
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#define DEBUG_X 496
+#define DEBUG_Y 82
+  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
+  cairo_fill (cr);
+#if 0
+  cairo_set_source_rgb (cr, 1, 0, 0);
+  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
+  cairo_fill (cr);
+#endif
+#undef DEBUG_X
+#undef DEBUG_Y
+#undef DEBUG_R
   cairo_destroy (cr);
   return FALSE;
 }
