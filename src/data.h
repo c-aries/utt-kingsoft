@@ -29,6 +29,19 @@ struct _icon {
   gchar *path;
 };
 
+enum _finger {				/* finger */
+  LEFT_THUMB,
+  LEFT_INDEX,
+  LEFT_MIDDLE,
+  LEFT_RING,
+  LEFT_LITTLE,
+  RIGHT_THUMB,
+  RIGHT_INDEX,
+  RIGHT_MIDDLE,
+  RIGHT_RING,
+  RIGHT_LITTLE,
+};
+
 struct _key {
   gchar *name;
   guchar ch;			/* printable character */
@@ -36,6 +49,7 @@ struct _key {
   /* fill area infromation, need to improve, in order to satisfy ENTER button, etc. */
   int x, y;			/* start x, start y */
   int width, height;
+  enum _finger finger;
 };
 
 void data_precheck_and_init();
