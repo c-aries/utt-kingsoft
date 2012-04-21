@@ -32,7 +32,8 @@ static struct _key *rshift;
 /* hand */
 static cairo_surface_t *hand_surface;
 
-static gchar *text = "~!@#$%^&*()_+{}|:\"<>?";
+/* static gchar *text = "~!@#$%^&*()_+{}|:\"<>?"; */
+static gchar *text = "ABCDEFG";
 static gchar gentext[7];	/* the last character is NUL */
 
 /* static guint elapse; */
@@ -116,7 +117,7 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
       }
     }
     stat.sum++;
-    if (ch && key[keyi].ch != ch) { /* keys don't equal */
+    if (ch && g_ascii_tolower (key[keyi].ch) != g_ascii_tolower (ch)) {	/*  keys don't equal */
       gtk_widget_queue_draw (dashboard);
       return FALSE;
     }
