@@ -34,7 +34,8 @@ static gchar gentext[7];	/* the last character is NUL */
 /* static guint elapse; */
 static guint timeout_id;
 static gboolean class_begin_flag = FALSE;
-static gboolean class_stop_flag = FALSE;
+static gboolean class_end_flag = FALSE;
+static gboolean class_pause_flag = FALSE;
 static GtkWidget *progress;
 
 struct _class {
@@ -79,7 +80,7 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   gint i, texti, keyi, reti;
   gchar ch = gentext[keydraw_index];
 
-  if (class_stop_flag) {
+  if (class_end_flag) {
     return FALSE;
   }
   g_print ("key press %08x\n", event->keyval);
@@ -87,12 +88,17 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     if (timeout_id) {
       g_source_remove (timeout_id);
       timeout_id = 0;
+      class_pause_flag = TRUE;
       gtk_label_set_text (GTK_LABEL (pause_label), "'Pause' to resume");
     }
     else {
       timeout_id = g_timeout_add_seconds (1, on_timeout, NULL);
+      class_pause_flag = FALSE;
       gtk_label_set_text (GTK_LABEL (pause_label), "'Pause' to pause");
     }
+    return FALSE;
+  }
+  if (class_pause_flag) {
     return FALSE;
   }
   ret = g_hash_table_lookup (key_val_ht, GUINT_TO_POINTER (event->keyval));
@@ -125,12 +131,14 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 	stat_reset (&stat);
 	progress_bar_update (progress, &stat);
 	gtk_widget_hide_all (continue_dialog);
+	/* FIXME: reset flags */
       }
       else {
 	g_print ("cancel\n");
 	/* window already focus out, timeout_id remove, class_begin_flag still is TRUE */
 	class_begin_flag = FALSE; /* FIXME: all clear to a new class, what if to change to a new page? */
-	class_stop_flag = TRUE;
+	class_end_flag = TRUE;
+	class_pause_flag = FALSE;
 	gtk_widget_hide_all (continue_dialog);
 	return FALSE;
       }
@@ -319,7 +327,8 @@ on_choose_press (GtkWidget *widget, gpointer data)
     }
     gtk_widget_queue_draw (kb_draw);
     class_begin_flag = FALSE;
-    class_stop_flag = FALSE;
+    class_end_flag = FALSE;
+    class_pause_flag = FALSE;
   }
   if (class_index == 1) {	/* "asdfg" */
   }
@@ -376,132 +385,215 @@ static gboolean
 on_hand_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr;
+  gchar ch = gentext[keydraw_index];
+  gpointer found;
+  struct _key *keyp;
+  gint keyi, fingerx, fingery;
 
   cr = gdk_cairo_create (event->window);
   cairo_set_source_surface (cr, hand_surface, 0, 0);
   cairo_paint (cr);
+
+  if (ch) {
+    found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)ch));
+    if (found) {
+      keyi = GPOINTER_TO_INT (found);
+      keyp = &key[keyi];
+      g_print ("%d\n", keyp->finger);
+      switch (keyp->finger) {
+      case LEFT_LITTLE:
+	{
+	  fingerx = 36;
+	  fingery = 82;
+	}
+	break;
+      case LEFT_RING:
+	{
+	  fingerx = 64;
+	  fingery = 38;
+	}
+	break;
+      case LEFT_MIDDLE:
+	{
+	  fingerx = 89;
+	  fingery = 21;
+	}
+	break;
+      case LEFT_INDEX:
+	{
+	  fingerx = 118;
+	  fingery = 43;
+	}
+	break;
+      case LEFT_THUMB:
+	{
+	  fingerx = 160;
+	  fingery = 125;
+	}
+	break;
+      case RIGHT_THUMB:
+	{
+	  fingerx = 371;
+	  fingery = 125;
+	}
+	break;
+      case RIGHT_INDEX:
+	{
+	  fingerx = 413;
+	  fingery = 43;
+	}
+	break;
+      case RIGHT_MIDDLE:
+	{
+	  fingerx = 442;
+	  fingery = 21;
+	}
+	break;
+      case RIGHT_RING:
+	{
+	  fingerx = 468;
+	  fingery = 38;
+	}
+	break;
+      case RIGHT_LITTLE:
+	{
+	  fingerx = 496;
+	  fingery = 82;
+	}
+	break;
+      default:
+	g_error (G_STRLOC);
+	break;
+      }
 #define DEBUG_R 16
-#define DEBUG_X 36
-#define DEBUG_Y 82
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 64
-#define DEBUG_Y 38
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 89
-#define DEBUG_Y 21
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 118
-#define DEBUG_Y 43
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 160
-#define DEBUG_Y 125
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 371
-#define DEBUG_Y 125
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 413
-#define DEBUG_Y 43
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 442
-#define DEBUG_Y 21
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 468
-#define DEBUG_Y 38
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
-#define DEBUG_X 496
-#define DEBUG_Y 82
-  cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI);
-  cairo_fill (cr);
-#if 0
-  cairo_set_source_rgb (cr, 1, 0, 0);
-  cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI);
-  cairo_fill (cr);
-#endif
-#undef DEBUG_X
-#undef DEBUG_Y
+      cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+      cairo_arc (cr, fingerx, fingery, DEBUG_R, 0, 2 * G_PI);
+      cairo_fill (cr);
 #undef DEBUG_R
+    }
+  }
+/* #define DEBUG_R 16 */
+/* #define DEBUG_X 36 */
+/* #define DEBUG_Y 82 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 64 */
+/* #define DEBUG_Y 38 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 89 */
+/* #define DEBUG_Y 21 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 118 */
+/* #define DEBUG_Y 43 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 160 */
+/* #define DEBUG_Y 125 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 371 */
+/* #define DEBUG_Y 125 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 413 */
+/* #define DEBUG_Y 43 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 442 */
+/* #define DEBUG_Y 21 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 468 */
+/* #define DEBUG_Y 38 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #define DEBUG_X 496 */
+/* #define DEBUG_Y 82 */
+/*   cairo_set_source_rgba (cr, 0, 0, 1, 0.3); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, DEBUG_R, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #if 0 */
+/*   cairo_set_source_rgb (cr, 1, 0, 0); */
+/*   cairo_arc (cr, DEBUG_X, DEBUG_Y, 2, 0, 2 * G_PI); */
+/*   cairo_fill (cr); */
+/* #endif */
+/* #undef DEBUG_X */
+/* #undef DEBUG_Y */
+/* #undef DEBUG_R */
   cairo_destroy (cr);
   return FALSE;
 }
@@ -510,7 +602,7 @@ static gboolean
 on_english_window_focus_in (GtkWidget *widget, GdkEventFocus *event, gpointer data)
 {
   g_print ("%s\n", __func__);
-  if (class_begin_flag && !timeout_id) {
+  if (class_begin_flag && !timeout_id && !class_pause_flag) {
     timeout_id = g_timeout_add_seconds (1, on_timeout, NULL);
   }
   return TRUE;
