@@ -25,10 +25,14 @@ static gint class_index = 0;
 static GtkWidget *fix;
 static GtkWidget *continue_dialog;
 
+/* control keys */
+static struct _key *lshift;
+static struct _key *rshift;
+
 /* hand */
 static cairo_surface_t *hand_surface;
 
-static gchar *text = "asdfg";
+static gchar *text = "~!@#$%^&*()_+{}|:\"<>?";
 static gchar gentext[7];	/* the last character is NUL */
 
 /* static guint elapse; */
@@ -145,9 +149,9 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     }
     keydraw_index = (keydraw_index + 1) % 6;
     if (keydraw_index == 0) {	/* next turn */
-      g_print ("gen text\n");
+      g_print ("gen text, len %ld\n", g_utf8_strlen (text, -1));
       for (i = 0; i < 6; i++) {	/* i is gentext index */
-	texti = g_random_int_range (0, 5);
+	texti = g_random_int_range (0, g_utf8_strlen (text, -1));
 	found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
 	if (found) {
 	  keyi = GPOINTER_TO_INT (found);
@@ -170,7 +174,7 @@ static gint
 on_keyboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *cr;
-  struct _key *keyp;
+  struct _key *keyp, *tmp_keyp;
   gchar ch = gentext[keydraw_index];
   gpointer found;
   gint keyi;
@@ -189,6 +193,27 @@ on_keyboard_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
       cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
       cairo_rectangle (cr, keyp->x, keyp->y, keyp->width, keyp->height);
       cairo_fill (cr);
+
+      switch (keyp->shift) {
+      case NONE_SHIFT:
+	tmp_keyp = NULL;
+	break;
+      case LEFT_SHIFT:
+	tmp_keyp = lshift;
+	break;
+      case RIGHT_SHIFT:
+	tmp_keyp = rshift;
+	break;
+      default:
+	g_error (G_STRLOC);
+	break;
+      }
+      if (tmp_keyp) {
+	cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+	cairo_rectangle (cr, tmp_keyp->x, tmp_keyp->y,
+			 tmp_keyp->width, tmp_keyp->height);
+	cairo_fill (cr);
+      }
     }
   }
 
@@ -310,7 +335,7 @@ on_choose_press (GtkWidget *widget, gpointer data)
     gtk_widget_queue_draw (dashboard);
     keydraw_index = 0;
     for (i = 0; i < 6; i++) {
-      texti = g_random_int_range (0, 5);
+      texti = g_random_int_range (0, g_utf8_strlen (text, -1));
       found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
       if (found) {
 	keyi = GPOINTER_TO_INT (found);
@@ -400,75 +425,31 @@ on_hand_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
       keyi = GPOINTER_TO_INT (found);
       keyp = &key[keyi];
       g_print ("%d\n", keyp->finger);
-      switch (keyp->finger) {
-      case LEFT_LITTLE:
-	{
-	  fingerx = 36;
-	  fingery = 82;
-	}
+      g_assert (finger_get_origin (keyp->finger, &fingerx, &fingery));
+#define DEBUG_R 16
+      cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+      cairo_arc (cr, fingerx, fingery, DEBUG_R, 0, 2 * G_PI);
+      cairo_fill (cr);
+      switch (keyp->shift) {
+      case NONE_SHIFT:
+	keyp = NULL;
 	break;
-      case LEFT_RING:
-	{
-	  fingerx = 64;
-	  fingery = 38;
-	}
+      case LEFT_SHIFT:
+	keyp = lshift;
 	break;
-      case LEFT_MIDDLE:
-	{
-	  fingerx = 89;
-	  fingery = 21;
-	}
-	break;
-      case LEFT_INDEX:
-	{
-	  fingerx = 118;
-	  fingery = 43;
-	}
-	break;
-      case LEFT_THUMB:
-	{
-	  fingerx = 160;
-	  fingery = 125;
-	}
-	break;
-      case RIGHT_THUMB:
-	{
-	  fingerx = 371;
-	  fingery = 125;
-	}
-	break;
-      case RIGHT_INDEX:
-	{
-	  fingerx = 413;
-	  fingery = 43;
-	}
-	break;
-      case RIGHT_MIDDLE:
-	{
-	  fingerx = 442;
-	  fingery = 21;
-	}
-	break;
-      case RIGHT_RING:
-	{
-	  fingerx = 468;
-	  fingery = 38;
-	}
-	break;
-      case RIGHT_LITTLE:
-	{
-	  fingerx = 496;
-	  fingery = 82;
-	}
+      case RIGHT_SHIFT:
+	keyp = rshift;
 	break;
       default:
 	g_error (G_STRLOC);
 	break;
       }
-#define DEBUG_R 16
-      cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
-      cairo_arc (cr, fingerx, fingery, DEBUG_R, 0, 2 * G_PI);
-      cairo_fill (cr);
+      if (keyp) {
+	g_assert (finger_get_origin (keyp->finger, &fingerx, &fingery));
+	cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
+	cairo_arc (cr, fingerx, fingery, DEBUG_R, 0, 2 * G_PI);
+	cairo_fill(cr);
+      }
 #undef DEBUG_R
     }
   }
@@ -761,7 +742,7 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
 
   /* initialize gentext */
   for (i = 0; i < 6; i++) {	/* i is gentext index */
-    texti = g_random_int_range (0, 5);
+    texti = g_random_int_range (0, g_utf8_strlen (text, -1));
     found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
     if (found) {
       keyi = GPOINTER_TO_INT (found);
@@ -776,6 +757,20 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   /* statistics */
   stat_init (&stat, 6 * 2);
   g_print ("[total] %u\n", stat.total);
+
+  /* control keys index */
+  found = g_hash_table_lookup (key_name_ht, "Shift<L>");
+  g_assert (found);
+  if (found) {
+    keyi = GPOINTER_TO_INT (found);
+    lshift = &key[keyi];
+  }
+  found = g_hash_table_lookup (key_name_ht, "Shift<R>");
+  g_assert (found);
+  if (found) {
+    keyi = GPOINTER_TO_INT (found);
+    rshift = &key[keyi];
+  }
 }
 
 void englishui_deinit()

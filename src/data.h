@@ -42,6 +42,12 @@ enum _finger {				/* finger */
   RIGHT_LITTLE,
 };
 
+enum _shift {
+  NONE_SHIFT,
+  LEFT_SHIFT,
+  RIGHT_SHIFT,
+};
+
 struct _key {
   gchar *name;
   guchar ch;			/* printable character */
@@ -50,10 +56,12 @@ struct _key {
   int x, y;			/* start x, start y */
   int width, height;
   enum _finger finger;
+  enum _shift shift;
 };
 
 void data_precheck_and_init();
 void data_deinit();
+gboolean finger_get_origin (enum _finger finger, gint *x, gint *y);
 /* struct icon *load_icons (); */
 /* struct key *load_keys (); */
 
