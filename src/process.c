@@ -13,10 +13,6 @@ display_helper (cairo_t *cr, gint r, gint g, gint b, gint x, gint y, gint w, gin
 void
 display_quoteleft (cairo_t *cr)
 {
-  /*   cairo_set_source_rgba (cr, 1, 0, 0, 0.8); */
-/*   cairo_set_source_rgba (cr, 230./255, 230./255, 223./255, 1); */
-/*   cairo_rectangle (cr, 14, 8, 20, 12); */
-/*   cairo_fill (cr); */
   display_helper (cr, 230, 230, 223, 14, 8, 20, 12);
 }
 
@@ -40,27 +36,39 @@ display_exclam (cairo_t *cr)
 
 void
 display_2 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 228, 228, 230, 14, 5, 22, 22);
+}
 
 void
 display_at (cairo_t *cr)
-{}
+{
+  display_helper (cr, 214, 213, 219, 20, 29, 12, 17);
+}
 
 void
 display_3 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 230, 230, 233, 18, 5, 15, 17);
+}
 
 void
 display_numbersign (cairo_t *cr)
-{}
+{
+  display_helper (cr, 214, 214, 219, 22, 29, 12, 18);
+}
 
 void
 display_4 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 230, 230, 233, 18, 5, 12, 19);
+}
 
 void
 display_dollar (cairo_t *cr)
-{}
+{
+  display_helper (cr, 213, 213, 218, 19, 29, 12, 17);
+}
 
 void
 display_5 (cairo_t *cr)
