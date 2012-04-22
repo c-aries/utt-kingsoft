@@ -46,26 +46,23 @@ static GtkWidget *progress;
 struct _class {
   const gchar *name;
 };
+enum {				/* please sync with class[] */
+  CLASS_RANDOM,
+  CLASS_A2L,
+  CLASS_Q2P,
+  CLASS_Z2M,
+  CLASS_ALPHABET,
+  CLASS_NUMBER,
+  CLASS_PUNCTUATION,
+};
 static struct _class class[] = {
   {"Random"},
-  {"asdfg"},
-  {"Keyboard Layout"},
-  {"Finger One by One"},
-  {"Wrong?"},
-  {"Test 'a', 's'"},
-  {"Class 0: asdfjkl;"},
-  {"Class 1: ei"},
-  {"Class 2: ru"},
-  {"Class 3: gh"},
-  {"Class 4: C,"},
-  {"Class 5: yt"},
-  {"Class 6: mv"},
-  {"Class 7: bn"},
-  {"Class 8: ow"},
-  {"Class 9: pqz"},
-  {"Class 10: x."},
-  {"Class 11: 0-9"},
-  {"Class 12: punctuation"},
+  {"asdfghjkl"},
+  {"qwertyuiop"},
+  {"zxcvbnm"},
+  {"Alphabet"},
+  {"1234567890"},
+  {"Punctuation"},
 };
 
 static gboolean

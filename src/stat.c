@@ -1,6 +1,7 @@
+/* library */
 #include "stat.h"
 
-struct _stat stat;
+/* don't define struct _stat stat; here. this file should be a module */
 
 void
 stat_reset (struct _stat *stat)

@@ -52,7 +52,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_utt_OBJECTS = utt-main.$(OBJEXT) utt-englishui.$(OBJEXT) \
 	utt-data.$(OBJEXT) utt-process.$(OBJEXT) utt-global.$(OBJEXT) \
-	utt-stat.$(OBJEXT) utt-commonui.$(OBJEXT)
+	utt-stat.$(OBJEXT) utt-commonui.$(OBJEXT) utt-class.$(OBJEXT) \
+	utt-strategy.$(OBJEXT)
 utt_OBJECTS = $(am_utt_OBJECTS)
 am__DEPENDENCIES_1 =
 utt_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -198,7 +199,9 @@ utt_SOURCES = \
 	process.c process.h \
 	global.c global.h \
 	stat.c stat.h \
-	commonui.c commonui.h
+	commonui.c commonui.h \
+	class.c class.h \
+	strategy.c strategy.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \
@@ -295,6 +298,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-class.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-commonui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-data.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-englishui.Po@am__quote@
@@ -302,6 +306,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-process.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-stat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utt-strategy.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -421,6 +426,34 @@ utt-commonui.obj: commonui.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='commonui.c' object='utt-commonui.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-commonui.obj `if test -f 'commonui.c'; then $(CYGPATH_W) 'commonui.c'; else $(CYGPATH_W) '$(srcdir)/commonui.c'; fi`
+
+utt-class.o: class.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-class.o -MD -MP -MF $(DEPDIR)/utt-class.Tpo -c -o utt-class.o `test -f 'class.c' || echo '$(srcdir)/'`class.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-class.Tpo $(DEPDIR)/utt-class.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='class.c' object='utt-class.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-class.o `test -f 'class.c' || echo '$(srcdir)/'`class.c
+
+utt-class.obj: class.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-class.obj -MD -MP -MF $(DEPDIR)/utt-class.Tpo -c -o utt-class.obj `if test -f 'class.c'; then $(CYGPATH_W) 'class.c'; else $(CYGPATH_W) '$(srcdir)/class.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-class.Tpo $(DEPDIR)/utt-class.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='class.c' object='utt-class.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-class.obj `if test -f 'class.c'; then $(CYGPATH_W) 'class.c'; else $(CYGPATH_W) '$(srcdir)/class.c'; fi`
+
+utt-strategy.o: strategy.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-strategy.o -MD -MP -MF $(DEPDIR)/utt-strategy.Tpo -c -o utt-strategy.o `test -f 'strategy.c' || echo '$(srcdir)/'`strategy.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-strategy.Tpo $(DEPDIR)/utt-strategy.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strategy.c' object='utt-strategy.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-strategy.o `test -f 'strategy.c' || echo '$(srcdir)/'`strategy.c
+
+utt-strategy.obj: strategy.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT utt-strategy.obj -MD -MP -MF $(DEPDIR)/utt-strategy.Tpo -c -o utt-strategy.obj `if test -f 'strategy.c'; then $(CYGPATH_W) 'strategy.c'; else $(CYGPATH_W) '$(srcdir)/strategy.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/utt-strategy.Tpo $(DEPDIR)/utt-strategy.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strategy.c' object='utt-strategy.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(utt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o utt-strategy.obj `if test -f 'strategy.c'; then $(CYGPATH_W) 'strategy.c'; else $(CYGPATH_W) '$(srcdir)/strategy.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

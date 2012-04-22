@@ -1,3 +1,4 @@
+/* data */
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib/ghash.h>

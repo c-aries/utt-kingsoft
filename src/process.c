@@ -1,3 +1,4 @@
+/* data */
 #include <glib.h>
 #define __PROCESS_C__
 #include "process.h"

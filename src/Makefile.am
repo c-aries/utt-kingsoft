@@ -9,7 +9,9 @@ utt_SOURCES = \
 	process.c process.h \
 	global.c global.h \
 	stat.c stat.h \
-	commonui.c commonui.h
+	commonui.c commonui.h \
+	class.c class.h \
+	strategy.c strategy.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \

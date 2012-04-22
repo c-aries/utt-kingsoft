@@ -6,7 +6,7 @@
 #include "data.h"
 #include "englishui.h"
 
-struct _ui ui;
+struct _stat stat;
 
 static gboolean
 on_wubi_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
