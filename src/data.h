@@ -57,6 +57,7 @@ struct _key {
   int width, height;
   enum _finger finger;
   enum _shift shift;
+  void (*display) (cairo_t *cr);		/* modify and display */
 };
 
 void data_precheck_and_init();

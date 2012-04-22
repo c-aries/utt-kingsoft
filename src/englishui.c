@@ -33,7 +33,8 @@ static struct _key *rshift;
 static cairo_surface_t *hand_surface;
 
 /* static gchar *text = "~!@#$%^&*()_+{}|:\"<>?"; */
-static gchar *text = "ABCDEFG";
+static gchar *text = "!1";
+/* static gchar *text = "ABCDEFG"; */
 static gchar gentext[7];	/* the last character is NUL */
 
 /* static guint elapse; */
@@ -395,6 +396,11 @@ on_keydraw_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
     gdk_cairo_set_source_pixbuf (cr, dest, 0, 0);
   }
   cairo_paint (cr);
+
+  if (keyp->display) {
+    keyp->display (cr);
+  }
+
   if (key_draw[keydraw_index] == widget) {
     cairo_set_source_rgba (cr, 0, 0, 1, 0.3);
     cairo_paint (cr);

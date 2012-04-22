@@ -6,6 +6,7 @@ utt_SOURCES = \
 	main.c main.h \
 	englishui.c englishui.h \
 	data.c data.h \
+	process.c process.h \
 	global.c global.h \
 	stat.c stat.h \
 	commonui.c commonui.h
