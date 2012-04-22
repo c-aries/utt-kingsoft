@@ -33,7 +33,7 @@ static struct _key *rshift;
 static cairo_surface_t *hand_surface;
 
 /* static gchar *text = "~!@#$%^&*()_+{}|:\"<>?"; */
-static gchar *text = "7&";
+static gchar *text = "0)";
 /* static gchar *text = "ABCDEFG"; */
 static gchar gentext[7];	/* the last character is NUL */
 

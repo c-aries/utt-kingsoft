@@ -108,28 +108,39 @@ display_ampersand (cairo_t *cr)
 
 void
 display_8 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 234, 234, 235, 26, 5, 9, 9);
+}
 
 void
 display_asterisk (cairo_t *cr)
 {
+  display_helper (cr, 214, 214, 219, 25, 30, 11, 16);
 }
 
 void
 display_9 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 228, 228, 231, 21, 5, 8, 20);
+}
 
 void
 display_parenleft (cairo_t *cr)
-{}
+{
+  display_helper (cr, 216, 216, 222, 22, 30, 11, 16);
+}
 
 void
 display_0 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 230, 230, 233, 21, 5, 10, 20);
+}
 
 void
 display_parenright (cairo_t *cr)
-{}
+{
+  display_helper (cr, 213, 213, 218, 24, 30, 11, 16);
+}
 
 void
 display_minus (cairo_t *cr)
