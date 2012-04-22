@@ -144,27 +144,39 @@ display_parenright (cairo_t *cr)
 
 void
 display_minus (cairo_t *cr)
-{}
+{
+  display_helper (cr, 223, 223, 227, 18, 20, 14, 6);
+}
 
 void
 display_underscore (cairo_t *cr)
-{}
+{
+  display_helper (cr, 213, 213, 218, 22, 36, 11, 6);
+}
 
 void
 display_equal (cairo_t *cr)
-{}
+{
+  display_helper (cr, 230, 230, 233, 22, 8, 12, 12);
+}
 
 void
 display_plus (cairo_t *cr)
-{}
+{
+  display_helper (cr, 214, 214, 219, 22, 32, 11, 10);
+}
 
 void
 display_backslash (cairo_t *cr)
-{}
+{
+  display_helper (cr, 229, 229, 232, 20, 6, 6, 20);
+}
 
 void
 display_bar (cairo_t *cr)
-{}
+{
+  display_helper (cr, 214, 214, 219, 19, 29, 12, 19);
+}
 
 void
 display_bracketleft (cairo_t *cr)
