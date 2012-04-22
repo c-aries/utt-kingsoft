@@ -116,6 +116,9 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 	timeout_id = g_timeout_add_seconds (1, on_timeout, NULL);
       }
     }
+    if (!g_ascii_isprint (key[keyi].ch)) {
+      return FALSE;
+    }
     stat.sum++;
     if (ch && g_ascii_tolower (key[keyi].ch) != g_ascii_tolower (ch)) {	/*  keys don't equal */
       gtk_widget_queue_draw (dashboard);
