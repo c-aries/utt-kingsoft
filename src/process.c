@@ -204,40 +204,60 @@ display_braceright (cairo_t *cr)
 
 void
 display_semicolon (cairo_t *cr)
-{}
+{
+  display_helper (cr, 228, 228, 231, 23, 10, 7, 14);
+}
 
 void
 display_colon (cairo_t *cr)
-{}
+{
+  display_helper (cr, 216, 216, 221, 23, 30, 6, 14);
+}
 
 void
 display_apostrophe (cairo_t *cr)
-{}
+{
+  display_helper (cr, 231, 231, 234, 23, 8, 7, 8);
+}
 
 void
 display_quotedbl (cairo_t *cr)
-{}
+{
+  display_helper (cr, 213, 213, 219, 25, 33, 5, 12);
+}
 
 void
 display_comma (cairo_t *cr)
-{}
+{
+  display_helper (cr, 230, 230, 233, 16, 8, 13, 14);
+}
 
 void
 display_less (cairo_t *cr)
-{}
+{
+  display_helper (cr, 213, 213, 218, 20, 36, 5, 10);
+}
 
 void
 display_period (cairo_t *cr)
-{}
+{
+  display_helper (cr, 228, 228, 231, 18, 8, 13, 14);
+}
 
 void
 display_greater (cairo_t *cr)
-{}
+{
+  display_helper (cr, 213, 213, 219, 19, 37, 5, 6);
+}
 
 void
 display_slash (cairo_t *cr)
-{}
+{
+  display_helper (cr, 229, 229, 232, 18, 8, 12, 16);
+}
 
 void
 display_question (cairo_t *cr)
-{}
+{
+  display_helper (cr, 215, 215, 220, 18, 27, 9, 16);
+}
