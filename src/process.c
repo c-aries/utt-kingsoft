@@ -72,27 +72,39 @@ display_dollar (cairo_t *cr)
 
 void
 display_5 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 231, 231, 234, 19, 5, 17, 17);
+}
 
 void
 diaplay_percent (cairo_t *cr)
-{}
+{
+  display_helper (cr, 214, 214, 219, 23, 29, 12, 18);
+}
 
 void
 display_6 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 232, 232, 235, 22, 5, 10, 11);
+}
 
 void
 display_asciicircum (cairo_t *cr)
-{}
+{
+  display_helper (cr, 214, 214, 219, 20, 29, 12, 18);
+}
 
 void
 display_7 (cairo_t *cr)
-{}
+{
+  display_helper (cr, 230, 230, 233, 22, 5, 14, 17);
+}
 
 void
 display_ampersand (cairo_t *cr)
-{}
+{
+  display_helper (cr, 213, 213, 219, 22, 30, 11, 16);
+}
 
 void
 display_8 (cairo_t *cr)
