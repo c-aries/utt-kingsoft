@@ -180,19 +180,27 @@ display_bar (cairo_t *cr)
 
 void
 display_bracketleft (cairo_t *cr)
-{}
+{
+  display_helper (cr, 230, 230, 233, 16, 6, 6, 20);
+}
 
 void
 display_braceleft (cairo_t *cr)
-{}
+{
+  display_helper (cr, 214, 214, 219, 16, 27, 8, 21);
+}
 
 void
 display_bracketright (cairo_t *cr)
-{}
+{
+  display_helper (cr, 228, 228, 231, 24, 5, 8, 21);
+}
 
 void
 display_braceright (cairo_t *cr)
-{}
+{
+  display_helper (cr, 215, 215, 220, 22, 27, 8, 21);
+}
 
 void
 display_semicolon (cairo_t *cr)
