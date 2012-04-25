@@ -5,6 +5,9 @@
 #include "data.h"		/* ICON_KB_EN */
 #include "main.h"
 #include "commonui.h"
+#include "strategy.h"
+#include "class.h"
+#include "class_random.h"
 
 #define DEBUG 1
 
@@ -32,7 +35,7 @@ static struct _key *rshift;
 /* hand */
 static cairo_surface_t *hand_surface;
 
-static gchar *text = "~!@#$%^&*()_+{}|:\"<>?";
+/* static gchar *text = "~!@#$%^&*()_+{}|:\"<>?"; */
 /* static gchar *text = "ABCDEFG"; */
 static gchar gentext[7];	/* the last character is NUL */
 
@@ -43,10 +46,17 @@ static gboolean class_end_flag = FALSE;
 static gboolean class_pause_flag = FALSE;
 static GtkWidget *progress;
 
-struct _class {
-  const gchar *name;
+static struct class class[] = {
+  {"Random", &strategy_random, "abcdefghijklmnopqrstuvwxyz1234567890~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/", NULL},
+  {"asdfghjkl", &strategy_random, "asdfghjkl", NULL},
+  {"qwertyuiop", &strategy_random, "qwertyuiop", NULL},
+  {"zxcvbnm", &strategy_random, "zxcvbnm", NULL},
+  {"Alphabet", &strategy_random, "abcdefghijklmnopqrstuvwxyz", NULL},
+  {"1234567890", &strategy_random, "1234567890", NULL},
+  {"Punctuation", &strategy_random, "~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/", NULL},
 };
-enum {				/* please sync with class[] */
+
+enum {				/* please sync with class_random[] */
   CLASS_RANDOM,
   CLASS_A2L,
   CLASS_Q2P,
@@ -54,16 +64,35 @@ enum {				/* please sync with class[] */
   CLASS_ALPHABET,
   CLASS_NUMBER,
   CLASS_PUNCTUATION,
+  NUM_CLASS,
 };
-static struct _class class[] = {
-  {"Random"},
-  {"asdfghjkl"},
-  {"qwertyuiop"},
-  {"zxcvbnm"},
-  {"Alphabet"},
-  {"1234567890"},
-  {"Punctuation"},
+
+static struct class_random class_random[NUM_CLASS];
+
+struct class_random_data {
+  gchar *name;
+  gchar *text;
 };
+
+static struct class_random_data class_random_data[] = {
+  {"Random", "abcdefghijklmnopqrstuvwxyz1234567890~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/"},
+  {"asdfghjkl", "asdfghjkl"},
+  {"qwertyuiop", "qwertyuiop"},
+  {"zxcvbnm", "zxcvbnm"},
+  {"Alphabet", "abcdefghijklmnopqrstuvwxyz"},
+  {"1234567890", "1234567890"},
+  {"Punctuation", "~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/"},
+};
+
+static void
+englishui_class_random_init ()
+{
+  gint i;
+
+  for (i = 0; i < NUM_CLASS; i++) {
+    class_random_set_text (&class_random[i], class_random_data[i].text);
+  }
+}
 
 static gboolean
 on_timeout (gpointer data)
@@ -79,7 +108,7 @@ static gboolean
 on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
   gpointer ret, found;
-  gint i, texti, keyi, reti;
+  gint i, /* texti, */ keyi, reti;
   gchar ch = gentext[keydraw_index];
 
   if (class_end_flag) {
@@ -150,17 +179,21 @@ on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     }
     keydraw_index = (keydraw_index + 1) % 6;
     if (keydraw_index == 0) {	/* next turn */
-      g_print ("gen text, len %ld\n", g_utf8_strlen (text, -1));
+      class_random_read (&class_random[class_index], gentext, 6);
+/*       g_print ("gen text, len %ld\n", g_utf8_strlen (text, -1)); */
       for (i = 0; i < 6; i++) {	/* i is gentext index */
-	texti = g_random_int_range (0, g_utf8_strlen (text, -1));
-	found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
-	if (found) {
-	  keyi = GPOINTER_TO_INT (found);
-	  g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name);
-	  gentext[i] = text[texti];
-	}
-	else {
-	  g_print ("not found\n");
+/* 	texti = g_random_int_range (0, g_utf8_strlen (text, -1)); */
+	found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)/* text[texti] */gentext[i]));
+/* 	if (found) { */
+/* 	  keyi = GPOINTER_TO_INT (found); */
+/* 	  g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name); */
+/* 	  gentext[i] = text[texti]; */
+/* 	} */
+/* 	else { */
+/* 	  g_print ("not found\n"); */
+/* 	} */
+	if (!found) {
+	  g_error ("'%c' not found\n", gentext[i]);
 	}
       }
       g_print ("gentext %s\n", gentext);
@@ -314,7 +347,7 @@ on_choose_press (GtkWidget *widget, gpointer data)
   GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (choose_treeview));
   GtkTreeIter iter;
   GtkTreePath *path;
-  gint ret, choose, texti, keyi, i;
+  gint ret, choose, /* texti, keyi,  */i;
   gpointer found;
 
   if (!gtk_tree_selection_get_selected (sel, NULL, &iter)) {
@@ -331,20 +364,29 @@ on_choose_press (GtkWidget *widget, gpointer data)
     gtk_label_set_text (GTK_LABEL (layout_label), class[choose].name);
     g_print ("choose index %d '%s'\n", choose, class[choose].name);
     /* set a new class */
+
+    /* update ui */
+    /* update dashboard */
     stat_reset (&stat);
-    progress_bar_update (progress, &stat);
+    progress_bar_update (progress, &stat); /* stat finish status */
     gtk_widget_queue_draw (dashboard);
+
+    /* update keydraw, gen new text  */
+    class_random_read (&class_random[class_index], gentext, 6);
+    /* update kb_draw */
     keydraw_index = 0;
     for (i = 0; i < 6; i++) {
-      texti = g_random_int_range (0, g_utf8_strlen (text, -1));
-      found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
-      if (found) {
-	keyi = GPOINTER_TO_INT (found);
-	g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name);
-	gentext[i] = text[texti];
-      }
-      else {
-	g_print ("not found\n");
+/*       texti = g_random_int_range (0, g_utf8_strlen (text, -1)); */
+      found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)gentext[i/* texti */]));
+/*       if (found) { */
+/* 	keyi = GPOINTER_TO_INT (found); */
+/* 	g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name); */
+/* 	gentext[i] = text[texti]; */
+/*       } */
+/*       else { */
+      if (!found) {
+	g_error ("'%c' not found\n", gentext[i]);
+/* 	g_print ("not found\n"); */
       }
     }
     g_print ("gentext %s\n", gentext);
@@ -355,8 +397,6 @@ on_choose_press (GtkWidget *widget, gpointer data)
     class_begin_flag = FALSE;
     class_end_flag = FALSE;
     class_pause_flag = FALSE;
-  }
-  if (class_index == 1) {	/* "asdfg" */
   }
   gtk_widget_hide_all (choose_dialog);
 /*   gtk_widget_grab_focus (title_label); /\* focus title label, if not, when you press enter, it will press choose button again *\/ */
@@ -649,8 +689,11 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   GtkTreeViewColumn *col;
   gchar *tempstr;
   /* gentext */
-  gint texti, keyi;
+  gint /* texti,  */keyi;
   gpointer found;
+
+  /* init data */
+  englishui_class_random_init ();
 
   english_window = global.english_window = GTK_WIDGET (gtk_builder_get_object (builder, "english_window"));
   g_signal_connect (english_window, "focus-out-event", G_CALLBACK (on_english_window_focus_out), NULL);
@@ -747,18 +790,23 @@ englishui_init (GtkBuilder *builder)			/* english ui init */
   gtk_tree_view_append_column (GTK_TREE_VIEW (choose_treeview), col);
 
   /* initialize gentext */
+  class_random_read (&class_random[class_index], gentext, 6);
   for (i = 0; i < 6; i++) {	/* i is gentext index */
-    texti = g_random_int_range (0, g_utf8_strlen (text, -1));
-    found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)text[texti]));
-    if (found) {
-      keyi = GPOINTER_TO_INT (found);
-      g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name);
-      gentext[i] = text[texti];
-    }
-    else {
-      g_print ("not found\n");
+/*     texti = g_random_int_range (0, g_utf8_strlen (text, -1)); */
+    found = g_hash_table_lookup (key_char_ht, GUINT_TO_POINTER ((guint)/* text[texti] */gentext[i]));
+/*     if (found) { */
+/*       keyi = GPOINTER_TO_INT (found); */
+/*       g_print ("%d %c, %d, %s\n", texti, text[texti], keyi, key[keyi].name); */
+/*       gentext[i] = text[texti]; */
+/*     } */
+/*     else { */
+/*       g_print ("not found\n"); */
+/*     } */
+    if (!found) {
+      g_error ("'%c' not found\n", gentext[i]);
     }
   }
+  g_print ("gentext %s\n", gentext);
 
   /* statistics */
   stat_init (&stat, 6 * 2);

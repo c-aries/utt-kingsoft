@@ -11,7 +11,8 @@ utt_SOURCES = \
 	stat.c stat.h \
 	commonui.c commonui.h \
 	class.c class.h \
-	strategy.c strategy.h
+	strategy.c strategy.h \
+	class_random.c class_random.h
 
 utt_CPPFLAGS = \
 	$(GTK_CFLAGS) \
